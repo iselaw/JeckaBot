@@ -1,6 +1,7 @@
 import telebot
 import gspread
 import os
+import sqlite3
 import time
 from time import sleep
 import random
@@ -24,6 +25,12 @@ from GameQvest import *
 bot = telebot.TeleBot('5231426811:AAEgODwFTSgKDcRnIL1smBYtDZpw2Cf5w64')
 admin = [1349611778, 425041981, 677784600]
 ignoreList = [-754170909]
+conn = sqlite3.connect('db/JeckaBot.db')
+cursor = conn.cursor()
+cursor.execute("SELECT * FROM Films where Id="+str(random.randint(1, 4)))
+results = cursor.fetchall()
+conn.close()
+print(results)
 isPush = False
 pushAdmin = ""
 addAdmin = ""
