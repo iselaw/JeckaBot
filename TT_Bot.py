@@ -1556,6 +1556,8 @@ def startadm(message: types.Message):
     if isAdmin == True:
         bot.send_message(message.chat.id, ' {}, вы авторизованы! \n\n'.format(message.from_user.first_name),
                          reply_markup=keyadmin)
+    else:
+        bot.send_message(message.chat.id, ' {}, У Вас нет прав администратора'.format(message.from_user.first_name))
 
 
 def cancelButton(message):
