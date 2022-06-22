@@ -1,6 +1,7 @@
 import telebot
 import gspread
 import os
+import sqlite3
 import time
 from time import sleep
 import random
@@ -918,7 +919,65 @@ def query_handler(call):
             bot.send_sticker(chat_id=call.message.chat.id, sticker=itog)
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                   text="Ничия")
+    elif call.data == "films":
+        db = sqlite3.connect('db/JeckaBot.db')
+        cur = db.cursor()
+        for rand in cur.execute('SELECT * FROM Films WHERE ID IN (SELECT ID FROM Films ORDER BY RANDOM() LIMIT 1)'):
+            Film_name = rand[1]
+            Film_KP = rand[2]
+            Film_Imdb = rand[3]
+            Description = rand[4]
+            Image = rand[5]
+            Film_itog = (f"Название Фильма: {Film_name}\nОценки Фильма:\nКинопоиск - {Film_KP}\n"
+                f"Imdb - {Film_Imdb}\n{Description}")
+            bot.send_photo(chat_id=call.message.chat.id, photo=Image)
+            bot.send_message(chat_id=call.message.chat.id, text=Film_itog)
+            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
+                                  text="Приятного просмотра")
 
+    elif call.data == "mult":
+        db = sqlite3.connect('db/JeckaBot.db')
+        cur = db.cursor()
+        for rand in cur.execute('SELECT * FROM Mult WHERE ID IN (SELECT ID FROM Mult ORDER BY RANDOM() LIMIT 1)'):
+            Film_name = rand[1]
+            Film_KP = rand[2]
+            Film_Imdb = rand[3]
+            Description = rand[4]
+            Image = rand[5]
+            Film_itog = (f"Название Мультика: {Film_name}\nОценки Мультика:\nКинопоиск - {Film_KP}\n"
+                f"Imdb - {Film_Imdb}\n{Description}")
+            bot.send_photo(chat_id=call.message.chat.id, photo=Image)
+            bot.send_message(chat_id=call.message.chat.id, text=Film_itog)
+            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
+                                  text="Приятного просмотра")
+
+    elif call.data == "anime":
+        db = sqlite3.connect('db/JeckaBot.db')
+        cur = db.cursor()
+        for rand in cur.execute('SELECT * FROM Anime WHERE ID IN (SELECT ID FROM Anime ORDER BY RANDOM() LIMIT 1)'):
+            Film_name = rand[1]
+            Film_KP = rand[2]
+            Film_Imdb = rand[3]
+            Description = rand[4]
+            Image = rand[5]
+            Film_itog = (f"Название Аниме: {Film_name}\nОценки Аниме:\nКинопоиск - {Film_KP}\n"
+                f"Imdb - {Film_Imdb}\n{Description}")
+            bot.send_photo(chat_id=call.message.chat.id, photo=Image)
+            bot.send_message(chat_id=call.message.chat.id, text=Film_itog)
+            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
+                                  text="Приятного просмотра")
+
+@bot.message_handler(commands=["films", "фильм"])
+def films(message, res=False):
+    keyfilms = types.InlineKeyboardMarkup()
+    key_film = types.InlineKeyboardButton(text='Случайный Фильм', callback_data='films')
+    keyfilms.add(key_film)
+    key_mult = types.InlineKeyboardButton(text='Случайный Мультик', callback_data='mult')
+    keyfilms.add(key_mult)
+    key_anime = types.InlineKeyboardButton(text='Случайное Аниме', callback_data='anime')
+    keyfilms.add(key_anime)
+    bot.send_message(message.chat.id, 'Что хотите посмотреть ?',
+                     reply_markup=keyfilms)
 
 @bot.message_handler(commands=["music", "музыка"])
 def music(message, res=False):
