@@ -1,7 +1,6 @@
 import telebot
 import gspread
 import os
-import sqlite3
 import time
 from time import sleep
 import random
@@ -11,7 +10,6 @@ from requests import get
 from telebot import types
 from fuzzywuzzy import fuzz
 import pytz
-import pprint
 import requests
 import re
 import xmltodict
@@ -19,12 +17,10 @@ import urllib.request as urllib2
 from telebot.types import InputMediaAudio
 from typing import Any
 from GameQvest import *
-
-# import test
-# Создаем бота, пишем свой токен
-bot = telebot.TeleBot('5231426811:AAEgODwFTSgKDcRnIL1smBYtDZpw2Cf5w64')
-admin = [1349611778, 425041981, 677784600]
-ignoreList = [-754170909]
+from Films import *
+from Login import *
+from Music import *
+# Создаем бота
 isPush = False
 pushAdmin = ""
 addAdmin = ""
@@ -32,11 +28,8 @@ isAddQuestion = False
 questionString = ""
 answerString = ""
 questionNumberToAdd = 0
-gs = gspread.service_account(filename='zhekamatuxovbot-87ff0c553364.json')  # подключаем файл с ключами и пр.
-sh = gs.open_by_key('14RGCwOhoSadmE8iTXvnmtHqP-cRN-uK7aATWbb0fgOw')  # подключаем таблицу по ID
-open_weather_token = '9ab864194f5db1221616acba01d06b92'
-worksheet = sh.sheet1  # получаем первый лист
-# Загружаем список фраз и ответов в массив
+worksheet = sh.sheet1
+# Загружаем в массив
 standatPoint = 5000
 weatherStatus = []
 UseridMas = []
@@ -46,7 +39,6 @@ masurl = []
 masParaLove = []
 masstiker = []
 masScore = []
-masaudio = []
 if os.path.exists('data/boltun.txt'):
     f = open('data/boltun.txt', 'r', encoding='UTF-8')
     for x in f:
@@ -77,17 +69,11 @@ if os.path.exists('data/balls.txt'):
     for x5 in f5:
         masScore.append(int(x5))
     f5.close()
-if os.path.exists('data/AudioMas.txt'):
-    f6 = open('data/AudioMas.txt', 'r', encoding='UTF-8')
-    for x6 in f6:
-        masaudio.append(x6.strip())
-    f6.close()
 if os.path.exists('data/masParaLove.txt'):
     f7 = open('data/masParaLove.txt', 'r', encoding='UTF-8')
     for x7 in f7:
         masParaLove.append(x7)
     f7.close()
-
 
 def update(questionString, answerString):
     questionString = questionString.lower().strip()
@@ -108,7 +94,6 @@ def update(questionString, answerString):
     lastString = 'u: fUnCr55Iofefsfcccраытысш'
     mas.append(lastString.strip().lower())
     f.close()
-
 
 def addAnswer(text, questionNumber):
     text = text.lower().strip()
@@ -139,14 +124,12 @@ def addAnswer(text, questionNumber):
         count = count + 1
     x.close()
 
-
 def push(text):
     for s in UseridMas:
         try:
             bot.send_message(s, text)
         except:
             print("Не удалось отправить сообщение")
-
 
 def answer(text):
     text = text.lower().strip()
@@ -180,7 +163,6 @@ def answer(text):
     except:
         return 'Не совсем понял вопрос'
 
-
 # Отправка фото на фото
 @bot.message_handler(content_types=["photo"])
 def handle_photo(message):
@@ -197,7 +179,6 @@ def handle_photo(message):
         with open(src, 'wb') as new_file:
             new_file.write(downloaded_file)
 
-
 # Отправка Стикеров на Стикер
 @bot.message_handler(content_types=["sticker"])
 def handle_sticker(message):
@@ -206,13 +187,11 @@ def handle_sticker(message):
     stikerr = masstiker[stiker]
     bot.send_sticker(message.chat.id, stikerr)
 
-
 # Отправка Сообщения на голосовое
 @bot.message_handler(content_types=['voice'])
 def voice_processing(message):
     bot.send_message(message.chat.id,
                      "{} Прости, я пока не могу слушать, напиши текстом".format(message.from_user.first_name))
-
 
 # Команда "Курс"
 @bot.message_handler(commands=["курс", "course"])
@@ -223,7 +202,6 @@ def startcourse(message, res=False):
     key_crip = types.InlineKeyboardButton(text='Курс Криптовалюты', callback_data='crip')
     keycoursemenu.add(key_crip)
     bot.send_message(message.chat.id, 'Что именно тебя интересует ?', reply_markup=keycoursemenu)
-
 
 @bot.callback_query_handler(func=lambda call: True)
 def query_handler(call):
@@ -920,54 +898,20 @@ def query_handler(call):
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                   text="Ничия")
     elif call.data == "films":
-        db = sqlite3.connect('db/JeckaBot.db')
-        cur = db.cursor()
-        for rand in cur.execute('SELECT * FROM Films WHERE ID IN (SELECT ID FROM Films ORDER BY RANDOM() LIMIT 1)'):
-            Film_name = rand[1]
-            Film_KP = rand[2]
-            Film_Imdb = rand[3]
-            Description = rand[4]
-            Image = rand[5]
-            Film_itog = (f"Название Фильма: {Film_name}\nОценки Фильма:\nКинопоиск - {Film_KP}\n"
-                f"Imdb - {Film_Imdb}\n{Description}")
-            bot.send_photo(chat_id=call.message.chat.id, photo=Image)
-            bot.send_message(chat_id=call.message.chat.id, text=Film_itog)
-            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
+        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                   text="Приятного просмотра")
-
+        film(call.message)
     elif call.data == "mult":
-        db = sqlite3.connect('db/JeckaBot.db')
-        cur = db.cursor()
-        for rand in cur.execute('SELECT * FROM Mult WHERE ID IN (SELECT ID FROM Mult ORDER BY RANDOM() LIMIT 1)'):
-            Film_name = rand[1]
-            Film_KP = rand[2]
-            Film_Imdb = rand[3]
-            Description = rand[4]
-            Image = rand[5]
-            Film_itog = (f"Название Мультика: {Film_name}\nОценки Мультика:\nКинопоиск - {Film_KP}\n"
-                f"Imdb - {Film_Imdb}\n{Description}")
-            bot.send_photo(chat_id=call.message.chat.id, photo=Image)
-            bot.send_message(chat_id=call.message.chat.id, text=Film_itog)
-            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                                  text="Приятного просмотра")
 
+        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
+                                  text="Приятного просмотра")
+        mult(call.message)
     elif call.data == "anime":
-        db = sqlite3.connect('db/JeckaBot.db')
-        cur = db.cursor()
-        for rand in cur.execute('SELECT * FROM Anime WHERE ID IN (SELECT ID FROM Anime ORDER BY RANDOM() LIMIT 1)'):
-            Film_name = rand[1]
-            Film_KP = rand[2]
-            Film_Imdb = rand[3]
-            Description = rand[4]
-            Image = rand[5]
-            Film_itog = (f"Название Аниме: {Film_name}\nОценки Аниме:\nКинопоиск - {Film_KP}\n"
-                f"Imdb - {Film_Imdb}\n{Description}")
-            bot.send_photo(chat_id=call.message.chat.id, photo=Image)
-            bot.send_message(chat_id=call.message.chat.id, text=Film_itog)
-            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
+        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                   text="Приятного просмотра")
-
-@bot.message_handler(commands=["films", "фильм"])
+        anime(call.message)
+#Фильмы
+@bot.message_handler(commands=["films", "фильмы"])
 def films(message, res=False):
     keyfilms = types.InlineKeyboardMarkup()
     key_film = types.InlineKeyboardButton(text='Случайный Фильм', callback_data='films')
@@ -979,6 +923,7 @@ def films(message, res=False):
     bot.send_message(message.chat.id, 'Что хотите посмотреть ?',
                      reply_markup=keyfilms)
 
+#Музыка
 @bot.message_handler(commands=["music", "музыка"])
 def music(message, res=False):
     keymusic = types.InlineKeyboardMarkup()
@@ -988,53 +933,6 @@ def music(message, res=False):
     keymusic.add(key_musicList)
     bot.send_message(message.chat.id, 'Что хотите послушать ?',
                      reply_markup=keymusic)
-
-
-def audio_processing(message, isFirstAudio):
-    key_like = types.InlineKeyboardButton(text='❤', callback_data='audioLike')
-    key_nextTrack = types.InlineKeyboardButton(text='>>>', callback_data='audionext')
-    keyboard = types.InlineKeyboardMarkup()
-    keyboard.add(key_like)
-    keyboard.add(key_nextTrack)
-    lenghtAudioMas = len(masaudio)
-    audio = random.randrange(0, lenghtAudioMas - 1, 3)
-    audioo = masaudio[audio]
-    nextAudio(message, audioo, keyboard, isFirstAudio)
-
-
-def nextAudio(message, audioo, keyboard, isFirstAudio):
-    if isFirstAudio == False:
-        bot.edit_message_media(chat_id=message.chat.id, message_id=message.message_id, media=InputMediaAudio(audioo),
-                               reply_markup=keyboard)
-    if isFirstAudio == True:
-        bot.send_audio(chat_id=message.chat.id, audio=audioo, reply_markup=keyboard)
-
-
-def LikePlayList(message):
-    PlayList = open('usersPlayLists/music' + str(message.chat.id) + '.txt', 'r', encoding='UTF-8')
-    i = 0
-    isPList = True
-    for x7 in PlayList:
-        i = + 1
-        if x7.strip() == str(message.audio.file_unique_id):
-            isPList = False
-            bot.send_message(message.chat.id, "Трек уже есть")
-    if isPList == True:
-        PlayList = open('usersPlayLists/music' + str(message.chat.id) + '.txt', 'a', encoding='UTF-8')
-        PlayList.write(message.audio.file_id + '\n' + message.audio.file_unique_id + '\n')
-        bot.send_message(message.chat.id, "{} - Трек сохранен".format(message.audio.file_name))
-    PlayList.close()
-
-
-def PlayList(message):
-    List = []
-    ListPlay = open('usersPlayLists/music' + str(message.chat.id) + '.txt', 'r', encoding='UTF-8')
-    for x8 in ListPlay:
-        List.append(x8.strip())
-    for i in range(0, len(List), 2):
-        audioo = List[i]
-        bot.send_audio(chat_id=message.chat.id, audio=audioo)
-
 
 # Добавление Аудио
 @bot.message_handler(content_types=['audio'])
@@ -1064,7 +962,7 @@ def audio_record(message):
                                                                                               number_of_elements=int(
                                                                                                   number_of_elements)))
 
-
+#Игра "Путешествие жеки"
 @bot.message_handler(commands=["qvest"])
 def GameQvest(message, res=False):
     keygameqvest = types.InlineKeyboardMarkup()
@@ -1098,7 +996,6 @@ def game(message, res=False):
         bot.send_message(UseridMas[0], message.from_user.first_name + " - Пошел Играть")
         bot.send_message(UseridMas[1], message.from_user.first_name + " - Пошел Играть")
 
-
 # Получить баланс пользователя
 def getBalance(message):
     count = 0
@@ -1109,7 +1006,6 @@ def getBalance(message):
         count = count + 1
     Balance = str(masScore[numberMas])
     return Balance
-
 
 def GameSSP(message, itog, res=False):
     keygame1 = types.InlineKeyboardMarkup();
@@ -1126,7 +1022,6 @@ def GameSSP(message, itog, res=False):
     else:
         bot.edit_message_text(chat_id=message.chat.id, message_id=message.message_id,
                               text=itog, reply_markup=keygame1)
-
 
 def randomCard(poolCard, playerScore, itog):
     randomCard = random.choice(poolCard)
@@ -1166,7 +1061,6 @@ def randomCard(poolCard, playerScore, itog):
         itog = itog + "2️⃣"
     return playerScore, itog
 
-
 def BJBet(message, itog, res=False):
     keyBJ = types.InlineKeyboardMarkup()
     key_BJbet50 = types.InlineKeyboardButton(text='Ставка 50', callback_data='BlackJack50')
@@ -1183,7 +1077,6 @@ def BJBet(message, itog, res=False):
         bot.edit_message_text(chat_id=message.chat.id, message_id=message.message_id,
                               text=itog, reply_markup=keyBJ)
 
-
 def BJGetCard(message, sum, itog, res=False):
     keyBJGetCard = types.InlineKeyboardMarkup()
     key_BJGetCardYes = types.InlineKeyboardButton(text='Еще карту', callback_data='GetCardYes')
@@ -1191,7 +1084,6 @@ def BJGetCard(message, sum, itog, res=False):
     key_BJGetCardNo = types.InlineKeyboardButton(text='Хватит', callback_data='GetCardNo')
     keyBJGetCard.add(key_BJGetCardNo)
     bot.send_message(message.chat.id, 'Сумма: ' + str(sum) + '\n' + itog + '\nЕще карту?', reply_markup=keyBJGetCard)
-
 
 def BlackJackFirst(message, bet):
     isBankrot, numberMas = updateScore(bet, -bet, message)
@@ -1216,7 +1108,6 @@ def BlackJackFirst(message, bet):
             BJGetCard(message, playerScore, itog)
     else:
         BJBet(message, "К сожалению, Ваших средств недостаточно, чтобы сделать ставку")
-
 
 def BlackJackNext(message, getCard):
     poolCard = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, "a"]
@@ -1282,7 +1173,6 @@ def BlackJackNext(message, getCard):
                     botItog) + "\n" + "Твой Баланс: " + str(
                     masScore[numberMas]) + "(-" + str(bet) + ")")
 
-
 def slotMachine(message, betValue):
     bet = betValue
     slot1 = ""
@@ -1342,7 +1232,6 @@ def slotMachine(message, betValue):
             itog = "bankrot"
     return itog
 
-
 def updateScore(bet, point, message):
     count = 0
     numberMas = -1
@@ -1364,6 +1253,27 @@ def updateScore(bet, point, message):
     else:
         isBankrot = False
         return isBankrot, numberMas
+
+# Функция "Ставка в слот-машине"
+def SlotBet(message, itog, res=False):
+    keykazino = types.InlineKeyboardMarkup()
+    key_bet10 = types.InlineKeyboardButton(text='Ставка 10', callback_data='SlotBet10')
+    keykazino.add(key_bet10)
+    key_bet50 = types.InlineKeyboardButton(text='Ставка 50', callback_data='SlotBet50')
+    keykazino.add(key_bet50)
+    key_krutexit = types.InlineKeyboardButton(text='Вдругой раз', callback_data='krutkonec')
+    keykazino.add(key_krutexit)
+    if itog == "first":
+        bot.send_message(message.chat.id, 'Сыграем ?', reply_markup=keykazino)
+    elif itog == "bankrot":
+        bot.edit_message_text(chat_id=message.chat.id, message_id=message.message_id,
+                              text="К сожалению, твой баланс не позволяет сделать ставку")
+    else:
+        bot.edit_message_text(chat_id=message.chat.id, message_id=message.message_id,
+                              text=itog)
+        time.sleep(0.5)
+        bot.edit_message_text(chat_id=message.chat.id, message_id=message.message_id,
+                              text=itog, reply_markup=keykazino)
 
 
 # Команда «Старт»
@@ -1391,35 +1301,11 @@ def start(message, res=False):
                      '{} Привет, меня зовут ЖекаБот. Напиши мне Привет :)\nОбязательно введи /help что бы увидеть что я умею'.format(
                          message.from_user.first_name))
 
-
-# Функция "Ставка в слот-машине"
-def SlotBet(message, itog, res=False):
-    keykazino = types.InlineKeyboardMarkup()
-    key_bet10 = types.InlineKeyboardButton(text='Ставка 10', callback_data='SlotBet10')
-    keykazino.add(key_bet10)
-    key_bet50 = types.InlineKeyboardButton(text='Ставка 50', callback_data='SlotBet50')
-    keykazino.add(key_bet50)
-    key_krutexit = types.InlineKeyboardButton(text='Вдругой раз', callback_data='krutkonec')
-    keykazino.add(key_krutexit)
-    if itog == "first":
-        bot.send_message(message.chat.id, 'Сыграем ?', reply_markup=keykazino)
-    elif itog == "bankrot":
-        bot.edit_message_text(chat_id=message.chat.id, message_id=message.message_id,
-                              text="К сожалению, твой баланс не позволяет сделать ставку")
-    else:
-        bot.edit_message_text(chat_id=message.chat.id, message_id=message.message_id,
-                              text=itog)
-        time.sleep(0.5)
-        bot.edit_message_text(chat_id=message.chat.id, message_id=message.message_id,
-                              text=itog, reply_markup=keykazino)
-
-
 # Команда "ХЕЛП"
 @bot.message_handler(commands=["help"])
 def help(message, res=False):
     bot.send_message(message.chat.id, '{} Привет, вот что я умею'.format(
         message.from_user.first_name) + '\n❕ Список Команд ❕\n/weather - Погода в вашем городе\n/course - Курс различных валют\n/music - Послушать музыку\n/game - Поиграть в игры\n/menu - Вызвать меню\nЧтобы узнать гороскоп на сегодня, напиши мне, например "гороскоп весы"\nА так же, я могу отвечать на твои сообщения, картинки, стикеры.\nИ каждый день учусь новому.')
-
 
 # Команда "Бот меню"
 @bot.message_handler(commands=["menu"])
@@ -1427,12 +1313,12 @@ def menu(message, res=False):
     keyboardgame = types.ReplyKeyboardMarkup(resize_keyboard=True)
     btn1 = types.KeyboardButton('/погода')
     btn2 = types.KeyboardButton('/курс')
-    btn3 = types.KeyboardButton('/музыка')
-    btn4 = types.KeyboardButton('/игра')
-    btn5 = types.KeyboardButton('/admin')
-    keyboardgame.add(btn1, btn2, btn3, btn4, btn5)
+    btn3 = types.KeyboardButton('/фильмы')
+    btn4 = types.KeyboardButton('/музыка')
+    btn5 = types.KeyboardButton('/игра')
+    btn6 = types.KeyboardButton('/admin')
+    keyboardgame.add(btn1, btn2, btn3, btn4, btn5, btn6)
     bot.send_message(message.chat.id, 'Что нужно ? ', reply_markup=keyboardgame)
-
 
 # Команда "Погода"
 @bot.message_handler(commands=["погода", "weather"])
@@ -1444,10 +1330,8 @@ def weather(message, res=False):
         count = count + 1
     bot.send_message(chat_id=message.chat.id, text='В Каком городе тебя интересует погода ?')
 
-
 def textCity(message):
     bot.send_message(chat_id=message.chat.id, text=get_weather(message.text, open_weather_token))
-
 
 def get_weather(message, open_weather_token):
     code_to_smile = {
@@ -1479,13 +1363,12 @@ def get_weather(message, open_weather_token):
             wd = "Не пойму что там, посмотри в окно"
         text = (f"Погода в городе: {cur_city}\nТемпература: {cur_weather}C° {wd}\n"
                 f"Влажность: {cur_humidity}%\nДавление: {cur_pressure} мм.рт.ст\nВетер: {cur_wind}\n"
-                f"Восход Солнца: {cur_sunrise}")
+                f"Закат Солнца: {cur_sunrise}")
         return text
 
     except Exception as ex:
         text2 = ('я не знаю такого города')
         return text2
-
 
 # Команда "Гороскоп"
 def handle_Aries(message):
@@ -1565,7 +1448,6 @@ def handle_Aries(message):
 
     return isGoroscope
 
-
 # Команда "Пара дня"
 def handle_Para(message):
     para = False
@@ -1574,13 +1456,11 @@ def handle_Para(message):
         para = True
     return para
 
-
 def hack(message):
     keylove = types.InlineKeyboardMarkup()
     key_love = types.InlineKeyboardButton(text='Поиск пары дня', callback_data='love')
     keylove.add(key_love)
     bot.send_message(message.chat.id, 'Ну что найдем для тебя пару дня ?', reply_markup=keylove)
-
 
 # Команда "Орел  Решка"
 def handle_Brocok(message):
@@ -1590,13 +1470,11 @@ def handle_Brocok(message):
         Brocok = True
     return Brocok
 
-
 def money(message):
     keymoney = types.InlineKeyboardMarkup()
     key_money = types.InlineKeyboardButton(text='Бросить монету', callback_data='money')
     keymoney.add(key_money)
     bot.send_message(message.chat.id, 'Подбросим монету ?', reply_markup=keymoney)
-
 
 # Команда "Админ"
 @bot.message_handler(commands=['admin'])
@@ -1618,13 +1496,11 @@ def startadm(message: types.Message):
     else:
         bot.send_message(message.chat.id, ' {}, У Вас нет прав администратора'.format(message.from_user.first_name))
 
-
 def cancelButton(message):
     keyCancel = types.InlineKeyboardMarkup();  # наша клавиатура
     key_cancel = types.InlineKeyboardButton(text='Отменить операцию', callback_data='cancel');  # кнопка «Да»
     keyCancel.add(key_cancel);  # добавляем кнопку в клавиатуру
     bot.send_message(message.chat.id, "Нажмите, если хотите отменить операцию", reply_markup=keyCancel)
-
 
 # Команда добавления
 def addQuestion(message):
@@ -1657,7 +1533,6 @@ def addQuestion(message):
     else:
         update(questionString, answerString)
 
-
 def handle_UserId(message):
     # Запись userId
     fz = open('data/UseridMas.txt', 'a', encoding='UTF-8')
@@ -1683,7 +1558,6 @@ def handle_UserId(message):
     fi.close()
     pl.close()
 
-
 def handle_Time(message):
     if (fuzz.token_sort_ratio(message.lower().strip(), "сколько времени?") > 70):
         tz = pytz.timezone('Asia/Krasnoyarsk')
@@ -1691,7 +1565,6 @@ def handle_Time(message):
         c_date, c_time = nvk_current_datetime.split()
         Time = f"У тебя че, телефона нет? \nНу на {c_time}"
         return Time
-
 
 @bot.message_handler(content_types=["text"])
 def handle_text(message):
@@ -1765,7 +1638,6 @@ def handle_text(message):
         if (ignoreListParameter == False):
             bot.send_message(UseridMas[0], message.from_user.first_name + "\n" + message.text + "\n" + realAnswer)
             bot.send_message(UseridMas[1], message.from_user.first_name + "\n" + message.text + "\n" + realAnswer)
-
 
 # Запускаем бота
 bot.polling(none_stop=True, interval=0)
