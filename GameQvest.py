@@ -1,16 +1,6 @@
-from typing import Any
-
-import telebot
-import gspread
-import os
-import time
 import random
-from datetime import datetime
-from requests import get
 from telebot import types
-from fuzzywuzzy import fuzz
-import pytz
-bot = telebot.TeleBot('5231426811:AAEgODwFTSgKDcRnIL1smBYtDZpw2Cf5w64')
+from Login import *
 def Qvestt(message, res=False):
 	keygameqvest1 = types.InlineKeyboardMarkup()
 	key_askTraveler = types.InlineKeyboardButton(text='Надо бы спросить его', callback_data='askTraveler')
