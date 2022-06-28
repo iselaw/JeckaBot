@@ -1,6 +1,6 @@
 import telebot
 import gspread
-bot = telebot.TeleBot('5231426811:AAEgODwFTSgKDcRnIL1smBYtDZpw2Cf5w64')
+bot = telebot.TeleBot('5130263933:AAHYircsOurfHPtwYzLLKeCGqB3mIxKv9p0')
 admin = [1349611778, 425041981, 677784600]
 ignoreList = [-754170909]
 gs = gspread.service_account(filename='zhekamatuxovbot-87ff0c553364.json')  # подключаем файл с ключами и пр.
