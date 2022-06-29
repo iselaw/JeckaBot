@@ -4,20 +4,21 @@ from Login import *
 
 
 def push(text):
+    userValue = 0
     db = sqlite3.connect('db/JeckaBot.db')
     cur = db.cursor()
-    cur.execute('SELECT id FROM Users')
-    s = cur.fetchall()
-    try:
-        print(s)
-        print(s[0])
-        print(s[1])
-        bot.send_message(s[0], text)
-        cur.execute("UPDATE Users SET active = 1 WHERE id = " + str(s[0]))
-        db.commit()
-        print("Сообщение доставлено")
-    except:
-        cur.execute('UPDATE Users SET active = 0 WHERE id = ' + str(s[0]))
-        db.commit()
-        print("Не удалось отправить сообщение")
+    for x in cur.execute("SELECT COUNT(id) FROM Users WHERE active=1 OR active=0"):
+        userValue = x[0]
+    count = 1
+    while count <= userValue:
+        for s1 in cur.execute("SELECT userId FROM Users where id=" + str(count)):
+            s = s1[0]
+        try:
+            bot.send_message(s, text)
+            cur.execute("UPDATE Users SET active = 1 WHERE userId = " + str(s))
+            db.commit()
+        except:
+            cur.execute("UPDATE Users SET active = 0 WHERE userId = " + str(s))
+            db.commit()
+        count = count + 1
     db.close()

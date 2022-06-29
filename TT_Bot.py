@@ -893,7 +893,7 @@ def query_handler(call):
             itog = "CAACAgIAAxkBAAEExZxih0AlAr4WhBhh2ziJhpW6amwxQwACfRcAAvUgQEif-5XszcoaBCQE"
             bot.send_sticker(chat_id=call.message.chat.id, sticker=itog)
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                                  text="Ничия")
+                                  text="Ничья")
     elif call.data == "films":
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                               text="Приятного просмотра")
@@ -1251,6 +1251,7 @@ def updateScore(bet, point, message):
         db = sqlite3.connect('db/JeckaBot.db')
         cur = db.cursor()
         cur.execute("UPDATE Users SET balance = "+str(Balance)+" WHERE userId = " + str(message.chat.id))
+        db.commit()
         db.close()
     else:
         isBankrot = True
