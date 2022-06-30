@@ -933,6 +933,13 @@ def films(message, res=False):
     keyfilms.add(key_anime)
     bot.send_message(message.chat.id, 'Что хотите посмотреть ?',
                      reply_markup=keyfilms)
+    for x in admin:
+        if message.chat.id == x:
+            isAdmin = True
+    if (isAdmin == False):
+        bot.send_message(admin[0], message.from_user.first_name + " - Пошел Искать Фильм")
+        bot.send_message(admin[1], message.from_user.first_name + " - Пошел Искать Фильм")
+        bot.send_message(admin[2], message.from_user.first_name + " - Пошел Искать Фильм")
 
 
 # Музыка
@@ -945,6 +952,13 @@ def music(message, res=False):
     keymusic.add(key_musicList)
     bot.send_message(message.chat.id, 'Что хотите послушать ?',
                      reply_markup=keymusic)
+    for x in admin:
+        if message.chat.id == x:
+            isAdmin = True
+    if (isAdmin == False):
+        bot.send_message(admin[0], message.from_user.first_name + " - Пошел слушать музыку")
+        bot.send_message(admin[1], message.from_user.first_name + " - Пошел слушать музыку")
+        bot.send_message(admin[2], message.from_user.first_name + " - Пошел слушать музыку")
 
 
 # Добавление Аудио
