@@ -33,14 +33,11 @@ questionNumberToAdd = 0
 worksheet = sh.sheet1
 # Загружаем в массив
 standartPoint = 5000
-weatherStatus = []
-UseridMas = []
 masVerify = []
 mas = []
 masurl = []
 masParaLove = []
 masstiker = []
-masScore = []
 if os.path.exists('data/boltun.txt'):
     f = open('data/boltun.txt', 'r', encoding='UTF-8')
     for x in f:
