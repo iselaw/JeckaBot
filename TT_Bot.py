@@ -224,7 +224,7 @@ def query_handler(call):
                               text="Введите текст который хотите отправить")
         cancelButton(call.message)
     elif call.data == "stat":
-        number_of_elements=0
+        number_of_elements = 0
         db = sqlite3.connect('db/JeckaBot.db')
         cur = db.cursor()
         for x in cur.execute("SELECT COUNT(id) FROM Users WHERE active=1"):
@@ -282,8 +282,23 @@ def query_handler(call):
                               text="Выбрано: Камень, Ножницы, Бумага\nВаш баланс: " + str(getBalance(call.message)))
         GameSSP(call.message, "first")
     elif call.data == "StatGame":
+        static = []
+        staticMessage = ""
+        db = sqlite3.connect('db/JeckaBot.db')
+        cur = db.cursor()
+        for x in cur.execute("Select nickname, balance from users where balance>5000 ORDER BY balance DESC Limit 10"):
+            static.append(x[0])
+            static.append(x[1])
+        count = 0
+        while count < 20:
+            if count % 2 == 0:
+                staticMessage = staticMessage + str((count + 1)//2+1) + ". " + str(static[count])
+            else:
+                staticMessage = staticMessage + ": " + str(static[count]) + '\n'
+            count = count + 1
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Статистика еще не готова")
+                              text="Самые успешные люди:\n" + staticMessage)
+        db.close()
     elif call.data == "Scissors":
         choice = random.choice(['Камень🤜', 'Ножницы✌️', 'Бумага✋'])
         Scissors = 'Ножницы✌️'
@@ -979,7 +994,14 @@ def GameQvest(message, res=False):
 # Команда "Игра"
 @bot.message_handler(commands=["game", "игра"])
 def game(message, res=False):
-    keygame = types.InlineKeyboardMarkup();
+    db = sqlite3.connect('db/JeckaBot.db')
+    cur = db.cursor()
+    cur.execute(
+        "UPDATE Users SET (nickname) = '" + str(message.from_user.first_name) + "'" + " WHERE userId = " + str(
+            message.chat.id))
+    db.commit()
+    db.close()
+    keygame = types.InlineKeyboardMarkup()
     key_Game1 = types.InlineKeyboardButton(text='Камень,Ножницы,Бумага', callback_data='GameSSP')
     keygame.add(key_Game1)
     key_Game2 = types.InlineKeyboardButton(text='Слот-машина', callback_data='SlotMachine')
@@ -1005,7 +1027,7 @@ def game(message, res=False):
 def getBalance(message):
     db = sqlite3.connect('db/JeckaBot.db')
     cur = db.cursor()
-    for x in cur.execute("SELECT balance FROM Users where userId="+str(message.chat.id)):
+    for x in cur.execute("SELECT balance FROM Users where userId=" + str(message.chat.id)):
         Balance = x[0]
     db.close()
     return Balance
@@ -1250,7 +1272,7 @@ def updateScore(bet, point, message):
         Balance = Balance + point
         db = sqlite3.connect('db/JeckaBot.db')
         cur = db.cursor()
-        cur.execute("UPDATE Users SET balance = "+str(Balance)+" WHERE userId = " + str(message.chat.id))
+        cur.execute("UPDATE Users SET balance = " + str(Balance) + " WHERE userId = " + str(message.chat.id))
         db.commit()
         db.close()
     else:
@@ -1293,7 +1315,8 @@ def start(message, res=False):
         UserId = s[0]
     if (UserId == 0):
         global standartPoint
-        cur.execute("INSERT INTO Users (userId, nickname, balance, active) VALUES (?, ?, ?, ?);", (sz, f"{si}", standartPoint, 1))
+        cur.execute("INSERT INTO Users (userId, nickname, balance, active) VALUES (?, ?, ?, ?);",
+                    (sz, f"{si}", standartPoint, 1))
         db.commit()
     db.close()
     pl.close()
@@ -1326,11 +1349,11 @@ def menu(message, res=False):
 # Команда "Погода"
 @bot.message_handler(commands=["погода", "weather"])
 def weather(message, res=False):
-    count = 0
-    for x in UseridMas:
-        if str(x) == str(message.chat.id):
-            weatherStatus[count] = 1
-        count = count + 1
+    db = sqlite3.connect('db/JeckaBot.db')
+    cur = db.cursor()
+    cur.execute("UPDATE Users SET weather = 1 WHERE userId = " + str(message.chat.id))
+    db.commit()
+    db.close()
     bot.send_message(chat_id=message.chat.id, text='В Каком городе тебя интересует погода ?')
 
 
@@ -1539,9 +1562,9 @@ def addQuestion(message):
                                                                                                 '') + "\n" + "ты уверен, что хочешь добавить новый?"
         keyboard = types.InlineKeyboardMarkup()  # наша клавиатура
         key_yes = types.InlineKeyboardButton(text='Добавить', callback_data='yes')  # кнопка «Да»
-        keyboard.add(key_yes);  # добавляем кнопку в клавиатуру
+        keyboard.add(key_yes)  # добавляем кнопку в клавиатуру
         key_no = types.InlineKeyboardButton(text='Добавить ответ к существующему', callback_data='no')
-        keyboard.add(key_no);
+        keyboard.add(key_no)
         bot.send_message(message.chat.id, questionOfSimilary, reply_markup=keyboard)
     else:
         update(questionString, answerString)
@@ -1559,7 +1582,8 @@ def handle_UserId(message):
         UserId = s[0]
     if (UserId == 0):
         global standartPoint
-        cur.execute("INSERT INTO Users (userId, nickname, balance, active) VALUES (?, ?, ?, ?);", (sz, f"{si}", standartPoint, 1))
+        cur.execute("INSERT INTO Users (userId, nickname, balance, active) VALUES (?, ?, ?, ?);",
+                    (sz, f"{si}", standartPoint, 1))
         db.commit()
     db.close()
     pl.close()
@@ -1595,17 +1619,17 @@ def handle_text(message):
     isGoroscope = handle_Aries(message)
     isStandarnAnswer = True
     timeAnswer = handle_Time(message.text)
-    numberUser = 0
-    count = 0
-    # for x in UseridMas:
-    #     if x == str(message.chat.id):
-    #         numberUser = count
-    #     count = count + 1
-    # if weatherStatus[numberUser] == 1:
-    #     textCity(message)
-    #     weatherStatus[numberUser] = 0
-    #     isStandarnAnswer = False
-    #     realAnswer = "*Был дан ответ о погоде*"
+    db = sqlite3.connect('db/JeckaBot.db')
+    cur = db.cursor()
+    for x in cur.execute("SELECT weather FROM Users WHERE userId=" + str(message.chat.id)):
+        weatherStatus = x[0]
+        if weatherStatus == 1:
+            textCity(message)
+            cur.execute("UPDATE Users SET weather = 0 WHERE userId = " + str(message.chat.id))
+            db.commit()
+            isStandarnAnswer = False
+            realAnswer = "*Был дан ответ о погоде*"
+    db.close()
     if (isAddQuestion == True):
         if (isAdmin == True):
             if (addAdmin == str(message.chat.id)):
