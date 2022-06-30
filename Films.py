@@ -4,6 +4,8 @@ import requests
 from bs4 import BeautifulSoup
 from telebot import types
 from Login import *
+
+
 def anime(message):
     db = sqlite3.connect('db/JeckaBot.db')
     cur = db.cursor()
@@ -16,7 +18,6 @@ def anime(message):
         link1 = rand[6]
         Film_itog = (f"Название Аниме: {Film_name}\nОценки Аниме:\nКинопоиск - {Film_KP}\n"
                      f"Imdb - {Film_Imdb}\n{Description}")
-        db.close()
         try:
             user_agent_list = [
                 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Safari/605.1.15',
@@ -40,6 +41,9 @@ def anime(message):
         except:
             bot.send_photo(message.chat.id, photo=Image)
             bot.send_message(message.chat.id, text=Film_itog)
+    db.close()
+
+
 def mult(message):
     db = sqlite3.connect('db/JeckaBot.db')
     cur = db.cursor()
@@ -52,7 +56,6 @@ def mult(message):
         link1 = rand[6]
         Film_itog = (f"Название Мультика: {Film_name}\nОценки Мультика:\nКинопоиск - {Film_KP}\n"
                      f"Imdb - {Film_Imdb}\n{Description}")
-        db.close()
         try:
             user_agent_list = [
                 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Safari/605.1.15',
@@ -76,6 +79,9 @@ def mult(message):
         except:
             bot.send_photo(message.chat.id, photo=Image)
             bot.send_message(message.chat.id, text=Film_itog)
+    db.close()
+
+
 def film(message):
     db = sqlite3.connect('db/JeckaBot.db')
     cur = db.cursor()
@@ -88,7 +94,6 @@ def film(message):
         link1 = rand[6]
         Film_itog = (f"Название Фильма: {Film_name}\nОценки Фильма:\nКинопоиск - {Film_KP}\n"
                      f"Imdb - {Film_Imdb}\n{Description}")
-        db.close()
         try:
             user_agent_list = [
                 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Safari/605.1.15',
@@ -112,3 +117,4 @@ def film(message):
         except:
             bot.send_photo(message.chat.id, photo=Image)
             bot.send_message(message.chat.id, text=Film_itog)
+    db.close()
