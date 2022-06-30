@@ -1681,6 +1681,7 @@ def handle_text(message):
         if (ignoreListParameter == False):
             bot.send_message(admin[1], message.from_user.first_name + "\n" + message.text + "\n" + realAnswer)
             bot.send_message(admin[2], message.from_user.first_name + "\n" + message.text + "\n" + realAnswer)
+            bot.send_message(admin[0], message.from_user.first_name + "\n" + message.text + "\n" + realAnswer)
 
 
 # Запускаем бота
