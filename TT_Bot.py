@@ -933,6 +933,7 @@ def films(message, res=False):
     keyfilms.add(key_anime)
     bot.send_message(message.chat.id, 'Что хотите посмотреть ?',
                      reply_markup=keyfilms)
+    isAdmin = False
     for x in admin:
         if message.chat.id == x:
             isAdmin = True
@@ -952,6 +953,7 @@ def music(message, res=False):
     keymusic.add(key_musicList)
     bot.send_message(message.chat.id, 'Что хотите послушать ?',
                      reply_markup=keymusic)
+    isAdmin = False
     for x in admin:
         if message.chat.id == x:
             isAdmin = True
