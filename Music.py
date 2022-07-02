@@ -1,16 +1,12 @@
 import random
 import os
 import requests
+import sqlite3
 from telebot.types import InputMediaAudio
 from bs4 import BeautifulSoup
 from telebot import types
 from Login import *
-masaudio = []
-if os.path.exists('data/AudioMas.txt'):
-    f6 = open('data/AudioMas.txt', 'r', encoding='UTF-8')
-    for x6 in f6:
-        masaudio.append(x6.strip())
-    f6.close()
+
 
 def audio_processing(message, isFirstAudio):
     key_like = types.InlineKeyboardButton(text='❤', callback_data='audioLike')
@@ -18,10 +14,13 @@ def audio_processing(message, isFirstAudio):
     keyboard = types.InlineKeyboardMarkup()
     keyboard.add(key_like)
     keyboard.add(key_nextTrack)
-    lenghtAudioMas = len(masaudio)
-    audio = random.randrange(0, lenghtAudioMas - 1, 3)
-    audioo = masaudio[audio]
-    nextAudio(message, audioo, keyboard, isFirstAudio)
+    db = sqlite3.connect('db/JeckaBot.db')
+    cur = db.cursor()
+    for rand in cur.execute('SELECT * FROM Music WHERE ID IN (SELECT ID FROM Music ORDER BY RANDOM() LIMIT 1)'):
+        audioo = rand[5]
+        db.close
+        nextAudio(message, audioo, keyboard, isFirstAudio)
+
 
 def nextAudio(message, audioo, keyboard, isFirstAudio):
     if isFirstAudio == False:
@@ -30,26 +29,97 @@ def nextAudio(message, audioo, keyboard, isFirstAudio):
     if isFirstAudio == True:
         bot.send_audio(chat_id=message.chat.id, audio=audioo, reply_markup=keyboard)
 
+
 def LikePlayList(message):
-    PlayList = open('usersPlayLists/music' + str(message.chat.id) + '.txt', 'r', encoding='UTF-8')
-    i = 0
-    isPList = True
-    for x7 in PlayList:
-        i = + 1
-        if x7.strip() == str(message.audio.file_unique_id):
-            isPList = False
-            bot.send_message(message.chat.id, "Трек уже есть")
-    if isPList == True:
-        PlayList = open('usersPlayLists/music' + str(message.chat.id) + '.txt', 'a', encoding='UTF-8')
-        PlayList.write(message.audio.file_id + '\n' + message.audio.file_unique_id + '\n')
-        bot.send_message(message.chat.id, "{} - Трек сохранен".format(message.audio.file_name))
-    PlayList.close()
+    try:
+        MessageChatId = str(message.chat.id)
+        MessageGroupId = MessageChatId.split('-', 1)[1]
+        db = sqlite3.connect('db/PlayList.db')
+        Plist = db.cursor()
+        Plist.execute("CREATE TABLE IF NOT EXISTS " + "pList_" + MessageGroupId + """(
+                   Id INTEGER NOT NULL UNIQUE,
+                   Performer TEXT,
+                   Title TEXT,
+                   FileId TEXT,
+                   UniqueId TEXT,
+                   PRIMARY KEY("Id" AUTOINCREMENT)
+                   );
+                """)
+        db.commit()
+        track = str(message.audio.file_unique_id)
+        Track_performer = message.audio.performer
+        Track_title = message.audio.title
+        isNew = True
+        UniqueId_list = []
+        for UniqueId in Plist.execute('SELECT UniqueId FROM pList_' + MessageGroupId + '  WHERE UniqueId LIKE ?',
+                                          ('%' + track + '%',)):
+            UniqueId_list.append(UniqueId[0])
+            UniqueId_list1 = UniqueId_list[0]
+            if str(UniqueId_list1) == str(message.audio.file_unique_id):
+                isNew = False
+                bot.send_message(message.chat.id, Track_performer + " - " + Track_title + " - Такой трек уже есть ")
+
+        if isNew == True:
+            Track_id = message.audio.file_id
+            Track_Unique = message.audio.file_unique_id
+            db.execute(
+                    "INSERT INTO " + "pList_" + MessageGroupId + " (Performer, Title, FileId, UniqueId) VALUES (?, ?, ?, ?);",
+                    (Track_performer, Track_title, Track_id, Track_Unique))
+            db.commit()
+            db.close()
+            bot.send_message(message.chat.id, Track_performer + " - " + Track_title + " - Трек сохранен ")
+    except:
+        MessageChatId = str(message.chat.id)
+        db = sqlite3.connect('db/PlayList.db')
+        Plist = db.cursor()
+        Plist.execute("CREATE TABLE IF NOT EXISTS " + "pList_" + MessageChatId + """(
+       Id INTEGER NOT NULL UNIQUE,
+       Performer TEXT,
+       Title TEXT,
+       FileId TEXT,
+       UniqueId TEXT,
+       PRIMARY KEY("Id" AUTOINCREMENT)
+       );
+        """)
+        db.commit()
+        track = str(message.audio.file_unique_id)
+        Track_performer = message.audio.performer
+        Track_title = message.audio.title
+        isNew = True
+        UniqueId_list = []
+        for UniqueId in Plist.execute('SELECT UniqueId FROM pList_' + MessageChatId + '  WHERE UniqueId LIKE ?',
+                                      ('%' + track + '%',)):
+            UniqueId_list.append(UniqueId[0])
+            UniqueId_list1 = UniqueId_list[0]
+            if str(UniqueId_list1) == str(message.audio.file_unique_id):
+                isNew = False
+                bot.send_message(message.chat.id, Track_performer + " - " + Track_title + " - Такой трек уже есть ")
+
+        if isNew == True:
+            Track_id = message.audio.file_id
+            Track_Unique = message.audio.file_unique_id
+            db.execute(
+                "INSERT INTO " + "pList_" + MessageChatId + " (Performer, Title, FileId, UniqueId) VALUES (?, ?, ?, ?);",
+                (Track_performer, Track_title, Track_id, Track_Unique))
+            db.commit()
+            db.close()
+            bot.send_message(message.chat.id, Track_performer + " - " + Track_title + " - Трек сохранен ")
+
 
 def PlayList(message):
-    List = []
-    ListPlay = open('usersPlayLists/music' + str(message.chat.id) + '.txt', 'r', encoding='UTF-8')
-    for x8 in ListPlay:
-        List.append(x8.strip())
-    for i in range(0, len(List), 2):
-        audioo = List[i]
-        bot.send_audio(chat_id=message.chat.id, audio=audioo)
+    try:
+        MessageChatId = str(message.chat.id)
+        MessageGroupId = MessageChatId.split('-', 1)[1]
+        db = sqlite3.connect('db/PlayList.db')
+        Plist = db.cursor()
+        for s1 in Plist.execute("SELECT FileId FROM " + "pList_" + MessageGroupId):
+            audioo = s1[0]
+            bot.send_audio(chat_id=message.chat.id, audio=audioo)
+    except:
+        db = sqlite3.connect('db/PlayList.db')
+        Plist = db.cursor()
+        for s1 in Plist.execute("SELECT FileId FROM " + "pList_" + MessageChatId):
+            audioo = s1[0]
+            bot.send_audio(chat_id=message.chat.id, audio=audioo)
+
+
