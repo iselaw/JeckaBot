@@ -966,30 +966,28 @@ def music(message, res=False):
 # Добавление Аудио
 @bot.message_handler(content_types=['audio'])
 def audio_record(message):
-    record = open('data/AudioMas.txt', 'a',
-                  encoding='UTF-8')
+    db = sqlite3.connect('db/JeckaBot.db')
+    cur = db.cursor()
+    track = str(message.audio.file_unique_id)
+    Track_performer = message.audio.performer
+    Track_title = message.audio.title
     isNew = True
-    count = 1
-    while count <= len(masaudio) - 2:
-        if str(masaudio[count]) == str(message.audio.file_unique_id):
+    UniqueId_list = []
+    for UniqueId in cur.execute('SELECT UniqueId FROM Music WHERE UniqueId LIKE ?', ('%' + track + '%',)):
+        UniqueId_list.append(UniqueId[0])
+        UniqueId_list1 = UniqueId_list[0]
+        if str(UniqueId_list1) == str(message.audio.file_unique_id):
             isNew = False
-            number_of_elements = len(masaudio) / 3
-            bot.send_message(message.chat.id,
-                             "{} - Такой трек уже есть \nТреков сохранено: {number_of_elements}".format(
-                                 message.audio.file_name, number_of_elements=int(number_of_elements)))
-        count = count + 3
+            bot.send_message(message.chat.id, Track_performer + " - " + Track_title + " - Такой трек уже есть ")
+
     if isNew == True:
-        masaudio.append(str(message.audio.file_id))
-        masaudio.append(str(message.audio.file_unique_id))
-        masaudio.append(str(message.audio.file_name))
-        record.write(
-            message.audio.file_id + '\n' + message.audio.file_unique_id + '\n' + message.audio.file_name + '\n')
-        record.close()
-        number_of_elements = len(masaudio) / 3
-        bot.send_message(message.chat.id,
-                         "{} - Трек сохранен \nТреков сохранено: {number_of_elements}".format(message.audio.file_name,
-                                                                                              number_of_elements=int(
-                                                                                                  number_of_elements)))
+        Track_id = message.audio.file_id
+        Track_Unique = message.audio.file_unique_id
+        Track_Name = message.audio.file_name
+        db.execute("INSERT INTO Music (Name, Performer, Title, UniqueId, FileId) VALUES (?, ?, ?, ?, ?);", (Track_Name, Track_performer, Track_title, Track_Unique, Track_id))
+        db.commit()
+        db.close()
+        bot.send_message(message.chat.id, Track_performer + " - " + Track_title + " - Трек сохранен ")
 
 
 # Игра "Путешествие жеки"

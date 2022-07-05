@@ -16,6 +16,8 @@ def anime(message):
         Description = rand[4]
         Image = rand[5]
         link1 = rand[6]
+        link2 = link1.split('.', 1)[1]
+        link3 = "https://m." + link2
         Film_itog = (f"Название Аниме: {Film_name}\nОценки Аниме:\nКинопоиск - {Film_KP}\n"
                      f"Imdb - {Film_Imdb}\n{Description}")
         try:
@@ -29,7 +31,7 @@ def anime(message):
 
             user_agent = random.choice(user_agent_list)
             headers = {'User-Agent': user_agent}
-            page3 = BeautifulSoup(requests.get(link1, headers=headers).text, "lxml")
+            page3 = BeautifulSoup(requests.get(link3, headers=headers).text, "lxml")
             film_play1 = page3.find("div", class_="tabs-b video-box").find('iframe').get('src')
             film_play = ("https:" + film_play1)
             markup = types.InlineKeyboardMarkup()
@@ -54,6 +56,8 @@ def mult(message):
         Description = rand[4]
         Image = rand[5]
         link1 = rand[6]
+        link2 = link1.split('.', 1)[1]
+        link3 = "https://m." + link2
         Film_itog = (f"Название Мультика: {Film_name}\nОценки Мультика:\nКинопоиск - {Film_KP}\n"
                      f"Imdb - {Film_Imdb}\n{Description}")
         try:
@@ -67,7 +71,7 @@ def mult(message):
 
             user_agent = random.choice(user_agent_list)
             headers = {'User-Agent': user_agent}
-            page3 = BeautifulSoup(requests.get(link1, headers=headers).text, "lxml")
+            page3 = BeautifulSoup(requests.get(link3, headers=headers).text, "lxml")
             film_play1 = page3.find("div", class_="tabs-b video-box").find('iframe').get('src')
             film_play = ("https:" + film_play1)
             markup = types.InlineKeyboardMarkup()
@@ -92,6 +96,8 @@ def film(message):
         Description = rand[4]
         Image = rand[5]
         link1 = rand[6]
+        link2 = link1.split('.', 1)[1]
+        link3 = "https://m." + link2
         Film_itog = (f"Название Фильма: {Film_name}\nОценки Фильма:\nКинопоиск - {Film_KP}\n"
                      f"Imdb - {Film_Imdb}\n{Description}")
         try:
@@ -105,7 +111,7 @@ def film(message):
 
             user_agent = random.choice(user_agent_list)
             headers = {'User-Agent': user_agent}
-            page3 = BeautifulSoup(requests.get(link1, headers=headers).text, "lxml")
+            page3 = BeautifulSoup(requests.get(link3, headers=headers).text, "lxml")
             film_play1 = page3.find("div", class_="tabs-b video-box").find('iframe').get('src')
             film_play = ("https:" + film_play1)
             markup = types.InlineKeyboardMarkup()
