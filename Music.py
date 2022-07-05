@@ -18,8 +18,8 @@ def audio_processing(message, isFirstAudio):
     cur = db.cursor()
     for rand in cur.execute('SELECT * FROM Music WHERE ID IN (SELECT ID FROM Music ORDER BY RANDOM() LIMIT 1)'):
         audioo = rand[5]
-        db.close
         nextAudio(message, audioo, keyboard, isFirstAudio)
+    db.close()
 
 
 def nextAudio(message, audioo, keyboard, isFirstAudio):
@@ -66,8 +66,8 @@ def LikePlayList(message):
                     "INSERT INTO " + "pList_" + MessageGroupId + " (Performer, Title, FileId, UniqueId) VALUES (?, ?, ?, ?);",
                     (Track_performer, Track_title, Track_id, Track_Unique))
             db.commit()
-            db.close()
             bot.send_message(message.chat.id, Track_performer + " - " + Track_title + " - Трек сохранен ")
+        db.close()
     except:
         MessageChatId = str(message.chat.id)
         db = sqlite3.connect('db/PlayList.db')
@@ -102,8 +102,8 @@ def LikePlayList(message):
                 "INSERT INTO " + "pList_" + MessageChatId + " (Performer, Title, FileId, UniqueId) VALUES (?, ?, ?, ?);",
                 (Track_performer, Track_title, Track_id, Track_Unique))
             db.commit()
-            db.close()
             bot.send_message(message.chat.id, Track_performer + " - " + Track_title + " - Трек сохранен ")
+        db.close()
 
 
 def PlayList(message):
@@ -115,11 +115,11 @@ def PlayList(message):
         for s1 in Plist.execute("SELECT FileId FROM " + "pList_" + MessageGroupId):
             audioo = s1[0]
             bot.send_audio(chat_id=message.chat.id, audio=audioo)
+        db.close()
     except:
         db = sqlite3.connect('db/PlayList.db')
         Plist = db.cursor()
         for s1 in Plist.execute("SELECT FileId FROM " + "pList_" + MessageChatId):
             audioo = s1[0]
             bot.send_audio(chat_id=message.chat.id, audio=audioo)
-
-
+        db.close()
