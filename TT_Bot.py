@@ -21,6 +21,8 @@ from Films import *
 from Login import *
 from Music import *
 from Push import *
+from millionaire import *
+from mute import *
 
 # Создаем бота
 isPush = False
@@ -289,7 +291,7 @@ def query_handler(call):
         count = 0
         while count < 20:
             if count % 2 == 0:
-                staticMessage = staticMessage + str((count + 1)//2+1) + ". " + str(static[count])
+                staticMessage = staticMessage + str((count + 1) // 2 + 1) + ". " + str(static[count])
             else:
                 staticMessage = staticMessage + ": " + str(static[count]) + '\n'
             count = count + 1
@@ -389,6 +391,25 @@ def query_handler(call):
         BJBet(call.message, "first")
     elif call.data == "krutkonec":
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Приходи еще")
+    elif call.data == "millionaire":
+        bot.delete_message(call.from_user.id, call.message.message_id)
+        millionaire(call.message)
+    elif call.data == "startMillionaire":
+        bot.delete_message(call.from_user.id, call.message.message_id)
+        startMillionaire(call.message, 0, True, 0)
+    # Игра Кто хочет стать миллионером
+    elif call.data == "A":
+        isTrueAnswer = checkAnswer(call.message, 1)
+        resultMillionaire(call, isTrueAnswer)
+    elif call.data == "B":
+        isTrueAnswer = checkAnswer(call.message, 2)
+        resultMillionaire(call, isTrueAnswer)
+    elif call.data == "C":
+        isTrueAnswer = checkAnswer(call.message, 3)
+        resultMillionaire(call, isTrueAnswer)
+    elif call.data == "D":
+        isTrueAnswer = checkAnswer(call.message, 4)
+        resultMillionaire(call, isTrueAnswer)
     # Игра с жекой
     elif call.data == "qvest":
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
@@ -984,7 +1005,8 @@ def audio_record(message):
         Track_id = message.audio.file_id
         Track_Unique = message.audio.file_unique_id
         Track_Name = message.audio.file_name
-        db.execute("INSERT INTO Music (Name, Performer, Title, UniqueId, FileId) VALUES (?, ?, ?, ?, ?);", (Track_Name, Track_performer, Track_title, Track_Unique, Track_id))
+        db.execute("INSERT INTO Music (Name, Performer, Title, UniqueId, FileId) VALUES (?, ?, ?, ?, ?);",
+                   (Track_Name, Track_performer, Track_title, Track_Unique, Track_id))
         db.commit()
         db.close()
         bot.send_message(message.chat.id, Track_performer + " - " + Track_title + " - Трек сохранен ")
@@ -1013,6 +1035,8 @@ def game(message, res=False):
     db.commit()
     db.close()
     keygame = types.InlineKeyboardMarkup()
+    key_Game0 = types.InlineKeyboardButton(text='Кто хочет стать миллионером?', callback_data='millionaire')
+    keygame.add(key_Game0)
     key_Game1 = types.InlineKeyboardButton(text='Камень,Ножницы,Бумага', callback_data='GameSSP')
     keygame.add(key_Game1)
     key_Game2 = types.InlineKeyboardButton(text='Слот-машина', callback_data='SlotMachine')
@@ -1034,18 +1058,8 @@ def game(message, res=False):
         bot.send_message(admin[2], message.from_user.first_name + " - Пошел Играть")
 
 
-# Получить баланс пользователя
-def getBalance(message):
-    db = sqlite3.connect('db/JeckaBot.db')
-    cur = db.cursor()
-    for x in cur.execute("SELECT balance FROM Users where userId=" + str(message.chat.id)):
-        Balance = x[0]
-    db.close()
-    return Balance
-
-
 def GameSSP(message, itog, res=False):
-    keygame1 = types.InlineKeyboardMarkup();
+    keygame1 = types.InlineKeyboardMarkup()
     key_Stone = types.InlineKeyboardButton(text='Камень🤜', callback_data='Stone')
     keygame1.add(key_Stone)
     key_Scissors = types.InlineKeyboardButton(text='Ножницы✌️', callback_data='Scissors')
@@ -1339,8 +1353,8 @@ def start(message, res=False):
 # Команда "ХЕЛП"
 @bot.message_handler(commands=["help"])
 def help(message, res=False):
-    bot.send_message(message.chat.id, '{} Привет, вот что я умею'.format(
-        message.from_user.first_name) + '\n❕ Список Команд ❕\n/weather - Погода в вашем городе\n/course - Курс различных валют\n/music - Послушать музыку\n/game - Поиграть в игры\n/menu - Вызвать меню\nЧтобы узнать гороскоп на сегодня, напиши мне, например "гороскоп весы"\nА так же, я могу отвечать на твои сообщения, картинки, стикеры.\nИ каждый день учусь новому.')
+    bot.send_message(message.chat.id,
+                     'Привет, вот что я умею' + '\n❕ Список Команд ❕\n/menu - Вызвать меню\n/game - Поиграть в игры\n/films - Подобрать фильм на вечер\n/weather - Погода в вашем городе\n/music - Послушать музыку\n/off - замутить бота\n/on - размутить бота\n/course - Курс различных валют\nЧтобы узнать гороскоп на сегодня, напиши мне, например "гороскоп весы"\nА так же, я могу отвечать на твои сообщения, картинки, стикеры.\nИ каждый день учусь новому.')
 
 
 # Команда "Бот меню"
@@ -1348,7 +1362,7 @@ def help(message, res=False):
 def menu(message, res=False):
     keyboardgame = types.ReplyKeyboardMarkup(resize_keyboard=True)
     btn1 = types.KeyboardButton('/погода')
-    btn2 = types.KeyboardButton('/курс')
+    btn2 = types.KeyboardButton('/mute|unmute')
     btn3 = types.KeyboardButton('/фильмы')
     btn4 = types.KeyboardButton('/музыка')
     btn5 = types.KeyboardButton('/игра')
@@ -1611,7 +1625,7 @@ def handle_Time(message):
 
 @bot.message_handler(content_types=["text"])
 def handle_text(message):
-    realAnswer = ""
+    realAnswer = "*Меня попросили помолчать*"
     global isPush
     global isAddQuestion
     global addAdmin
@@ -1624,59 +1638,66 @@ def handle_text(message):
     for x in ignoreList:
         if message.chat.id == x:
             ignoreListParameter = True
-    handle_UserId(message)
-    para = handle_Para(message)
-    Brocok = handle_Brocok(message)
-    isGoroscope = handle_Aries(message)
-    isStandarnAnswer = True
-    timeAnswer = handle_Time(message.text)
+    muteStatus = 2
     db = sqlite3.connect('db/JeckaBot.db')
     cur = db.cursor()
-    for x in cur.execute("SELECT weather FROM Users WHERE userId=" + str(message.chat.id)):
-        weatherStatus = x[0]
-        if weatherStatus == 1:
-            textCity(message)
-            cur.execute("UPDATE Users SET weather = 0 WHERE userId = " + str(message.chat.id))
-            db.commit()
-            isStandarnAnswer = False
-            realAnswer = "*Был дан ответ о погоде*"
+    for x in cur.execute("SELECT mute FROM Users WHERE userId=" + str(message.chat.id)):
+        muteStatus = x[0]
     db.close()
-    if (isAddQuestion == True):
-        if (isAdmin == True):
-            if (addAdmin == str(message.chat.id)):
-                addQuestion(message)
+    if muteStatus == 0:
+        handle_UserId(message)
+        para = handle_Para(message)
+        Brocok = handle_Brocok(message)
+        isGoroscope = handle_Aries(message)
+        isStandarnAnswer = True
+        timeAnswer = handle_Time(message.text)
+        db = sqlite3.connect('db/JeckaBot.db')
+        cur = db.cursor()
+        for x in cur.execute("SELECT weather FROM Users WHERE userId=" + str(message.chat.id)):
+            weatherStatus = x[0]
+            if weatherStatus == 1:
+                textCity(message)
+                cur.execute("UPDATE Users SET weather = 0 WHERE userId = " + str(message.chat.id))
+                db.commit()
                 isStandarnAnswer = False
-                isAddQuestion = False
-                addAdmin = "0"
-                realAnswer = "*Был добавлен вопрос*"
-    if (isPush == True):
-        if (isAdmin == True):
-            if (pushAdmin == str(message.chat.id)):
-                push(message.text)
-                pushAdmin = "0"
-                realAnswer = "*Был отправлен пуш*"
-                isStandarnAnswer = False
-                isPush = False
-    if (para == True):
-        isStandarnAnswer = False
-        realAnswer = "*Была подобрана пара*"
-    if (isGoroscope == True):
-        isStandarnAnswer = False
-        realAnswer = "*Был отправлен гороскоп*"
-    if (Brocok == True):
-        isStandarnAnswer = False
-        realAnswer = "*Была подкинута монетка*"
-    if (timeAnswer != None):
-        bot.send_message(message.chat.id, timeAnswer)
-        isStandarnAnswer = False
-        realAnswer = timeAnswer
-    if (isStandarnAnswer == True):
-        realAnswer = answer(message.text)
-        bot.send_message(message.chat.id, realAnswer)
-    f = open('data/logi/' + str(message.chat.id) + '_' + str(message.from_user.username) + '_log.txt', 'a',
-             encoding='UTF-8')
-    f.write('u: ' + message.text + '\n' + realAnswer + '\n')
-    f.close()
+                realAnswer = "*Был дан ответ о погоде*"
+        db.close()
+        if (isAddQuestion == True):
+            if (isAdmin == True):
+                if (addAdmin == str(message.chat.id)):
+                    addQuestion(message)
+                    isStandarnAnswer = False
+                    isAddQuestion = False
+                    addAdmin = "0"
+                    realAnswer = "*Был добавлен вопрос*"
+        if (isPush == True):
+            if (isAdmin == True):
+                if (pushAdmin == str(message.chat.id)):
+                    push(message.text)
+                    pushAdmin = "0"
+                    realAnswer = "*Был отправлен пуш*"
+                    isStandarnAnswer = False
+                    isPush = False
+        if (para == True):
+            isStandarnAnswer = False
+            realAnswer = "*Была подобрана пара*"
+        if (isGoroscope == True):
+            isStandarnAnswer = False
+            realAnswer = "*Был отправлен гороскоп*"
+        if (Brocok == True):
+            isStandarnAnswer = False
+            realAnswer = "*Была подкинута монетка*"
+        if (timeAnswer != None):
+            bot.send_message(message.chat.id, timeAnswer)
+            isStandarnAnswer = False
+            realAnswer = timeAnswer
+        if (isStandarnAnswer == True):
+            realAnswer = answer(message.text)
+            bot.send_message(message.chat.id, realAnswer)
+        f = open('data/logi/' + str(message.chat.id) + '_' + str(message.from_user.username) + '_log.txt', 'a',
+                 encoding='UTF-8')
+        f.write('u: ' + message.text + '\n' + realAnswer + '\n')
+        f.close()
     if (isAdmin == False):
         if (ignoreListParameter == False):
             bot.send_message(admin[1], message.from_user.first_name + "\n" + message.text + "\n" + realAnswer)
