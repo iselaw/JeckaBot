@@ -39,15 +39,16 @@ def unmute(message, res=False):
         bot.send_message(admin[1], message.from_user.first_name + " - Размутил бота")
         bot.send_message(admin[2], message.from_user.first_name + " - Размутил бота")
 
-@bot.message_handler(commands=["mute|unmute"])
+
+@bot.message_handler(commands=["muteORunmute"])
 def muteunmute(message, res=False):
-    muteStatus=3
+    muteStatus = 3
     db = sqlite3.connect('db/JeckaBot.db')
     cur = db.cursor()
     for x in cur.execute("SELECT mute FROM Users WHERE userId=" + str(message.chat.id)):
         muteStatus = x[0]
     db.close()
-    if muteStatus==0:
+    if muteStatus == 0:
         mute(message)
     else:
         unmute(message)

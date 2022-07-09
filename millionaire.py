@@ -4,6 +4,7 @@ from time import sleep
 
 from telebot import types
 from Login import *
+from OthersGameMethods import *
 
 
 def startMillionaire(message, balance, isStarting, messageId, res=False):
@@ -16,15 +17,13 @@ def startMillionaire(message, balance, isStarting, messageId, res=False):
     for s in ff:
         milMas.append(s.strip().lower())
     ff.close()
-    keyboard = types.InlineKeyboardMarkup()
+    keyboard = types.InlineKeyboardMarkup(row_width=2)
     keyA = types.InlineKeyboardButton(text='A', callback_data='A')
     keyB = types.InlineKeyboardButton(text='B', callback_data='B')
     keyC = types.InlineKeyboardButton(text='C', callback_data='C')
     keyD = types.InlineKeyboardButton(text='D', callback_data='D')
-    keyboard.add(keyA)
-    keyboard.add(keyB)
-    keyboard.add(keyC)
-    keyboard.add(keyD)
+    keyboard.row(keyA, keyB)
+    keyboard.row(keyC, keyD)
     Question = randomQuestion(message, balance, int(milMas[2]))
     if messageId == 0:
         bot.send_message(chat_id=message.chat.id, text=Question, reply_markup=keyboard)
@@ -131,11 +130,3 @@ def millionaire(message, res=False):
     keygame.add(key_startgame)
     bot.send_message(chat_id=message.chat.id, text='Ну что, начнём зарабатывать умом?', reply_markup=keygame)
 
-
-def getBalance(message):
-    db = sqlite3.connect('db/JeckaBot.db')
-    cur = db.cursor()
-    for x in cur.execute("SELECT balance FROM Users where userId=" + str(message.chat.id)):
-        Balance = x[0]
-    db.close()
-    return Balance
