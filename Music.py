@@ -112,14 +112,22 @@ def PlayList(message):
         MessageGroupId = MessageChatId.split('-', 1)[1]
         db = sqlite3.connect('db/PlayList.db')
         Plist = db.cursor()
-        for s1 in Plist.execute("SELECT FileId FROM " + "pList_" + MessageGroupId):
-            audioo = s1[0]
-            bot.send_audio(chat_id=message.chat.id, audio=audioo)
+        try:
+            for s1 in Plist.execute("SELECT FileId FROM " + "pList_" + MessageGroupId):
+                audioo = s1[0]
+                bot.send_audio(chat_id=message.chat.id, audio=audioo)
+        except:
+            bot.edit_message_text(chat_id=message.chat.id, message_id=message.message_id,
+                              text="Ваш плейлист пуст")
         db.close()
     except:
         db = sqlite3.connect('db/PlayList.db')
         Plist = db.cursor()
-        for s1 in Plist.execute("SELECT FileId FROM " + "pList_" + MessageChatId):
-            audioo = s1[0]
-            bot.send_audio(chat_id=message.chat.id, audio=audioo)
+        try:
+            for s1 in Plist.execute("SELECT FileId FROM " + "pList_" + MessageChatId):
+                audioo = s1[0]
+                bot.send_audio(chat_id=message.chat.id, audio=audioo)
+        except:
+            bot.edit_message_text(chat_id=message.chat.id, message_id=message.message_id,
+                              text="Ваш плейлист пуст")
         db.close()
