@@ -40,7 +40,7 @@ def unmute(message, res=False):
         bot.send_message(admin[2], message.from_user.first_name + " - Размутил бота")
 
 
-@bot.message_handler(commands=["muteORunmute"])
+@bot.message_handler(commands=["молчанка"])
 def muteunmute(message, res=False):
     muteStatus = 3
     db = sqlite3.connect('db/JeckaBot.db')

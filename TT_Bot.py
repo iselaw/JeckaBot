@@ -1197,7 +1197,7 @@ def help(message, res=False):
 def menu(message, res=False):
     keyboardgame = types.ReplyKeyboardMarkup(resize_keyboard=True)
     btn1 = types.KeyboardButton('/погода')
-    btn2 = types.KeyboardButton('/muteORunmute')
+    btn2 = types.KeyboardButton('/молчанка')
     btn3 = types.KeyboardButton('/фильмы')
     btn4 = types.KeyboardButton('/музыка')
     btn5 = types.KeyboardButton('/игра')
