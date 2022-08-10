@@ -1062,7 +1062,6 @@ def game(message, res=False):
         bot.send_message(admin[2], message.from_user.first_name + " - Пошел Играть")
         updateStatistic(message, "game")
 
-
 def GameSSP(message, itog, res=False):
     keygame1 = types.InlineKeyboardMarkup()
     key_Stone = types.InlineKeyboardButton(text='Камень🤜', callback_data='Stone')
