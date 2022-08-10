@@ -21,6 +21,10 @@ from Films import *
 from Login import *
 from Music import *
 from Push import *
+from millionaire import *
+from mute import *
+from statistic import *
+from BlackJack import *
 
 # Создаем бота
 isPush = False
@@ -221,14 +225,7 @@ def query_handler(call):
                               text="Введите текст который хотите отправить")
         cancelButton(call.message)
     elif call.data == "stat":
-        number_of_elements = 0
-        db = sqlite3.connect('db/JeckaBot.db')
-        cur = db.cursor()
-        for x in cur.execute("SELECT COUNT(id) FROM Users WHERE active=1"):
-            number_of_elements = x[0]
-        db.close()
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="❕ Информация:\n\n❕ Активных чатов в боте - " + str(number_of_elements))
+        getStatistic(call.message)
     elif call.data == "rub":
         keycourse = types.InlineKeyboardMarkup()
         key_dollar = types.InlineKeyboardButton(text='Доллар', callback_data='dollar')
@@ -278,6 +275,7 @@ def query_handler(call):
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                               text="Выбрано: Камень, Ножницы, Бумага\nВаш баланс: " + str(getBalance(call.message)))
         GameSSP(call.message, "first")
+        updateStatistic(call.message, "GameSSP")
     elif call.data == "StatGame":
         static = []
         staticMessage = ""
@@ -289,13 +287,14 @@ def query_handler(call):
         count = 0
         while count < 20:
             if count % 2 == 0:
-                staticMessage = staticMessage + str((count + 1)//2+1) + ". " + str(static[count])
+                staticMessage = staticMessage + str((count + 1) // 2 + 1) + ". " + str(static[count])
             else:
                 staticMessage = staticMessage + ": " + str(static[count]) + '\n'
             count = count + 1
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                               text="Самые успешные люди:\n" + staticMessage)
         db.close()
+        updateStatistic(call.message, "StatGame")
     elif call.data == "Scissors":
         choice = random.choice(['Камень🤜', 'Ножницы✌️', 'Бумага✋'])
         Scissors = 'Ножницы✌️'
@@ -357,6 +356,7 @@ def query_handler(call):
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                               text="Выбрано: Слот-машина\nВаш баланс: " + str(getBalance(call.message)))
         SlotBet(call.message, "first")
+        updateStatistic(call.message, "SlotMachine")
     elif call.data == "SlotBet10":
         itog = slotMachine(call.message, 10)
         SlotBet(call.message, itog)
@@ -384,16 +384,36 @@ def query_handler(call):
                               text="Ставка 200\nВаш баланс: " + str(int(getBalance(call.message)) - 200))
         BlackJackFirst(call.message, 200)
     elif call.data == "BlackJack":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Выбрано: Блекджек\nВаш баланс: " + str(getBalance(call.message)))
-        BJBet(call.message, "first")
+        BJBet(call.message, "Выбрано: Блекджек\nВаш баланс: " + str(getBalance(call.message)))
+        updateStatistic(call.message, "BlackJack")
     elif call.data == "krutkonec":
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Приходи еще")
+    elif call.data == "millionaire":
+        bot.delete_message(call.from_user.id, call.message.message_id)
+        millionaire(call.message)
+        updateStatistic(call.message, "millionaire")
+    elif call.data == "startMillionaire":
+        bot.delete_message(call.from_user.id, call.message.message_id)
+        startMillionaire(call.message, 0, True, 0)
+    # Игра Кто хочет стать миллионером
+    elif call.data == "A":
+        isTrueAnswer = checkAnswer(call.message, 1)
+        resultMillionaire(call, isTrueAnswer)
+    elif call.data == "B":
+        isTrueAnswer = checkAnswer(call.message, 2)
+        resultMillionaire(call, isTrueAnswer)
+    elif call.data == "C":
+        isTrueAnswer = checkAnswer(call.message, 3)
+        resultMillionaire(call, isTrueAnswer)
+    elif call.data == "D":
+        isTrueAnswer = checkAnswer(call.message, 4)
+        resultMillionaire(call, isTrueAnswer)
     # Игра с жекой
     elif call.data == "qvest":
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                               text="Поиграем?")
         GameQvest(call.message)
+        updateStatistic(call.message, "qvest")
     elif call.data == "startqvest":
         photo1 = open('GameQvest/putnic.jpg', 'rb')
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
@@ -910,15 +930,18 @@ def query_handler(call):
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                               text="Приятного просмотра")
         film(call.message)
+        updateStatistic(call.message, "randfilm")
     elif call.data == "mult":
 
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                               text="Приятного просмотра")
         mult(call.message)
+        updateStatistic(call.message, "mult")
     elif call.data == "anime":
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                               text="Приятного просмотра")
         anime(call.message)
+        updateStatistic(call.message, "anime")
 
 
 # Фильмы
@@ -941,6 +964,7 @@ def films(message, res=False):
         bot.send_message(admin[0], message.from_user.first_name + " - Пошел Искать Фильм")
         bot.send_message(admin[1], message.from_user.first_name + " - Пошел Искать Фильм")
         bot.send_message(admin[2], message.from_user.first_name + " - Пошел Искать Фильм")
+        updateStatistic(message, "films")
 
 
 # Музыка
@@ -961,6 +985,7 @@ def music(message, res=False):
         bot.send_message(admin[0], message.from_user.first_name + " - Пошел слушать музыку")
         bot.send_message(admin[1], message.from_user.first_name + " - Пошел слушать музыку")
         bot.send_message(admin[2], message.from_user.first_name + " - Пошел слушать музыку")
+    updateStatistic(message, "music")
 
 
 # Добавление Аудио
@@ -984,7 +1009,8 @@ def audio_record(message):
         Track_id = message.audio.file_id
         Track_Unique = message.audio.file_unique_id
         Track_Name = message.audio.file_name
-        db.execute("INSERT INTO Music (Name, Performer, Title, UniqueId, FileId) VALUES (?, ?, ?, ?, ?);", (Track_Name, Track_performer, Track_title, Track_Unique, Track_id))
+        db.execute("INSERT INTO Music (Name, Performer, Title, UniqueId, FileId) VALUES (?, ?, ?, ?, ?);",
+                   (Track_Name, Track_performer, Track_title, Track_Unique, Track_id))
         db.commit()
         bot.send_message(message.chat.id, Track_performer + " - " + Track_title + " - Трек сохранен ")
     db.close()
@@ -1013,6 +1039,8 @@ def game(message, res=False):
     db.commit()
     db.close()
     keygame = types.InlineKeyboardMarkup()
+    key_Game0 = types.InlineKeyboardButton(text='Кто хочет стать миллионером?', callback_data='millionaire')
+    keygame.add(key_Game0)
     key_Game1 = types.InlineKeyboardButton(text='Камень,Ножницы,Бумага', callback_data='GameSSP')
     keygame.add(key_Game1)
     key_Game2 = types.InlineKeyboardButton(text='Слот-машина', callback_data='SlotMachine')
@@ -1032,21 +1060,10 @@ def game(message, res=False):
         bot.send_message(admin[0], message.from_user.first_name + " - Пошел Играть")
         bot.send_message(admin[1], message.from_user.first_name + " - Пошел Играть")
         bot.send_message(admin[2], message.from_user.first_name + " - Пошел Играть")
-
-
-# Получить баланс пользователя
-def getBalance(message):
-    Balance=0
-    db = sqlite3.connect('db/JeckaBot.db')
-    cur = db.cursor()
-    for x in cur.execute("SELECT balance FROM Users where userId=" + str(message.chat.id)):
-        Balance = x[0]
-    db.close()
-    return Balance
-
+        updateStatistic(message, "game")
 
 def GameSSP(message, itog, res=False):
-    keygame1 = types.InlineKeyboardMarkup();
+    keygame1 = types.InlineKeyboardMarkup()
     key_Stone = types.InlineKeyboardButton(text='Камень🤜', callback_data='Stone')
     keygame1.add(key_Stone)
     key_Scissors = types.InlineKeyboardButton(text='Ножницы✌️', callback_data='Scissors')
@@ -1060,161 +1077,6 @@ def GameSSP(message, itog, res=False):
     else:
         bot.edit_message_text(chat_id=message.chat.id, message_id=message.message_id,
                               text=itog, reply_markup=keygame1)
-
-
-def randomCard(poolCard, playerScore, itog):
-    randomCard = random.choice(poolCard)
-    if randomCard == "a":
-        if playerScore < 11:
-            playerScore = playerScore + 11
-            itog = itog + "🃏"
-        else:
-            playerScore = playerScore + 1
-            itog = itog + "🃏"
-    if randomCard == 10:
-        playerScore = playerScore + randomCard
-        itog = itog + "🔟"
-    if randomCard == 9:
-        playerScore = playerScore + randomCard
-        itog = itog + "9️⃣"
-    if randomCard == 8:
-        playerScore = playerScore + randomCard
-        itog = itog + "8️⃣"
-    if randomCard == 7:
-        playerScore = playerScore + randomCard
-        itog = itog + "7️⃣"
-    if randomCard == 6:
-        playerScore = playerScore + randomCard
-        itog = itog + "6️⃣"
-    if randomCard == 5:
-        playerScore = playerScore + randomCard
-        itog = itog + "5️⃣"
-    if randomCard == 4:
-        playerScore = playerScore + randomCard
-        itog = itog + "4️⃣"
-    if randomCard == 3:
-        playerScore = playerScore + randomCard
-        itog = itog + "3️⃣"
-    if randomCard == 2:
-        playerScore = playerScore + randomCard
-        itog = itog + "2️⃣"
-    return playerScore, itog
-
-
-def BJBet(message, itog, res=False):
-    keyBJ = types.InlineKeyboardMarkup()
-    key_BJbet50 = types.InlineKeyboardButton(text='Ставка 50', callback_data='BlackJack50')
-    keyBJ.add(key_BJbet50)
-    key_BJbet100 = types.InlineKeyboardButton(text='Ставка 100', callback_data='BlackJack100')
-    keyBJ.add(key_BJbet100)
-    key_BJbet200 = types.InlineKeyboardButton(text='Ставка 200', callback_data='BlackJack200')
-    keyBJ.add(key_BJbet200)
-    key_BJexit = types.InlineKeyboardButton(text='Вдругой раз', callback_data='krutkonec')
-    keyBJ.add(key_BJexit)
-    if itog == "first":
-        bot.send_message(message.chat.id, 'Сыграем ?', reply_markup=keyBJ)
-    else:
-        bot.edit_message_text(chat_id=message.chat.id, message_id=message.message_id,
-                              text=itog, reply_markup=keyBJ)
-
-
-def BJGetCard(message, sum, itog, res=False):
-    keyBJGetCard = types.InlineKeyboardMarkup()
-    key_BJGetCardYes = types.InlineKeyboardButton(text='Еще карту', callback_data='GetCardYes')
-    keyBJGetCard.add(key_BJGetCardYes)
-    key_BJGetCardNo = types.InlineKeyboardButton(text='Хватит', callback_data='GetCardNo')
-    keyBJGetCard.add(key_BJGetCardNo)
-    bot.send_message(message.chat.id, 'Сумма: ' + str(sum) + '\n' + itog + '\nЕще карту?', reply_markup=keyBJGetCard)
-
-
-def BlackJackFirst(message, bet):
-    isBankrot, Balance = updateScore(bet, -bet, message)
-    playerScore = 0
-    itog = ""
-    if isBankrot == False:
-        poolCard = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, "a"]
-        playerScore, itog = randomCard(poolCard, playerScore, itog)
-        playerScore, itog = randomCard(poolCard, playerScore, itog)
-        if playerScore == 21:
-            isBankrot, Balance = updateScore(bet, 2 * bet, message)
-            x = open('bjSaves//player' + str(message.chat.id) + '.txt', 'w', encoding='UTF-8')
-            x.write(str(bet) + '\n' + "0" + '\n' + "0")
-            x.close()
-            BJBet(message,
-                  'Ты выиграл, набрав ' + str(playerScore) + ' \n{}'.format(itog) + "\n" + "Баланс: " + str(
-                      Balance) + "(+" + str(bet) + ")")
-        else:
-            x = open('bjSaves//player' + str(message.chat.id) + '.txt', 'w', encoding='UTF-8')
-            x.write(str(bet) + '\n' + str(playerScore) + '\n' + itog)
-            x.close()
-            BJGetCard(message, playerScore, itog)
-    else:
-        BJBet(message, "К сожалению, Ваших средств недостаточно, чтобы сделать ставку")
-
-
-def BlackJackNext(message, getCard):
-    poolCard = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, "a"]
-    bjmas = []
-    ff = open('bjSaves//player' + str(message.chat.id) + '.txt', 'r', encoding='UTF-8')
-    for s in ff:
-        bjmas.append(s.strip().lower())
-    ff.close()
-    bet = int(bjmas[0])
-    playerScore = int(bjmas[1])
-    itog = bjmas[2]
-    if getCard == True:
-        playerScore, itog = randomCard(poolCard, playerScore, itog)
-        if playerScore == 21:
-            isBankrot, Balance = updateScore(bet, 2 * bet, message)
-            x = open('bjSaves//player' + str(message.chat.id) + '.txt', 'w', encoding='UTF-8')
-            x.write(str(bet) + '\n' + "0" + '\n' + "0")
-            x.close()
-            BJBet(message, 'Ты выиграл, набрав ' + str(playerScore) + ' \n{}'.format(itog) + "\n" + "Баланс: " + str(
-                Balance) + "(+" + str(bet) + ")")
-        if playerScore > 21:
-            isBankrot, Balance = updateScore(bet, 0, message)
-            x = open('bjSaves//player' + str(message.chat.id) + '.txt', 'w', encoding='UTF-8')
-            x.write(str(bet) + '\n' + "0" + '\n' + "0")
-            x.close()
-            BJBet(message, 'Ты проиграл, набрав ' + str(playerScore) + ' \n{}'.format(itog) + "\n" + "Баланс: " + str(
-                Balance) + "(" + str(-bet) + ")")
-        if playerScore < 21:
-            x = open('bjSaves//player' + str(message.chat.id) + '.txt', 'w', encoding='UTF-8')
-            x.write(str(bet) + '\n' + str(playerScore) + '\n' + itog)
-            x.close()
-            BJGetCard(message, playerScore, itog)
-    if getCard == False:
-        botItog = ""
-        botScore = 0
-        botScore, botItog = randomCard(poolCard, botScore, botItog)
-        botScore, botItog = randomCard(poolCard, botScore, botItog)
-        while botScore <= playerScore:
-            botScore, botItog = randomCard(poolCard, botScore, botItog)
-        if botScore > 21:
-            isBankrot, Balance = updateScore(bet, 2 * bet, message)
-            x = open('bjSaves//player' + str(message.chat.id) + '.txt', 'w', encoding='UTF-8')
-            x.write(str(bet) + '\n' + "0" + '\n' + "0")
-            x.close()
-            BJBet(message, 'Ты выиграл, Жека-крупье набрал ' + str(botScore) + ' \n{}'.format(
-                botItog) + "\n" + "Твой Баланс: " + str(
-                Balance) + "(+" + str(bet) + ")")
-        if botScore == playerScore:
-            isBankrot, Balance = updateScore(bet, bet, message)
-            x = open('bjSaves//player' + str(message.chat.id) + '.txt', 'w', encoding='UTF-8')
-            x.write(str(bet) + '\n' + "0" + '\n' + "0")
-            x.close()
-            BJBet(message, 'Ничья, Жека-крупье набрал ' + str(botScore) + ' \n{}'.format(
-                botItog) + "\n" + "Твой Баланс: " + str(
-                Balance) + "(+" + str(0) + ")")
-        if botScore > playerScore:
-            if botScore <= 21:
-                isBankrot, Balance = updateScore(bet, 0, message)
-                x = open('bjSaves//player' + str(message.chat.id) + '.txt', 'w', encoding='UTF-8')
-                x.write(str(bet) + '\n' + "0" + '\n' + "0")
-                x.close()
-                BJBet(message, 'Ты проиграл, Жека-крупье набрал ' + str(botScore) + ' \n{}'.format(
-                    botItog) + "\n" + "Твой Баланс: " + str(
-                    Balance) + "(-" + str(bet) + ")")
 
 
 def slotMachine(message, betValue):
@@ -1277,21 +1139,6 @@ def slotMachine(message, betValue):
     return itog
 
 
-def updateScore(bet, point, message):
-    isBankrot = False
-    Balance = getBalance(message)
-    if Balance >= bet:
-        Balance = Balance + point
-        db = sqlite3.connect('db/JeckaBot.db')
-        cur = db.cursor()
-        cur.execute("UPDATE Users SET balance = " + str(Balance) + " WHERE userId = " + str(message.chat.id))
-        db.commit()
-        db.close()
-    else:
-        isBankrot = True
-    return isBankrot, Balance
-
-
 # Функция "Ставка в слот-машине"
 def SlotBet(message, itog, res=False):
     keykazino = types.InlineKeyboardMarkup()
@@ -1340,8 +1187,8 @@ def start(message, res=False):
 # Команда "ХЕЛП"
 @bot.message_handler(commands=["help"])
 def help(message, res=False):
-    bot.send_message(message.chat.id, '{} Привет, вот что я умею'.format(
-        message.from_user.first_name) + '\n❕ Список Команд ❕\n/weather - Погода в вашем городе\n/course - Курс различных валют\n/music - Послушать музыку\n/game - Поиграть в игры\n/menu - Вызвать меню\nЧтобы узнать гороскоп на сегодня, напиши мне, например "гороскоп весы"\nА так же, я могу отвечать на твои сообщения, картинки, стикеры.\nИ каждый день учусь новому.')
+    bot.send_message(message.chat.id,
+                     'Привет, вот что я умею' + '\n❕ Список Команд ❕\n/menu - Вызвать меню\n/game - Поиграть в игры\n/films - Подобрать фильм на вечер\n/weather - Погода в вашем городе\n/music - Послушать музыку\n/off - замутить бота\n/on - размутить бота\n/course - Курс различных валют\nЧтобы узнать гороскоп на сегодня, напиши мне, например "гороскоп весы"\nА так же, я могу отвечать на твои сообщения, картинки, стикеры.\nИ каждый день учусь новому.')
 
 
 # Команда "Бот меню"
@@ -1349,7 +1196,7 @@ def help(message, res=False):
 def menu(message, res=False):
     keyboardgame = types.ReplyKeyboardMarkup(resize_keyboard=True)
     btn1 = types.KeyboardButton('/погода')
-    btn2 = types.KeyboardButton('/курс')
+    btn2 = types.KeyboardButton('/молчанка')
     btn3 = types.KeyboardButton('/фильмы')
     btn4 = types.KeyboardButton('/музыка')
     btn5 = types.KeyboardButton('/игра')
@@ -1367,6 +1214,7 @@ def weather(message, res=False):
     db.commit()
     db.close()
     bot.send_message(chat_id=message.chat.id, text='В Каком городе тебя интересует погода ?')
+    updateStatistic(message, "weather")
 
 
 def textCity(message):
@@ -1612,7 +1460,7 @@ def handle_Time(message):
 
 @bot.message_handler(content_types=["text"])
 def handle_text(message):
-    realAnswer = ""
+    realAnswer = "*Меня попросили помолчать*"
     global isPush
     global isAddQuestion
     global addAdmin
@@ -1625,59 +1473,66 @@ def handle_text(message):
     for x in ignoreList:
         if message.chat.id == x:
             ignoreListParameter = True
-    handle_UserId(message)
-    para = handle_Para(message)
-    Brocok = handle_Brocok(message)
-    isGoroscope = handle_Aries(message)
-    isStandarnAnswer = True
-    timeAnswer = handle_Time(message.text)
+    muteStatus = 2
     db = sqlite3.connect('db/JeckaBot.db')
     cur = db.cursor()
-    for x in cur.execute("SELECT weather FROM Users WHERE userId=" + str(message.chat.id)):
-        weatherStatus = x[0]
-        if weatherStatus == 1:
-            textCity(message)
-            cur.execute("UPDATE Users SET weather = 0 WHERE userId = " + str(message.chat.id))
-            db.commit()
-            isStandarnAnswer = False
-            realAnswer = "*Был дан ответ о погоде*"
+    for x in cur.execute("SELECT mute FROM Users WHERE userId=" + str(message.chat.id)):
+        muteStatus = x[0]
     db.close()
-    if (isAddQuestion == True):
-        if (isAdmin == True):
-            if (addAdmin == str(message.chat.id)):
-                addQuestion(message)
+    if muteStatus == 0:
+        handle_UserId(message)
+        para = handle_Para(message)
+        Brocok = handle_Brocok(message)
+        isGoroscope = handle_Aries(message)
+        isStandarnAnswer = True
+        timeAnswer = handle_Time(message.text)
+        db = sqlite3.connect('db/JeckaBot.db')
+        cur = db.cursor()
+        for x in cur.execute("SELECT weather FROM Users WHERE userId=" + str(message.chat.id)):
+            weatherStatus = x[0]
+            if weatherStatus == 1:
+                textCity(message)
+                cur.execute("UPDATE Users SET weather = 0 WHERE userId = " + str(message.chat.id))
+                db.commit()
                 isStandarnAnswer = False
-                isAddQuestion = False
-                addAdmin = "0"
-                realAnswer = "*Был добавлен вопрос*"
-    if (isPush == True):
-        if (isAdmin == True):
-            if (pushAdmin == str(message.chat.id)):
-                push(message.text)
-                pushAdmin = "0"
-                realAnswer = "*Был отправлен пуш*"
-                isStandarnAnswer = False
-                isPush = False
-    if (para == True):
-        isStandarnAnswer = False
-        realAnswer = "*Была подобрана пара*"
-    if (isGoroscope == True):
-        isStandarnAnswer = False
-        realAnswer = "*Был отправлен гороскоп*"
-    if (Brocok == True):
-        isStandarnAnswer = False
-        realAnswer = "*Была подкинута монетка*"
-    if (timeAnswer != None):
-        bot.send_message(message.chat.id, timeAnswer)
-        isStandarnAnswer = False
-        realAnswer = timeAnswer
-    if (isStandarnAnswer == True):
-        realAnswer = answer(message.text)
-        bot.send_message(message.chat.id, realAnswer)
-    f = open('data/logi/' + str(message.chat.id) + '_' + str(message.from_user.username) + '_log.txt', 'a',
-             encoding='UTF-8')
-    f.write('u: ' + message.text + '\n' + realAnswer + '\n')
-    f.close()
+                realAnswer = "*Был дан ответ о погоде*"
+        db.close()
+        if (isAddQuestion == True):
+            if (isAdmin == True):
+                if (addAdmin == str(message.chat.id)):
+                    addQuestion(message)
+                    isStandarnAnswer = False
+                    isAddQuestion = False
+                    addAdmin = "0"
+                    realAnswer = "*Был добавлен вопрос*"
+        if (isPush == True):
+            if (isAdmin == True):
+                if (pushAdmin == str(message.chat.id)):
+                    push(message.text)
+                    pushAdmin = "0"
+                    realAnswer = "*Был отправлен пуш*"
+                    isStandarnAnswer = False
+                    isPush = False
+        if (para == True):
+            isStandarnAnswer = False
+            realAnswer = "*Была подобрана пара*"
+        if (isGoroscope == True):
+            isStandarnAnswer = False
+            realAnswer = "*Был отправлен гороскоп*"
+        if (Brocok == True):
+            isStandarnAnswer = False
+            realAnswer = "*Была подкинута монетка*"
+        if (timeAnswer != None):
+            bot.send_message(message.chat.id, timeAnswer)
+            isStandarnAnswer = False
+            realAnswer = timeAnswer
+        if (isStandarnAnswer == True):
+            realAnswer = answer(message.text)
+            bot.send_message(message.chat.id, realAnswer)
+        f = open('data/logi/' + str(message.chat.id) + '_' + str(message.from_user.username) + '_log.txt', 'a',
+                 encoding='UTF-8')
+        f.write('u: ' + message.text + '\n' + realAnswer + '\n')
+        f.close()
     if (isAdmin == False):
         if (ignoreListParameter == False):
             bot.send_message(admin[1], message.from_user.first_name + "\n" + message.text + "\n" + realAnswer)
