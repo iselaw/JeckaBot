@@ -1012,8 +1012,8 @@ def audio_record(message):
         db.execute("INSERT INTO Music (Name, Performer, Title, UniqueId, FileId) VALUES (?, ?, ?, ?, ?);",
                    (Track_Name, Track_performer, Track_title, Track_Unique, Track_id))
         db.commit()
-        db.close()
         bot.send_message(message.chat.id, Track_performer + " - " + Track_title + " - Трек сохранен ")
+    db.close()
 
 
 # Игра "Путешествие жеки"
