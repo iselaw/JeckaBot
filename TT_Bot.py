@@ -986,8 +986,8 @@ def audio_record(message):
         Track_Name = message.audio.file_name
         db.execute("INSERT INTO Music (Name, Performer, Title, UniqueId, FileId) VALUES (?, ?, ?, ?, ?);", (Track_Name, Track_performer, Track_title, Track_Unique, Track_id))
         db.commit()
-        db.close()
         bot.send_message(message.chat.id, Track_performer + " - " + Track_title + " - Трек сохранен ")
+    db.close()
 
 
 # Игра "Путешествие жеки"
@@ -1036,6 +1036,7 @@ def game(message, res=False):
 
 # Получить баланс пользователя
 def getBalance(message):
+    Balance=0
     db = sqlite3.connect('db/JeckaBot.db')
     cur = db.cursor()
     for x in cur.execute("SELECT balance FROM Users where userId=" + str(message.chat.id)):
