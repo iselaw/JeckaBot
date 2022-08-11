@@ -312,7 +312,7 @@ def query_handler(call):
                 bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                       text='Извините, но Вы проиграли 😢. У меня  {}.'.format(
                                           choice))
-                itog = 'Поздравляю с победой! У меня была {}.'.format(choice)
+                itog = 'Извините, но Вы проиграли 😢. У меня  {}.'.format(choice)
         GameSSP(call.message, itog)
     elif call.data == "Stone":
         choice = random.choice(['Камень🤜', 'Ножницы✌️', 'Бумага✋'])
@@ -1479,49 +1479,49 @@ def handle_text(message):
     for x in cur.execute("SELECT mute FROM Users WHERE userId=" + str(message.chat.id)):
         muteStatus = x[0]
     db.close()
-    if muteStatus == 0:
-        handle_UserId(message)
-        para = handle_Para(message)
-        Brocok = handle_Brocok(message)
-        isGoroscope = handle_Aries(message)
-        isStandarnAnswer = True
-        timeAnswer = handle_Time(message.text)
-        db = sqlite3.connect('db/JeckaBot.db')
-        cur = db.cursor()
-        for x in cur.execute("SELECT weather FROM Users WHERE userId=" + str(message.chat.id)):
-            weatherStatus = x[0]
-            if weatherStatus == 1:
-                textCity(message)
-                cur.execute("UPDATE Users SET weather = 0 WHERE userId = " + str(message.chat.id))
-                db.commit()
+    handle_UserId(message)
+    para = handle_Para(message)
+    Brocok = handle_Brocok(message)
+    isGoroscope = handle_Aries(message)
+    isStandarnAnswer = True
+    timeAnswer = handle_Time(message.text)
+    db = sqlite3.connect('db/JeckaBot.db')
+    cur = db.cursor()
+    for x in cur.execute("SELECT weather FROM Users WHERE userId=" + str(message.chat.id)):
+        weatherStatus = x[0]
+        if weatherStatus == 1:
+            textCity(message)
+            cur.execute("UPDATE Users SET weather = 0 WHERE userId = " + str(message.chat.id))
+            db.commit()
+            isStandarnAnswer = False
+            realAnswer = "*Был дан ответ о погоде*"
+    db.close()
+    if (isAddQuestion == True):
+        if (isAdmin == True):
+            if (addAdmin == str(message.chat.id)):
+                addQuestion(message)
                 isStandarnAnswer = False
-                realAnswer = "*Был дан ответ о погоде*"
-        db.close()
-        if (isAddQuestion == True):
-            if (isAdmin == True):
-                if (addAdmin == str(message.chat.id)):
-                    addQuestion(message)
-                    isStandarnAnswer = False
-                    isAddQuestion = False
-                    addAdmin = "0"
-                    realAnswer = "*Был добавлен вопрос*"
-        if (isPush == True):
-            if (isAdmin == True):
-                if (pushAdmin == str(message.chat.id)):
-                    push(message.text)
-                    pushAdmin = "0"
-                    realAnswer = "*Был отправлен пуш*"
-                    isStandarnAnswer = False
-                    isPush = False
-        if (para == True):
-            isStandarnAnswer = False
-            realAnswer = "*Была подобрана пара*"
-        if (isGoroscope == True):
-            isStandarnAnswer = False
-            realAnswer = "*Был отправлен гороскоп*"
-        if (Brocok == True):
-            isStandarnAnswer = False
-            realAnswer = "*Была подкинута монетка*"
+                isAddQuestion = False
+                addAdmin = "0"
+                realAnswer = "*Был добавлен вопрос*"
+    if (isPush == True):
+        if (isAdmin == True):
+            if (pushAdmin == str(message.chat.id)):
+                push(message.text)
+                pushAdmin = "0"
+                realAnswer = "*Был отправлен пуш*"
+                isStandarnAnswer = False
+                isPush = False
+    if (para == True):
+        isStandarnAnswer = False
+        realAnswer = "*Была подобрана пара*"
+    if (isGoroscope == True):
+        isStandarnAnswer = False
+        realAnswer = "*Был отправлен гороскоп*"
+    if (Brocok == True):
+        isStandarnAnswer = False
+        realAnswer = "*Была подкинута монетка*"
+    if muteStatus == 0:
         if (timeAnswer != None):
             bot.send_message(message.chat.id, timeAnswer)
             isStandarnAnswer = False
