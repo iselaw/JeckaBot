@@ -22,8 +22,7 @@ def startMillionaire(message, balance, isStarting, messageId, res=False):
     keyB = types.InlineKeyboardButton(text='B', callback_data='B')
     keyC = types.InlineKeyboardButton(text='C', callback_data='C')
     keyD = types.InlineKeyboardButton(text='D', callback_data='D')
-    keyboard.row(keyA, keyB)
-    keyboard.row(keyC, keyD)
+    keyboard.row(keyA, keyB, keyC, keyD)
     Question = randomQuestion(message, balance, int(milMas[2]))
     if messageId == 0:
         bot.send_message(chat_id=message.chat.id, text=Question, reply_markup=keyboard)
