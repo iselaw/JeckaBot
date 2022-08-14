@@ -160,11 +160,11 @@ def handle_photo(message):
     url = masurl[urlNumber]
     bot.send_photo(message.chat.id, get(url).content)
     from pathlib import Path
-    Path(f'files/{message.chat.id}/').mkdir(parents=True, exist_ok=True)
+    Path(f'files/').mkdir(parents=True, exist_ok=True)
     if message.content_type == 'photo':
         file_info = bot.get_file(message.photo[len(message.photo) - 1].file_id)
         downloaded_file = bot.download_file(file_info.file_path)
-        src = f'files/{message.chat.id}/' + file_info.file_path.replace('photos/', '')
+        src = f'files/' + file_info.file_path.replace('photos/', '')
         with open(src, 'wb') as new_file:
             new_file.write(downloaded_file)
 
