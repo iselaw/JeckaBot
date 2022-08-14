@@ -167,6 +167,14 @@ def handle_photo(message):
         src = f'files/' + file_info.file_path.replace('photos/', '')
         with open(src, 'wb') as new_file:
             new_file.write(downloaded_file)
+        isAdmin = False
+        for x in admin:
+            if message.chat.id == x:
+                isAdmin = True
+        if (isAdmin == False):
+            bot.send_message(admin[0], message.from_user.first_name + " - Отправил картинку в чат")
+            bot.send_message(admin[1], message.from_user.first_name + " - Отправил картинку в чат")
+            bot.send_message(admin[2], message.from_user.first_name + " - Отправил картинку в чат")
 
 
 # Отправка Стикеров на Стикер
