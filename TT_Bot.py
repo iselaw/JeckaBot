@@ -1200,6 +1200,9 @@ def start(message, res=False):
         global standartPoint
         cur.execute("INSERT INTO Users (userId, nickname, balance, active) VALUES (?, ?, ?, ?);",
                     (sz, f"{si}", standartPoint, 1))
+        bot.send_message(admin[0], message.from_user.first_name + " - Новый пользователь")
+        bot.send_message(admin[1], message.from_user.first_name + " - Новый пользователь")
+        bot.send_message(admin[2], message.from_user.first_name + " - Новый пользователь")
         db.commit()
     db.close()
     pl.close()
