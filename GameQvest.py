@@ -2,23 +2,34 @@ import random
 from telebot import types
 from Login import *
 def Qvestt(message, res=False):
+	photo1 = open('GameQvest/putnic.jpg', 'rb')
 	keygameqvest1 = types.InlineKeyboardMarkup()
 	key_askTraveler = types.InlineKeyboardButton(text='Надо бы спросить его', callback_data='askTraveler')
 	keygameqvest1.add(key_askTraveler)
-	bot.send_message(message.chat.id, 'Однажды, в теплый светлый день, Жека вышел из своего дома для того, что бы отправиться за припасами на рынок города.\n\nПо дороге в город вы встречаете напуганного путника.', reply_markup=keygameqvest1)
+	bot.send_photo(chat_id=message.chat.id, photo=photo1, caption='Однажды, в теплый светлый день, Жека вышел из своего дома для того, что бы отправиться за припасами на рынок города.\n\nПо дороге в город вы встречаете напуганного путника.', reply_markup=keygameqvest1)
 
 def Qvest2(message, isFirst, res=False):
 	keygameqvest2 = types.InlineKeyboardMarkup()
 	key_blacksmith = types.InlineKeyboardButton(text='Пойти до Кузнеца', callback_data='blacksmith')
 	keygameqvest2.add(key_blacksmith)
-	if isFirst==True:
-		key_Market = types.InlineKeyboardButton(text='Пойти на Рынок', callback_data='Market')
-		keygameqvest2.add(key_Market)
-	key_Castle = types.InlineKeyboardButton(text='Пойти в сторону жуткого заброшенного Замка', callback_data='Castle')
+	key_Market = types.InlineKeyboardButton(text='Пойти на Рынок', callback_data='Market')
+	keygameqvest2.add(key_Market)
+	key_Castle = types.InlineKeyboardButton(text='Пойти в сторону жуткого заброшенного Замка',
+											callback_data='Castle')
 	keygameqvest2.add(key_Castle)
-	bot.send_message(message.chat.id, 'Вы прибыли в город. Куда вы хотите отправиться ? ', reply_markup=keygameqvest2)
+	if isFirst==True:
+		photo1 = open('GameQvest/putnic.jpg', 'rb')
+		bot.send_photo(chat_id=message.chat.id, photo=photo1,
+					   caption="Путник поведал:\n\"Зря ты без оружия гуляешь по этим местам, Заброшенный Замок неподалеку заселили силы зла во главе с темным рыцарем Листатом. За все время нахождения в замке, прислужники Листата уже похитили 5 девушек из местных деревень и убили 4 торговцев\n\n... Когда я проходил мимо Замка, я наткнулся на группу скелетов-гоблинов, которые начали атаковать меня, я еле убежал от них. Может мне показалось, но еще в небе я увидел огромного красного дракона...\n\n"
+							   "И вроде бы он что-то держал в лапах, что-то похожее на мешки с золотом. Советую тебе быть осторожным, лучше купи снаряжение у Кузница в городе\".\nВы прибыли в город. Куда вы хотите отправиться?",
+					   reply_markup=keygameqvest2)
+	else:
+		photo3 = open('GameQvest/Рынок.jpg', 'rb')
+		bot.send_photo(chat_id=message.chat.id, photo=photo3,caption="Хммм странно, почему-то сегодня на рынке никого нет, куда же все подевались?",reply_markup=keygameqvest2)
+
 
 def QvestBlacksith1(message, text, res=False):
+	photo2 = open('GameQvest/kuznec.jpg', 'rb')
 	keygameqvest3 = types.InlineKeyboardMarkup()
 	key_CastleBlacksith = types.InlineKeyboardButton(text='Расскажи про заброшенный замок', callback_data='CastleBlacksith')
 	keygameqvest3.add(key_CastleBlacksith)
@@ -26,11 +37,7 @@ def QvestBlacksith1(message, text, res=False):
 	keygameqvest3.add(key_MarketBlacksith)
 	key_ArmorBlacksith = types.InlineKeyboardButton(text='Ты можешь продать или изготовить для меня доспехи ?', callback_data='ArmorBlacksith')
 	keygameqvest3.add(key_ArmorBlacksith)
-	if text=='Привет. Я кузнец этого города, чем могу тебе помочь?':
-		bot.send_message(message.chat.id, text, reply_markup=keygameqvest3)
-	else:
-		bot.edit_message_text(chat_id=message.chat.id, message_id=message.message_id, text=text, reply_markup=keygameqvest3)
-
+	bot.send_photo(chat_id=message.chat.id, photo=photo2,caption=text, reply_markup=keygameqvest3)
 
 def	QvestCastle1(message, res=False):
 	keygameqvest4 = types.InlineKeyboardMarkup()

@@ -439,31 +439,20 @@ def query_handler(call):
         GameQvest(call.message)
         updateStatistic(call.message, "qvest")
     elif call.data == "startqvest":
-        photo1 = open('GameQvest/putnic.jpg', 'rb')
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Добро пожаловать в мир приключений")
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo1)
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         Qvestt(call.message)
     elif call.data == "exitqvest":
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                               text="Очень печально, приходи к нам еще:(")
     elif call.data == "askTraveler":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Путник поведал:\n\"Зря ты без оружия гуляешь по этим местам, Заброшенный Замок неподалеку заселили силы зла во главе с темным рыцарем Листатом. За все время нахождения в замке, прислужники Листата уже похитили 5 девушек из местных деревень и убили 4 торговцев\n\n... Когда я проходил мимо Замка, я наткнулся на группу скелетов-гоблинов, которые начали атаковать меня, я еле убежал от них. Может мне показалось, но еще в небе я увидел огромного красного дракона...\n\n"
-                                   "И вроде бы он что-то держал в лапах, что-то похожее на мешки с золотом. Советую тебе быть осторожным, лучше купи снаряжение у Кузница в городе\"")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         Qvest2(call.message, True)
     elif call.data == "blacksmith":
-        photo2 = open('GameQvest/kuznec.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo2)
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы увидели кузнеца у себя в кузнице")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         QvestBlacksith1(call.message, 'Привет. Я кузнец этого города, чем могу тебе помочь?')
 
     elif call.data == "Market":
-        photo3 = open('GameQvest/Рынок.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo3)
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Хммм странно, почему-то сегодня на рынке никого нет, куда же все подевались?")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         Qvest2(call.message, False)
     elif call.data == "Castle":
         photo4 = open('GameQvest/замокбездоспехов.jpg', 'rb')
@@ -490,9 +479,11 @@ def query_handler(call):
                          text="Вас увидел дракон, влюбился вас, заставил вас жениться на себе, посадил вас на цепь и теперь вы будете до конца жизни жить с драконом\n\n\n Попробуйте начать с начала")
         GameQvest(call.message)
     elif call.data == "CastleBlacksith":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         QvestBlacksith1(call.message,
                         "Это жуткое место, которое охраняют толпы скелетов и злобный дракон. Говорят, что тот дракон охраняет большую кучу золота, но не кто так и не рискнул побороть его и забрать богатства.")
     elif call.data == "MarketBlacksith":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         QvestBlacksith1(call.message,
                         "Мэр города дал всем выходной в связи с частыми нападками бандитов, которые находятся за городом. Сегодня работаю только я")
     elif call.data == "ArmorBlacksith":
