@@ -184,13 +184,29 @@ def handle_sticker(message):
     stiker = random.randint(0, lenghtMasStiker - 1)
     stikerr = masstiker[stiker]
     bot.send_sticker(message.chat.id, stikerr)
+    isAdmin = False
+    for x in admin:
+        if message.chat.id == x:
+            isAdmin = True
+    if (isAdmin == False):
+        bot.send_message(admin[0], message.from_user.first_name + " - Отправил стикер в чат")
+        bot.send_message(admin[1], message.from_user.first_name + " - Отправил стикер в чат")
+        bot.send_message(admin[2], message.from_user.first_name + " - Отправил стикер в чат")
 
 
 # Отправка Сообщения на голосовое
 @bot.message_handler(content_types=['voice'])
 def voice_processing(message):
     bot.send_message(message.chat.id,
-                     "{} Прости, я пока не могу слушать, напиши текстом".format(message.from_user.first_name))
+                     "{}, прости, я пока не могу слушать, напиши текстом".format(message.from_user.first_name))
+    isAdmin = False
+    for x in admin:
+        if message.chat.id == x:
+            isAdmin = True
+    if (isAdmin == False):
+        bot.send_message(admin[0], message.from_user.first_name + " - Отправил голосовое в чат")
+        bot.send_message(admin[1], message.from_user.first_name + " - Отправил голосовое в чат")
+        bot.send_message(admin[2], message.from_user.first_name + " - Отправил голосовое в чат")
 
 
 # Команда "Курс"
@@ -397,11 +413,11 @@ def query_handler(call):
     elif call.data == "krutkonec":
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Приходи еще")
     elif call.data == "millionaire":
-        bot.delete_message(call.from_user.id, call.message.message_id)
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         millionaire(call.message)
         updateStatistic(call.message, "millionaire")
     elif call.data == "startMillionaire":
-        bot.delete_message(call.from_user.id, call.message.message_id)
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         startMillionaire(call.message, 0, True, 0)
     # Игра Кто хочет стать миллионером
     elif call.data == "A":
@@ -1396,7 +1412,10 @@ def startadm(message: types.Message):
         bot.send_message(message.chat.id, ' {}, вы авторизованы! \n\n'.format(message.from_user.first_name),
                          reply_markup=keyadmin)
     else:
-        bot.send_message(message.chat.id, ' {}, У Вас нет прав администратора'.format(message.from_user.first_name))
+        bot.send_message(message.chat.id, ' {}, у Вас нет прав администратора'.format(message.from_user.first_name))
+        bot.send_message(admin[0], message.from_user.first_name + " - Попытался вызвать панель админа")
+        bot.send_message(admin[1], message.from_user.first_name + " - Попытался вызвать панель админа")
+        bot.send_message(admin[2], message.from_user.first_name + " - Попытался вызвать панель админа")
 
 
 def cancelButton(message):
