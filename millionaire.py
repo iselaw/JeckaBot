@@ -83,7 +83,7 @@ def resultMillionaire(call, isTrueAnswer, res=False):
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                               text="Неправильный ответ :(")
         sleep(3)
-        bot.delete_message(call.from_user.id, call.message.message_id)
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         millionaire(call.message)
     else:
         isWin = winMillionaire(call.message)
@@ -119,7 +119,7 @@ def resultMillionaire(call, isTrueAnswer, res=False):
             x.write("0" + '\n' + "0" + '\n' + "1")
             x.close()
             sleep(4)
-            bot.delete_message(call.from_user.id, call.message.message_id)
+            bot.delete_message(call.message.chat.id, call.message.message_id)
             millionaire(call.message)
 
 
