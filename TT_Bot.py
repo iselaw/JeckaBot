@@ -1057,10 +1057,13 @@ def GameQvest(message, res=False):
 def game(message, res=False):
     db = sqlite3.connect('db/JeckaBot.db')
     cur = db.cursor()
-    cur.execute(
+    try:
+        cur.execute(
         "UPDATE Users SET (nickname) = '" + str(message.from_user.first_name) + "'" + " WHERE userId = " + str(
             message.chat.id))
-    db.commit()
+        db.commit()
+    except:
+        print("error update nickname")
     db.close()
     keygame = types.InlineKeyboardMarkup()
     key_Game0 = types.InlineKeyboardButton(text='Кто хочет стать миллионером?', callback_data='millionaire')
