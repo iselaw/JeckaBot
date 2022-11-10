@@ -155,35 +155,49 @@ def answer(text):
 # Отправка фото на фото
 @bot.message_handler(content_types=["photo"])
 def handle_photo(message):
-    lenghtMasUrl = len(masurl)
-    urlNumber = random.randint(0, lenghtMasUrl - 1)
-    url = masurl[urlNumber]
-    bot.send_photo(message.chat.id, get(url).content)
-    from pathlib import Path
-    Path(f'files/').mkdir(parents=True, exist_ok=True)
-    if message.content_type == 'photo':
-        file_info = bot.get_file(message.photo[len(message.photo) - 1].file_id)
-        downloaded_file = bot.download_file(file_info.file_path)
-        src = f'files/' + file_info.file_path.replace('photos/', '')
-        with open(src, 'wb') as new_file:
-            new_file.write(downloaded_file)
-        isAdmin = False
-        for x in admin:
-            if message.chat.id == x:
-                isAdmin = True
-        if (isAdmin == False):
-            bot.send_message(admin[0], message.from_user.first_name + " - Отправил картинку в чат")
-            bot.send_message(admin[1], message.from_user.first_name + " - Отправил картинку в чат")
-            bot.send_message(admin[2], message.from_user.first_name + " - Отправил картинку в чат")
+    muteStatus = 2
+    db = sqlite3.connect('db/JeckaBot.db')
+    cur = db.cursor()
+    for x in cur.execute("SELECT mute FROM Users WHERE userId=" + str(message.chat.id)):
+        muteStatus = x[0]
+    db.close()
+    if muteStatus == 0:
+        lenghtMasUrl = len(masurl)
+        urlNumber = random.randint(0, lenghtMasUrl - 1)
+        url = masurl[urlNumber]
+        bot.send_photo(message.chat.id, get(url).content)
+        from pathlib import Path
+        Path(f'files/').mkdir(parents=True, exist_ok=True)
+        if message.content_type == 'photo':
+            file_info = bot.get_file(message.photo[len(message.photo) - 1].file_id)
+            downloaded_file = bot.download_file(file_info.file_path)
+            src = f'files/' + file_info.file_path.replace('photos/', '')
+            with open(src, 'wb') as new_file:
+                new_file.write(downloaded_file)
+    isAdmin = False
+    for x in admin:
+        if message.chat.id == x:
+            isAdmin = True
+    if (isAdmin == False):
+        bot.send_message(admin[0], message.from_user.first_name + " - Отправил картинку в чат")
+        bot.send_message(admin[1], message.from_user.first_name + " - Отправил картинку в чат")
+        bot.send_message(admin[2], message.from_user.first_name + " - Отправил картинку в чат")
 
 
 # Отправка Стикеров на Стикер
 @bot.message_handler(content_types=["sticker"])
 def handle_sticker(message):
-    lenghtMasStiker = len(masstiker)
-    stiker = random.randint(0, lenghtMasStiker - 1)
-    stikerr = masstiker[stiker]
-    bot.send_sticker(message.chat.id, stikerr)
+    muteStatus = 2
+    db = sqlite3.connect('db/JeckaBot.db')
+    cur = db.cursor()
+    for x in cur.execute("SELECT mute FROM Users WHERE userId=" + str(message.chat.id)):
+        muteStatus = x[0]
+    db.close()
+    if muteStatus == 0:
+        lenghtMasStiker = len(masstiker)
+        stiker = random.randint(0, lenghtMasStiker - 1)
+        stikerr = masstiker[stiker]
+        bot.send_sticker(message.chat.id, stikerr)
     isAdmin = False
     for x in admin:
         if message.chat.id == x:
@@ -197,8 +211,15 @@ def handle_sticker(message):
 # Отправка Сообщения на голосовое
 @bot.message_handler(content_types=['voice'])
 def voice_processing(message):
-    bot.send_message(message.chat.id,
-                     "{}, прости, я пока не могу слушать, напиши текстом".format(message.from_user.first_name))
+    muteStatus = 2
+    db = sqlite3.connect('db/JeckaBot.db')
+    cur = db.cursor()
+    for x in cur.execute("SELECT mute FROM Users WHERE userId=" + str(message.chat.id)):
+        muteStatus = x[0]
+    db.close()
+    if muteStatus == 0:
+        bot.send_message(message.chat.id,
+                         "Прости, я пока не могу слушать, напиши текстом")
     isAdmin = False
     for x in admin:
         if message.chat.id == x:
@@ -207,7 +228,9 @@ def voice_processing(message):
         bot.send_message(admin[0], message.from_user.first_name + " - Отправил голосовое в чат")
         bot.send_message(admin[1], message.from_user.first_name + " - Отправил голосовое в чат")
         bot.send_message(admin[2], message.from_user.first_name + " - Отправил голосовое в чат")
-
+        bot.send_voice(admin[0], message.voice.file_id)
+        bot.send_voice(admin[1], message.voice.file_id)
+        bot.send_voice(admin[2], message.voice.file_id)
 
 # Команда "Курс"
 @bot.message_handler(commands=["курс", "course"])
@@ -1048,10 +1071,13 @@ def GameQvest(message, res=False):
 def game(message, res=False):
     db = sqlite3.connect('db/JeckaBot.db')
     cur = db.cursor()
-    cur.execute(
-        "UPDATE Users SET (nickname) = '" + str(message.from_user.first_name) + "'" + " WHERE userId = " + str(
-            message.chat.id))
-    db.commit()
+    try:
+        cur.execute(
+            "UPDATE Users SET (nickname) = '" + str(message.from_user.first_name) + "'" + " WHERE userId = " + str(
+                message.chat.id))
+        db.commit()
+    except:
+        print("error update nickname")
     db.close()
     keygame = types.InlineKeyboardMarkup()
     key_Game0 = types.InlineKeyboardButton(text='Кто хочет стать миллионером?', callback_data='millionaire')
@@ -1076,6 +1102,7 @@ def game(message, res=False):
         bot.send_message(admin[1], message.from_user.first_name + " - Пошел Играть")
         bot.send_message(admin[2], message.from_user.first_name + " - Пошел Играть")
         updateStatistic(message, "game")
+
 
 def GameSSP(message, itog, res=False):
     keygame1 = types.InlineKeyboardMarkup()
