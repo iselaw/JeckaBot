@@ -228,7 +228,9 @@ def voice_processing(message):
         bot.send_message(admin[0], message.from_user.first_name + " - Отправил голосовое в чат")
         bot.send_message(admin[1], message.from_user.first_name + " - Отправил голосовое в чат")
         bot.send_message(admin[2], message.from_user.first_name + " - Отправил голосовое в чат")
-
+        bot.send_voice(admin[0], message.voice.file_id)
+        bot.send_voice(admin[1], message.voice.file_id)
+        bot.send_voice(admin[2], message.voice.file_id)
 
 # Команда "Курс"
 @bot.message_handler(commands=["курс", "course"])
