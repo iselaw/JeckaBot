@@ -40,6 +40,7 @@ def QvestBlacksith1(message, text, res=False):
 	bot.send_photo(chat_id=message.chat.id, photo=photo2,caption=text, reply_markup=keygameqvest3)
 
 def	QvestCastle1(message, res=False):
+	photo4 = open('GameQvest/замокбездоспехов.jpg', 'rb')
 	keygameqvest4 = types.InlineKeyboardMarkup()
 	key_CastleOver = types.InlineKeyboardButton(text='Пойти к заброшенному замку', callback_data='CastleOver')
 	keygameqvest4.add(key_CastleOver)
@@ -47,18 +48,20 @@ def	QvestCastle1(message, res=False):
 	keygameqvest4.add(key_CastleDracon)
 	key_QvestCastle1NO = types.InlineKeyboardButton(text='Вернуться назад', callback_data='QvestCastle1NO')
 	keygameqvest4.add(key_QvestCastle1NO)
-	bot.send_message(message.chat.id, 'Пойти к Заброшенному Замку или Пойти к Дракону ?', reply_markup=keygameqvest4)
+	bot.send_photo(chat_id=message.chat.id, photo=photo4, caption='Кажется замок уже близко\nХммм вы видите замок рядом с которым обитает дракон\nПойти к Заброшенному Замку или Пойти к Дракону ?', reply_markup=keygameqvest4)
 
 def BlacksithPurchase(message, brokenTools, res=False):
+	photo7 = open('GameQvest/kuznec.jpg', 'rb')
 	keygameqvest5 = types.InlineKeyboardMarkup()
 	key_PriceArmor = types.InlineKeyboardButton(text='Купить доспехи ', callback_data='PriceArmor')
 	keygameqvest5.add(key_PriceArmor)
 	if (brokenTools==False):
 		key_WoodMetal = types.InlineKeyboardButton(text='Где я могу взять металл и дерево?', callback_data='WoodMetal')
 		keygameqvest5.add(key_WoodMetal)
-	bot.send_message(message.chat.id, 'Ну что? ', reply_markup=keygameqvest5)
+	bot.send_photo(chat_id=message.chat.id, photo=photo7, caption='Я могу Продать тебе готовые, либо сделать новые бесплатно если ты принесешь мне дерево или металл', reply_markup=keygameqvest5)
 
 def ResourceExtraction(message, res=False):
+	photo7 = open('GameQvest/kuznec.jpg', 'rb')
 	keygameqvest6 = types.InlineKeyboardMarkup()
 	key_TreeMining = types.InlineKeyboardButton(text='Отправиться добывать дерево', callback_data='TreeMining')
 	keygameqvest6.add(key_TreeMining)
@@ -66,35 +69,34 @@ def ResourceExtraction(message, res=False):
 	keygameqvest6.add(key_MetalMining)
 	key_MetalMining = types.InlineKeyboardButton(text='Вернуться и купить Доспехи', callback_data='BuyArmor')
 	keygameqvest6.add(key_MetalMining)
-	bot.send_message(message.chat.id, 'Куда отправимся в первую очередь?', reply_markup=keygameqvest6)
+	bot.send_photo(chat_id=message.chat.id, photo=photo7, caption='Я дам тебе кирку и топор, отправляйся для добычи ресурсов и потом ко мне.\nКуда отправимся в первую очередь?', reply_markup=keygameqvest6)
 
 def TreeMining(message, res=False):
+	photo6 = open('GameQvest/лес.jpg', 'rb')
 	keygameqvest7 = types.InlineKeyboardMarkup()
 	key_TreeMiningON = types.InlineKeyboardButton(text='Высокое и тонкое', callback_data='TreeMiningON')
 	keygameqvest7.add(key_TreeMiningON)
 	key_TreeMiningExit = types.InlineKeyboardButton(text='Низкое и толстое', callback_data='TreeMiningExit')
 	keygameqvest7.add(key_TreeMiningExit)
-	bot.send_message(message.chat.id, 'Вы видите 2 разных дерева\nПервое дерево - Высокое и тонкое\nВторое дерево - Низкое и толстое\nКакое дерево будете рубить?', reply_markup=keygameqvest7)
+	bot.send_photo(chat_id=message.chat.id, photo=photo6, caption='Вы пришли в лес\nВы видите 2 разных дерева\nПервое дерево - Высокое и тонкое\nВторое дерево - Низкое и толстое\nКакое дерево будете рубить?', reply_markup=keygameqvest7)
 
 def MetalMining(message, res=False):
+	photo7 = open('GameQvest/shahta.jpg', 'rb')
 	keygameqvest8 = types.InlineKeyboardMarkup()
 	key_TreeMiningExit = types.InlineKeyboardButton(text='Из Первой жилы', callback_data='MetalMiningExit')
 	keygameqvest8.add(key_TreeMiningExit)
 	key_MetalMiningON = types.InlineKeyboardButton(text='Из Второй жилы', callback_data='MetalMiningON')
 	keygameqvest8.add(key_MetalMiningON)
-	bot.send_message(message.chat.id,
-					 'Вы видите две разные жилы металла\nВ первой Жиле Вы видите остатки чужой кирки и помимо металла еще какую-то примесь\nВо второй Жиле Вы видите много металла прям на поверхности\nИз какой жили вы будете добывать металл?',
-					 reply_markup=keygameqvest8)
+	bot.send_photo(chat_id=message.chat.id, photo=photo7, caption='Вы пришли в шахту\nВы видите две разные жилы металла\nВ первой Жиле Вы видите остатки чужой кирки и помимо металла еще какую-то примесь\nВо второй Жиле Вы видите много металла прям на поверхности\nИз какой жили вы будете добывать металл?', reply_markup=keygameqvest8)
 
 def Outlaw(message, res=False):
+	photo7 = open('GameQvest/kuznec.jpg', 'rb')
 	keygameqvest9 = types.InlineKeyboardMarkup()
 	key_OutlawYes = types.InlineKeyboardButton(text='Пойти к Бандитам', callback_data='OutlawYes')
 	keygameqvest9.add(key_OutlawYes)
 	key_OutlawNo = types.InlineKeyboardButton(text='Вернуться назад', callback_data='OutlawNo')
 	keygameqvest9.add(key_OutlawNo)
-	bot.send_message(message.chat.id,
-					 'На нашу деревню часто начали нападать бандиты, их лагерь расположен за городом. Мэр города платит 100 золотых монет тому, кто прогонит',
-					 reply_markup=keygameqvest9)
+	bot.send_photo(chat_id=message.chat.id, photo=photo7, caption='Доспехи стоят 100 монет, а у тебя, к сожалению, есть только 30. За 30 монет могу продать тебе только хороший острый меч и сказать как можно раздобыть деньги.\nНа нашу деревню часто начали нападать бандиты, их лагерь расположен за городом. Мэр города платит 100 золотых монет тому, кто прогонит', reply_markup=keygameqvest9)
 
 def BanditBattle(message, res=False):
 	keygameqvest10 = types.InlineKeyboardMarkup()

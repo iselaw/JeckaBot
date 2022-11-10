@@ -478,28 +478,19 @@ def query_handler(call):
         bot.delete_message(call.message.chat.id, call.message.message_id)
         Qvest2(call.message, False)
     elif call.data == "Castle":
-        photo4 = open('GameQvest/замокбездоспехов.jpg', 'rb')
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Кажется замок уже близко")
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo4)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Хммм вы видите замок рядом с которым обитает дракон")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         QvestCastle1(call.message)
     elif call.data == "CastleOver":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         photo5 = open('GameQvest/gameOver.jpg', 'rb')
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Кажется впереди опасные скелеты-гоблины про которых предупреждал путник")
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo5)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вы наткнулись на группу опасных скелетов-гоблинов, они атаковали вас. Вы были очень сильно ранены, тк были без доспехов, и погибли.\n\n\n Попробуйте начать с начала")
+        bot.send_photo(chat_id=call.message.chat.id, photo=photo5,
+                       caption='Кажется впереди опасные скелеты-гоблины про которых предупреждал путник\nВы наткнулись на группу опасных скелетов-гоблинов, они атаковали вас. Вы были очень сильно ранены, тк были без доспехов, и погибли.\n\n\n Попробуйте начать с начала')
         GameQvest(call.message)
     elif call.data == "CastleDracon":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         photo6 = open('GameQvest/dragonOver.jpg', 'rb')
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Кажется дракон вас заметил, нужно что-то делать")
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo6)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вас увидел дракон, влюбился вас, заставил вас жениться на себе, посадил вас на цепь и теперь вы будете до конца жизни жить с драконом\n\n\n Попробуйте начать с начала")
+        bot.send_photo(chat_id=call.message.chat.id, photo=photo6,
+                       caption='Вас увидел дракон, влюбился вас, заставил вас жениться на себе, посадил вас на цепь и теперь вы будете до конца жизни жить с драконом\n\nПопробуйте начать с начала')
         GameQvest(call.message)
     elif call.data == "CastleBlacksith":
         bot.delete_message(call.message.chat.id, call.message.message_id)
@@ -510,28 +501,19 @@ def query_handler(call):
         QvestBlacksith1(call.message,
                         "Мэр города дал всем выходной в связи с частыми нападками бандитов, которые находятся за городом. Сегодня работаю только я")
     elif call.data == "ArmorBlacksith":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Я могу Продать тебе готовые, либо сделать новые бесплатно если ты принесешь мне дерево или металл")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         BlacksithPurchase(call.message, False)
     elif call.data == "PriceArmor":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Доспехи стоят 100 монет, а у тебя, к сожалению, есть только 30. За 30 монет могу продать тебе только хороший острый меч и сказать как можно раздобыть деньги")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         Outlaw(call.message)
     elif call.data == "WoodMetal":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Я дам тебе кирку и топор, отправляйся для добычи ресурсов и потом ко мне.")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         ResourceExtraction(call.message)
     elif call.data == "TreeMining":
-        photo6 = open('GameQvest/лес.jpg', 'rb')
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы пришли в лес")
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo6)
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         TreeMining(call.message)
     elif call.data == "MetalMining":
-        photo7 = open('GameQvest/shahta.jpg', 'rb')
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы пришли в шахту")
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo7)
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         MetalMining(call.message)
     elif call.data == "BuyArmor":
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
