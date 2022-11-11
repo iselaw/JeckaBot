@@ -99,24 +99,22 @@ def Outlaw(message, res=False):
 	bot.send_photo(chat_id=message.chat.id, photo=photo7, caption='Доспехи стоят 100 монет, а у тебя, к сожалению, есть только 30. За 30 монет могу продать тебе только хороший острый меч и сказать как можно раздобыть деньги.\nНа нашу деревню часто начали нападать бандиты, их лагерь расположен за городом. Мэр города платит 100 золотых монет тому, кто прогонит', reply_markup=keygameqvest9)
 
 def BanditBattle(message, res=False):
+	photo8 = open('GameQvest/bandit.jpg', 'rb')
 	keygameqvest10 = types.InlineKeyboardMarkup()
 	key_BanditDogovor = types.InlineKeyboardButton(text='Попробовать договориться с Бандитом', callback_data='BanditDogovor')
 	keygameqvest10.add(key_BanditDogovor)
 	key_BanditBattle = types.InlineKeyboardButton(text='Начать бой с Бандитом ', callback_data='BanditBattle')
 	keygameqvest10.add(key_BanditBattle)
-	bot.send_message(message.chat.id,
-					 'Вы пришли в лагерь бандитов. Перед вами стоит самый главный бандит. Вы видите, что у него хороший стальной шлем, но одет он в тканевые тряпки.',
-					 reply_markup=keygameqvest10)
+	bot.send_photo(chat_id=message.chat.id, photo=photo8, caption='Вы пришли в лагерь бандитов\nПеред вами стоит самый главный бандит. Вы видите, что у него хороший стальной шлем, но одет он в тканевые тряпки.', reply_markup=keygameqvest10)
 
 def BanditDogovor(message, res=False):
+	photo8 = open('GameQvest/bandit.jpg', 'rb')
 	keygameqvest11 = types.InlineKeyboardMarkup()
 	key_DieBandit = types.InlineKeyboardButton(text='Отдать все золото и вернуться к Кузнецу', callback_data='DieBandit')
 	keygameqvest11.add(key_DieBandit)
 	key_BanditBattle2 = types.InlineKeyboardButton(text='Начать бой с Бандитом ', callback_data='BanditBattle2')
 	keygameqvest11.add(key_BanditBattle2)
-	bot.send_message(message.chat.id,
-					 'Выворачивай карманы и пошел отсюда !!!\n ПОКА ЦЕЛ !!!! ',
-					 reply_markup=keygameqvest11)
+	bot.send_photo(chat_id=message.chat.id, photo=photo8, caption="Кажется разговор не состоится\n- Выворачивай карманы и пошел отсюда, пока цел!!!! ", reply_markup=keygameqvest11)
 
 def BanditBattleExit(message, res=False):
 	keygameqvest12 = types.InlineKeyboardMarkup()

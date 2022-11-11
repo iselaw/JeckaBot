@@ -516,22 +516,16 @@ def query_handler(call):
         bot.delete_message(call.message.chat.id, call.message.message_id)
         MetalMining(call.message)
     elif call.data == "BuyArmor":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Хорошо")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         BlacksithPurchase(call.message, False)
     elif call.data == "OutlawNo":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Хорошо")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         BlacksithPurchase(call.message, False)
     elif call.data == "OutlawYes":
-        photo8 = open('GameQvest/bandit.jpg', 'rb')
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы пришли в лагерь бандитов")
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo8)
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         BanditBattle(call.message)
     elif call.data == "BanditDogovor":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Кажется разговор не состоится")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         BanditDogovor(call.message)
     elif call.data == "BanditBattle":
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
