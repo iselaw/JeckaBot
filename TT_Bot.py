@@ -466,7 +466,7 @@ def query_handler(call):
         Qvestt(call.message)
     elif call.data == "exitqvest":
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Очень печально, приходи к нам еще:(")
+                              text="Хорошо, тогда в другой раз!")
     elif call.data == "askTraveler":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         Qvest2(call.message, True)
@@ -484,26 +484,27 @@ def query_handler(call):
         bot.delete_message(call.message.chat.id, call.message.message_id)
         photo5 = open('GameQvest/gameOver.jpg', 'rb')
         bot.send_photo(chat_id=call.message.chat.id, photo=photo5,
-                       caption='Кажется впереди опасные скелеты-гоблины про которых предупреждал путник\nВы '
-                               'наткнулись на группу опасных скелетов-гоблинов, они атаковали вас. Вы были очень '
-                               'сильно ранены, тк были без доспехов, и погибли.\n\n\n Попробуйте начать с начала')
-        GameQvest(call.message)
+                       caption='Судя по всему, впереди опасные скелеты-гоблины, про которых предупреждал '
+                               'путник\nСкелеты '
+                               'атаковали вас. Так как Вы были без доспехов, скелеты без особого труда смертельно '
+                               'ранили Вас. Вы погибли.\n\n '
+                               'Попробуйте начать с начала')
     elif call.data == "CastleDracon":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         photo6 = open('GameQvest/dragonOver.jpg', 'rb')
         bot.send_photo(chat_id=call.message.chat.id, photo=photo6,
-                       caption='Вас увидел дракон, влюбился вас, заставил вас жениться на себе, посадил вас на цепь и '
+                       caption='Вас заметила дракон. К сожалению или к счастью, Вы ей понравились, она посадил вас на '
+                               'цепь и '
                                'теперь вы будете до конца жизни жить с драконом\n\nПопробуйте начать с начала')
-        GameQvest(call.message)
     elif call.data == "CastleBlacksith":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         QvestBlacksith1(call.message,
                         "Это жуткое место, которое охраняют толпы скелетов и злобный дракон. Говорят, что тот дракон "
-                        "охраняет большую кучу золота, но не кто так и не рискнул побороть его и забрать богатства.")
+                        "охраняет много золота, но никто так и не рискнул побороть его и забрать богатства.")
     elif call.data == "MarketBlacksith":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         QvestBlacksith1(call.message,
-                        "Мэр города дал всем выходной в связи с частыми нападками бандитов, которые находятся за "
+                        "Мэр города дал всем выходной в связи с нападками бандитов, которые находятся за "
                         "городом. Сегодня работаю только я")
     elif call.data == "ArmorBlacksith":
         bot.delete_message(call.message.chat.id, call.message.message_id)
@@ -539,7 +540,7 @@ def query_handler(call):
         bot.delete_message(call.message.chat.id, call.message.message_id)
         photo9 = open('GameQvest/banditубил.jpg', 'rb')
         bot.send_photo(chat_id=call.message.chat.id, photo=photo9,
-                       caption="Вы отдали золото и развернулись, чтобы идти  к  Кузнецу. Но глава Бандитов ударил "
+                       caption="Вы отдали золото и уже собрались идти обратно в город, но глава Бандитов ударил "
                                "мечом вас в спину.\n\nВы умерли!!! Попробуйте начать сначала")
     elif call.data == "BanditBattle2":
         bot.delete_message(call.message.chat.id, call.message.message_id)
@@ -548,8 +549,8 @@ def query_handler(call):
         bot.delete_message(call.message.chat.id, call.message.message_id)
         photo10 = open('GameQvest/banditубил.jpg', 'rb')
         bot.send_photo(chat_id=call.message.chat.id, photo=photo10,
-                       caption="Весь урон на себя взял шлем, Бандит не пострадал и ударил мечом вас в шею.\n\nВы "
-                               "умерли!!! Попробуйте начать сначала")
+                       caption="Весь урон на себя принял шлем, Бандит не пострадал и ударил мечом вас в шею.\n\nВы "
+                               "погибли.\nПопробуйте начать сначала")
     elif call.data == "HeartBeat":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         ReceivingMoney(call.message)
@@ -578,7 +579,7 @@ def query_handler(call):
         key_MistakeBroken = types.InlineKeyboardButton(text='Вернуться к кузнецу', callback_data='MistakeBroken')
         keygameqvest16.add(key_MistakeBroken)
         bot.send_photo(chat_id=call.message.chat.id, photo=photo17,
-                       caption="Вы сломали свой Топор. Отправтесь к кузнецу для покупки доспехов",
+                       caption="Вы сломали свой Топор. Возвращайтесь обратно к кузнецу",
                        reply_markup=keygameqvest16)
     elif call.data == "MetalMiningON":
         bot.delete_message(call.message.chat.id, call.message.message_id)
@@ -590,7 +591,7 @@ def query_handler(call):
         key_GotIt = types.InlineKeyboardButton(text='Пойти к кузнецу за доспехами', callback_data='GotIt')
         keygameqvest17.add(key_GotIt)
         bot.send_photo(chat_id=call.message.chat.id, photo=photo18,
-                       caption="Вы Добыли Дерево\nОтправтесь к кузнецу для покупки доспехов",
+                       caption="Вы Добыли Дерево\nВозвращайтесь обратно к кузнецу",
                        reply_markup=keygameqvest17)
     elif call.data == "GotIt":
         bot.delete_message(call.message.chat.id, call.message.message_id)
@@ -612,7 +613,7 @@ def query_handler(call):
         bot.delete_message(call.message.chat.id, call.message.message_id)
         photo20 = open('GameQvest/жеказолото.png', 'rb')
         bot.send_photo(chat_id=call.message.chat.id, photo=photo20,
-                       caption="Отныне Вы самый богатый человек Мира и вся выша жизнь прошла в роскоши и "
+                       caption="Отныне Вы самый богатый человек Мира. Вся ваша жизнь пройдет в роскоши и "
                                "сытости\n\nНебольшой подарок за прохождение игры\nНабор стикеров ZhekaMatuxovbot в "
                                "средеземье\nhttps://t.me/addstickers/ZhekaMatuxovbot")
     elif call.data == "DragonExitLove":
@@ -628,7 +629,7 @@ def query_handler(call):
         photo22 = open('GameQvest/жекаумер.jpg', 'rb')
         bot.send_photo(chat_id=call.message.chat.id, photo=photo22,
                        caption="Дракон полон ярости\nДракон со словами: \"Да как ты смеешь!!!\". Накинулся на вас. От "
-                               "вас остались только доспехи")
+                               "Вас остались только доспехи")
     elif call.data == "СhoosePathCastle":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         SkeletonsOfbBry(call.message)
@@ -658,7 +659,7 @@ def query_handler(call):
         photo30 = open('GameQvest/killgeka.jpg', 'rb')
         bot.send_photo(chat_id=call.message.chat.id, photo=photo30,
                        caption="Вы нанесли удар по противнику, но вашей силы удара не хватило, чтобы нанести сильные "
-                               "повреждения. Противник размахнулся и своей косой разделил ваше тело на три части "
+                               "повреждения. Противник размахнулся и резкими движениями косой разделил Ваше тело на три части "
                                "\n\nВЫ ПОГИБЛИ")
     elif call.data == "BossExit":
         bot.delete_message(call.message.chat.id, call.message.message_id)
@@ -688,7 +689,7 @@ def query_handler(call):
         photo37 = open('GameQvest/жекуубилбос.jpg', 'rb')
         bot.send_photo(chat_id=call.message.chat.id, photo=photo37,
                        caption="Вы попытались нанести удар, но Листат оказался быстрее. Он увернулся от вашей атаки и "
-                               "ловким ударом снес с плечь вашу голов. Вы погибили, а он продолжил развлекаться со "
+                               "ловким ударом снес с плеч вашу голову. Вы погибили, а он продолжил развлекаться со "
                                "своей пленницей.")
     elif call.data == "SashaelKill":
         bot.delete_message(call.message.chat.id, call.message.message_id)
@@ -704,7 +705,7 @@ def query_handler(call):
         photo41 = open('GameQvest/жекуубилбос.jpg', 'rb')
         bot.send_photo(chat_id=call.message.chat.id, photo=photo41,
                        caption="Вы попытались нанести удар, но Листат оказался быстрее. Он увернулся от нашей атаки и "
-                               "ловким ударом снес с плечь вашу голов. Вы погибили, а он продолжил развлекаться со "
+                               "ловким ударом снес с плеч вашу голов. Вы погибили, а он продолжил развлекаться со "
                                "своей пленницей.")
     elif call.data == "ScrollAttack":
         bot.delete_message(call.message.chat.id, call.message.message_id)
@@ -716,7 +717,7 @@ def query_handler(call):
         bot.delete_message(call.message.chat.id, call.message.message_id)
         photo44 = open('GameQvest/Умерласемья.jpg', 'rb')
         bot.send_photo(chat_id=call.message.chat.id, photo=photo44,
-                       caption="Прошло десять лет, в один из прекрасных солнечных дней, Вы возвращаетесь домой и "
+                       caption="Прошло десять лет. В один из прекрасных солнечных дней Вы возвращаетесь домой и "
                                "видите ужасную картину. По дому разбросаны части тел всей вашей семьи и прислуги. А "
                                "на стене написано кровью: Зря ты решил со мной поссориться, смертный.")
     elif call.data == "HeartAttack":
@@ -729,15 +730,15 @@ def query_handler(call):
         bot.delete_message(call.message.chat.id, call.message.message_id)
         photo47 = open('GameQvest/gekaKing.jpg', 'rb')
         bot.send_photo(chat_id=call.message.chat.id, photo=photo47,
-                       caption="Когда вы закончили, вы поняли, что отныне вы являетесь хозяином этой башни, а так же, "
-                               "вы больше никогда не сможете жить без пожирания этого вкуснейшего человеческого "
+                       caption="Когда Вы закончили, Вы осознали, что отныне Вы являетесь хозяином этой башни. "
+                               "Вы больше никогда не сможете жить без пожирания этого вкуснейшего человеческого "
                                "мяса.\nВы стали владыкой тьмы")
     elif call.data == "Died2":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         photo48 = open('GameQvest/жекуубилбос.jpg', 'rb')
         bot.send_photo(chat_id=call.message.chat.id, photo=photo48,
                        caption="Вы попытались нанести удар, но Листат оказался быстрее. Он увернулся от нашей атаки и "
-                               "ловким ударом снес с плечь вашу голов. Вы погибили, а он продолжил развлекаться со "
+                               "ловким ударом снес с плеч вашу голов. Вы погибили, а он продолжил развлекаться со "
                                "своей пленницей.")
     elif call.data == "HeartAttack2":
         bot.delete_message(call.message.chat.id, call.message.message_id)
@@ -749,17 +750,18 @@ def query_handler(call):
         key_VinBoss = types.InlineKeyboardButton(text='Освободить девушку и забрать золото', callback_data='VinBoss')
         keygameqvest30.add(key_VinBoss)
         bot.send_photo(chat_id=call.message.chat.id, photo=photo49,
-                       caption="Вы ощущаете как меч начал выбрировать, через мгновение из противника полилась "
+                       caption="Вы ощутили как меч начал вибрировать, через мгновение из противника полилась "
                                "жизненная энергия и начала подпитывать меч бездны. Вы решили не тратить времени и "
-                               "предприняли попытку атаковать. Судя по всему меч Бездны не оставил противнику сил "
+                               "предприняли попытку атаковать. Судя по всему, меч Бездны не оставил противнику сил "
                                "даже попытаться отбить удар. С помощью своего нового оружия вы выпотрошили Листата "
                                "как свинью", reply_markup=keygameqvest30)
     elif call.data == "BossAmuletNo2":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         photo30 = open('GameQvest/killgeka.jpg', 'rb')
         bot.send_photo(chat_id=call.message.chat.id, photo=photo30,
-                       caption="Вы нанесли удар по противнику, но вашей силы удара не хватило что бы нанести сильные "
-                               "повреждения. Противник размахнулся и своей косой разделил ваше тело на три части "
+                       caption="Вы нанесли удар по противнику, но вашей силы удара не хватило, чтобы нанести сильные "
+                               "повреждения. Противник размахнулся и резкими движениями косой разделил Ваше тело на "
+                               "три части "
                                "\n\nВЫ ПОГИБЛИ")
     elif call.data == "BossExit2":
         bot.delete_message(call.message.chat.id, call.message.message_id)
@@ -908,11 +910,11 @@ def audio_record(message):
 @bot.message_handler(commands=["qvest"])
 def GameQvest(message, res=False):
     keygameqvest = types.InlineKeyboardMarkup()
-    key_startqvest = types.InlineKeyboardButton(text='Да давай погрузимся в мир фантастики', callback_data='startqvest')
+    key_startqvest = types.InlineKeyboardButton(text='Да', callback_data='startqvest')
     keygameqvest.add(key_startqvest)
-    key_exitqvest = types.InlineKeyboardButton(text='Нет, вернуться назад', callback_data='exitqvest')
+    key_exitqvest = types.InlineKeyboardButton(text='Нет', callback_data='exitqvest')
     keygameqvest.add(key_exitqvest)
-    bot.send_message(message.chat.id, 'Привет хочешь сыграть в игру про путешествия Жеки по волшебному миру ?',
+    bot.send_message(message.chat.id, 'Привет, хочешь сыграть в игру про путешествия Жеки по волшебному миру?',
                      reply_markup=keygameqvest)
 
 

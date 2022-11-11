@@ -6,11 +6,11 @@ from Login import *
 def Qvestt(message, res=False):
     photo1 = open('GameQvest/putnic.jpg', 'rb')
     keygameqvest1 = types.InlineKeyboardMarkup()
-    key_askTraveler = types.InlineKeyboardButton(text='Надо бы спросить его', callback_data='askTraveler')
+    key_askTraveler = types.InlineKeyboardButton(text='Спросить что случилось', callback_data='askTraveler')
     keygameqvest1.add(key_askTraveler)
     bot.send_photo(chat_id=message.chat.id, photo=photo1,
-                   caption='Однажды, в теплый светлый день, Жека вышел из своего дома для того, что бы отправиться за '
-                           'припасами на рынок города.\n\nПо дороге в город вы встречаете напуганного путника.',
+                   caption='Однажды, в теплый светлый день, Жека вышел из своего дома за покупками на рынок '
+                           'города.\n\nПо дороге в город вы встречаете напуганного путника.',
                    reply_markup=keygameqvest1)
 
 
@@ -26,20 +26,20 @@ def Qvest2(message, isFirst, res=False):
     if isFirst == True:
         photo1 = open('GameQvest/putnic.jpg', 'rb')
         bot.send_photo(chat_id=message.chat.id, photo=photo1,
-                       caption="Путник поведал:\n\"Зря ты без оружия гуляешь по этим местам, Заброшенный Замок "
+                       caption="Путник поведал:\n\"Зря ты без оружия гуляешь по этим местам. Заброшенный Замок "
                                "неподалеку заселили силы зла во главе с темным рыцарем Листатом. За все время "
                                "нахождения в замке, прислужники Листата уже похитили 5 девушек из местных деревень и "
-                               "убили 4 торговцев\n\n... Когда я проходил мимо Замка, я наткнулся на группу "
-                               "скелетов-гоблинов, которые начали атаковать меня, я еле убежал от них. Может мне "
-                               "показалось, но еще в небе я увидел огромного красного дракона...\n\n "
-                               "И вроде бы он что-то держал в лапах, что-то похожее на мешки с золотом. Советую тебе "
-                               "быть осторожным, лучше купи снаряжение у Кузница в городе\".\nВы прибыли в город. "
+                               "убили 4 торговцев. Когда я проходил мимо Замка, я наткнулся на группу "
+                               "скелетов-гоблинов, которые напали на меня, я еле унес от них ноги. Может мне "
+                               "показалось, но еще в небе я увидел огромного красного дракона, "
+                               "он что-то держал в лапах, что-то похожее на мешки с золотом. Советую тебе "
+                               "быть осторожнее, лучше купи снаряжение у Кузница в городе\".\nВы прибыли в город. "
                                "Куда вы хотите отправиться?",
                        reply_markup=keygameqvest2)
     else:
         photo3 = open('GameQvest/Рынок.jpg', 'rb')
         bot.send_photo(chat_id=message.chat.id, photo=photo3,
-                       caption="Хммм странно, почему-то сегодня на рынке никого нет, куда же все подевались?",
+                       caption="Хммм странно, почему-то сегодня на рынке никого нет, куда все подевались?",
                        reply_markup=keygameqvest2)
 
 
@@ -68,7 +68,7 @@ def QvestCastle1(message, res=False):
     key_QvestCastle1NO = types.InlineKeyboardButton(text='Вернуться назад', callback_data='QvestCastle1NO')
     keygameqvest4.add(key_QvestCastle1NO)
     bot.send_photo(chat_id=message.chat.id, photo=photo4,
-                   caption='Кажется замок уже близко\nХммм вы видите замок рядом с которым обитает дракон\nПойти к '
+                   caption='Вы видите замок рядом с которым обитает дракон\nПойти к '
                            'Заброшенному Замку или Пойти к Дракону ?',
                    reply_markup=keygameqvest4)
 
@@ -82,7 +82,7 @@ def BlacksithPurchase(message, brokenTools, res=False):
         key_WoodMetal = types.InlineKeyboardButton(text='Где я могу взять металл и дерево?', callback_data='WoodMetal')
         keygameqvest5.add(key_WoodMetal)
     bot.send_photo(chat_id=message.chat.id, photo=photo7,
-                   caption='Я могу Продать тебе готовые, либо сделать новые бесплатно если ты принесешь мне дерево '
+                   caption='Я могу Продать тебе готовые, либо сделать новые бесплатно, если ты принесешь мне дерево '
                            'или металл',
                    reply_markup=keygameqvest5)
 
@@ -140,7 +140,7 @@ def Outlaw(message, res=False):
                    caption='Доспехи стоят 100 монет, а у тебя, к сожалению, есть только 30. За 30 монет могу продать '
                            'тебе только хороший острый меч и сказать как можно раздобыть деньги.\nНа нашу деревню '
                            'часто начали нападать бандиты, их лагерь расположен за городом. Мэр города платит 100 '
-                           'золотых монет тому, кто прогонит',
+                           'золотых монет тому, кто их прогонит',
                    reply_markup=keygameqvest9)
 
 
@@ -167,7 +167,7 @@ def BanditDogovor(message, res=False):
     key_BanditBattle2 = types.InlineKeyboardButton(text='Начать бой с Бандитом ', callback_data='BanditBattle2')
     keygameqvest11.add(key_BanditBattle2)
     bot.send_photo(chat_id=message.chat.id, photo=photo8,
-                   caption="Кажется разговор не состоится\n- Выворачивай карманы и пошел отсюда, пока цел!!!! ",
+                   caption="Кажется, разговор не состоится\n- Выворачивай карманы и пошел отсюда, пока цел!!!! ",
                    reply_markup=keygameqvest11)
 
 
@@ -189,9 +189,8 @@ def ReceivingMoney(message, res=False):
                                                     callback_data='ReceivingMoney')
     keygameqvest13.add(key_ReceivingMoney)
     bot.send_photo(chat_id=message.chat.id, photo=photo11,
-                   caption="Вы нанесли сокрушительный урон Главе бандитов, вы убили его, а его подчиненые быстро "
-                           "сбежали увидив такой расклад.\nПосле победы Вам нужно отправиться к мэру города за "
-                           "наградой",
+                   caption="Вы нанесли сокрушительный удар Главе бандитов. Он мертв, а его подчиненые быстро "
+                           "сбежали.",
                    reply_markup=keygameqvest13)
 
 
@@ -203,8 +202,8 @@ def BlacksmithArmorPayment(message, res=False):
     keygameqvest14.add(key_BlacksmithArmorPayment)
     bot.send_photo(chat_id=message.chat.id, photo=photo12,
                    caption="Вы пришли к Мэру города\nМэр поблагодарил вас за помощь городу, дал вам положенную "
-                           "награду.\nФуууух теперь можно отправиться к кузнецу и купить у него доспехи для похода к "
-                           "жуткому заброшенному замку\nВы отправляетесь к Кузнецу",
+                           "награду.\nФуууух, теперь можно отправиться к кузнецу и купить у него доспехи для похода к "
+                           "жуткому заброшенному замку",
                    reply_markup=keygameqvest14)
 
 
@@ -226,7 +225,7 @@ def MistakeBroken(message, res=False):
     key_MistakeBroken = types.InlineKeyboardButton(text='Вернуться к кузнецу', callback_data='MistakeBroken')
     keygameqvest16.add(key_MistakeBroken)
     bot.send_photo(chat_id=message.chat.id, photo=photo15,
-                   caption="Вы сломали свою Кирку. Отправтесь к кузнецу для покупки доспехов",
+                   caption="Вы сломали свою Кирку. Возвращайтесь к кузнецу",
                    reply_markup=keygameqvest16)
 
 
@@ -236,7 +235,7 @@ def GotIt(message, res=False):
     key_GotIt = types.InlineKeyboardButton(text='Пойти к кузнецу за доспехами', callback_data='GotIt')
     keygameqvest17.add(key_GotIt)
     bot.send_photo(chat_id=message.chat.id, photo=photo18,
-                   caption="Вы Добыли металл\nОтправтесь к кузнецу для покупки доспехов",
+                   caption="Вы Добыли металл\nВозвращайтесь к кузнецу",
                    reply_markup=keygameqvest17)
 
 
@@ -250,8 +249,8 @@ def СhoosePath(message, res=False):
     keygameqvest18.add(key_СhoosePathDragon)
     bot.send_photo(chat_id=message.chat.id, photo=photo14,
                    caption="Вы пришли к Жуткому заброшеному замку.\nВы увидели небольшую группу скелетов около "
-                           "заброшенного замка?\nВы заметили куда полетел Большой красный дракон, в лапах у него "
-                           "сверкала куча золота?\nВ какую сторону идти?",
+                           "заброшенного замка и красного дракон, в лапах у которого "
+                           "мешки с золотом?\nВ какую сторону идти?",
                    reply_markup=keygameqvest18)
 
 
@@ -261,9 +260,9 @@ def DragonDialogue(message, res=False):
     key_DragonDialogue = types.InlineKeyboardButton(text='Подойти к дракону ', callback_data='DragonDialogue')
     keygameqvest19.add(key_DragonDialogue)
     bot.send_photo(chat_id=message.chat.id, photo=photo19,
-                   caption="Вы приблизлись к логову дракона и увидели, что у него в логове полно золота\nДракон "
-                           "смотрит на вас, но вроде бы не собираеться атаковать вас.\nДумаю, стоит приблизиться к "
-                           "дракону, кажется он хочет что-то сказать",
+                   caption="Вы приблизлись к логову дракона и увидели, что у него полно золота\nДракон "
+                           "смотрит на вас, но вроде бы не собираеться атаковать.\nДумаю, стоит приблизиться к "
+                           "дракону",
                    reply_markup=keygameqvest19)
 
 
@@ -288,7 +287,7 @@ def SkeletonsOfbBry(message, res=False):
     key_SkeletonsOfbBry = types.InlineKeyboardButton(text='Атаковать скелетов', callback_data='SkeletonsOfbBry')
     keygameqvest21.add(key_SkeletonsOfbBry)
     bot.send_photo(chat_id=message.chat.id, photo=photo23,
-                   caption="Вы приблизились к Замку, скелеты-рыцари увидели вас и двинулись в атаку\nВы достали меч и "
+                   caption="Вы приблизились к Замку, скелеты-рыцари заметили Вас и двинулись в атаку\nВы достали меч и "
                            "готовы атаковать скелетов в ответ",
                    reply_markup=keygameqvest21)
 
@@ -299,7 +298,7 @@ def Ingot(message, res=False):
     key_IngotYes = types.InlineKeyboardButton(text='Подобрать свиток', callback_data='IngotYes')
     keygameqvest22.add(key_IngotYes)
     bot.send_photo(chat_id=message.chat.id, photo=photo24,
-                   caption="Вы убили всех скелетов-рыцарей\nНа полу вы заметили свиток. Возьми его",
+                   caption="Вы убили всех скелетов-рыцарей\nНа полу вы заметили свиток. Возьмите его",
                    reply_markup=keygameqvest22)
 
 
@@ -334,7 +333,7 @@ def Demon3(message, res=False):
     key_DemonAmuletNo = types.InlineKeyboardButton(text='Отказаться', callback_data='DemonAmuletNo')
     keygameqvest25.add(key_DemonAmuletNo)
     bot.send_photo(chat_id=message.chat.id, photo=photo26,
-                   caption="Демон протягивает некий амулет и говорит:\n-\"Этот артефакт позволит убить твоего "
+                   caption="Демон протягивает какой-то амулет и говорит:\n-\"Этот артефакт позволит убить твоего "
                            "следующего противника, его имя Сашаель. Я дам тебе амулет, но взамен ты принесешь мне "
                            "сердце Сашаеля\"",
                    reply_markup=keygameqvest25)
@@ -350,9 +349,8 @@ def Boss1(message, res=False):
     key_BossExit = types.InlineKeyboardButton(text='Использовать Свиток для Атаки', callback_data='BossExit')
     keygameqvest26.add(key_BossExit)
     bot.send_photo(chat_id=message.chat.id, photo=photo27,
-                   caption="Вы взяли амулет\nДемон улыбнулся и сказал:\n-\"Жду не дождусь когда ты принесешь его "
-                           "сердце мне. Не советую меня обманывать\"\nВы отправились дальше и встретили Сашаеля\nВы "
-                           "увидели демона Сашаеля, как вы хотите его атаковать?",
+                   caption="Вы взяли амулет\nДемон улыбнулся и сказал:\n-\"С нетерпением жду, когда ты принесешь его "
+                           "сердце мне. Не советую меня обманывать\"\nВы отправились дальше и встретили Сашаеля\nКак вы хотите его атаковать?",
                    reply_markup=keygameqvest26)
 
 
@@ -362,9 +360,9 @@ def Demon4(message, res=False):
     key_Demon4 = types.InlineKeyboardButton(text='Пойти дальше', callback_data='Demon4')
     keygameqvest27.add(key_Demon4)
     bot.send_photo(chat_id=message.chat.id, photo=photo29,
-                   caption="При взмахе меча сила амулета перетекла в ваши руки. Вы нанесли сокрушительный удар такой "
-                           "силы, что броня противника разлетелась словно она была изготовлена из хрусталя. Сашаель "
-                           "упал на колени, вы просунули свою руку в отверствие в броне и достали едва бьющиеся "
+                   caption="При взмахе меча сила, амулета перетекла в ваши руки. Вы нанесли сокрушительный удар такой "
+                           "силы, что броня противника разлетелась. Сашаель "
+                           "упал на колени, вы просунули свою руку в отверствие в броне и достали едва бьющееся "
                            "сердце этой твари\nВы забрали сердце",
                    reply_markup=keygameqvest27)
 
@@ -392,10 +390,10 @@ def MainBoss(message, res=False):
     keygameqvest29.add(key_MainBossExit)
     bot.send_photo(chat_id=message.chat.id, photo=photo33,
                    caption="\"C тобой приятно иметь дело, что ж, надеюсь еще увидимся\"\nВы поднимаетесь на самый "
-                           "верх башни\nВы Поднялись на вершину башни. Вы оказались в комнате с огромным количеством "
+                           "верх башни\nВы оказались в комнате с огромным количеством "
                            "золота, у стены сидит связанная девушка. Вы замечаете два светящихся глаза. Видимо это "
                            "владелец башни Листат, выглядит он устрашающе. После пары секунд молчания он говорит\n\"- "
-                           "Придти сюда было глупо. Сейчас ты умрешь",
+                           "Явиться сюда было глупо. Сейчас ты умрешь",
                    reply_markup=keygameqvest29)
 
 
@@ -477,7 +475,7 @@ def TenYears(message, res=False):
     keygameqvest35.add(key_TenYears)
     bot.send_photo(chat_id=message.chat.id, photo=photo43,
                    caption="Вы освободили девушку и забрали золото. Вскоре, вы с ней поженились и купили огромный "
-                           "дом. Вы жили счастливую и беззаботную жизнь\nНо ....",
+                           "дом. Вы прожили счастливую и беззаботную жизнь\nНо ....",
                    reply_markup=keygameqvest35)
 
 
@@ -499,7 +497,7 @@ def JekaDemon2(message, res=False):
     key_JekaDemon2 = types.InlineKeyboardButton(text='Продолжить', callback_data='JekaDemon2')
     keygameqvest37.add(key_JekaDemon2)
     bot.send_photo(chat_id=message.chat.id, photo=photo46,
-                   caption="Вы потеряли контроль над собой\nВы подошли к нему и одним уверенным движением вырвали ему "
+                   caption="Вы потеряли контроль над собой\nПодошли к нему и одним уверенным движением вырвали ему "
                            "сердце и затолкали в глотку, затем вырвали ноги и руки. Пленная девушка закричала и "
                            "затряслась от страха. Вы подумали успокоить ее, но голос в вашей голове начал "
                            "шептать\n\n\"- Сожри эту мразь... Сожри это аппетитное свежее мясо.\"\n\nВаш разум "
@@ -542,7 +540,7 @@ def MainBoss4(message, res=False):
     keygameqvest40.add(key_SwordAttack)
     bot.send_photo(chat_id=message.chat.id, photo=photo39,
                    caption="\"C тобой приятно иметь дело, что ж, надеюсь еще увидимся\"\nВы поднимаетесь на самый "
-                           "верх башни\nВы Поднялись на вершину башни. Вы оказались в комнате с огромным количеством "
+                           "верх башни\nВы оказались в комнате с огромным количеством "
                            "золота, у стены сидит связанная девушка. Вы замечаете два светящихся глаза. Видимо это "
                            "владелец башни Листат, выглядит он устрашающе. После пары секунд молчания он "
                            "говорит\n\n\"- Придти сюда было глупо. Сейчас ты умрешь",
