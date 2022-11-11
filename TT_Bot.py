@@ -528,68 +528,41 @@ def query_handler(call):
         bot.delete_message(call.message.chat.id, call.message.message_id)
         BanditDogovor(call.message)
     elif call.data == "BanditBattle":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Главарь Бандитов достал меч")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         BanditBattleExit(call.message)
     elif call.data == "DieBandit":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         photo9 = open('GameQvest/banditубил.jpg', 'rb')
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы отдали золото и развернулись, чтобы идти  к  Кузнецу. Но глава Бандитов ударил мечом вас в спину.\n\n\n\nВы умерли!!! Попробуйте начать сначала")
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo9)
+        bot.send_photo(chat_id=call.message.chat.id, photo=photo9,
+                       caption="Вы отдали золото и развернулись, чтобы идти  к  Кузнецу. Но глава Бандитов ударил мечом вас в спину.\n\nВы умерли!!! Попробуйте начать сначала")
     elif call.data == "BanditBattle2":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Главарь Бандитов достал меч")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         BanditBattleExit(call.message)
     elif call.data == "BlowHead":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         photo10 = open('GameQvest/banditубил.jpg', 'rb')
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Весь урон на себя взял шлем, Бандит не пострадал и ударил мечом вас в шею.\n\n\n\nВы умерли!!! Попробуйте начать сначала")
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo10)
+        bot.send_photo(chat_id=call.message.chat.id, photo=photo10,
+                       caption="Весь урон на себя взял шлем, Бандит не пострадал и ударил мечом вас в шею.\n\nВы умерли!!! Попробуйте начать сначала")
     elif call.data == "HeartBeat":
-        photo11 = open('GameQvest/мертвбандит.jpg', 'rb')
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы нанесли сокрушительный урон Главе бандитов, вы убили его, а его подчиненые быстро сбежали увидив такой расклад.")
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo11)
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         ReceivingMoney(call.message)
     elif call.data == "ReceivingMoney":
-        photo12 = open('GameQvest/nagrada.jpg', 'rb')
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы пришли к Мэру города ")
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo12)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Мэр поблагодарил вас за помощь городу, дал вам положенную награду.\nФуууух теперь можно отправиться к кузнецу и купить у него доспехи для похода к жуткому заброшенному замку")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         BlacksmithArmorPayment(call.message)
     elif call.data == "QvestCastle1NO":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы вернулись назад")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         Qvest2(call.message, False)
     elif call.data == "BlacksmithArmorPayment":
-        photo13 = open('GameQvest/Куз2нец.jpg', 'rb')
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы пришли к Кузнецу")
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo13)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Привет-\nСпасибо что прогнал бандитов. Вот держи свои доспехи. Пожелаю успехов тебе в твоем путешествии")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         Castle(call.message)
     elif call.data == "CastleArmor":
-        photo14 = open('GameQvest/pal.jpg', 'rb')
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы пришли к Жуткому заброшеному замку. ")
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo14)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вы увидели небольшую группу скелетов около заброшенного замка, пойти к ним ?\n\n\nВы заметили куда полетел Большой красный дракон, в лапах у него сверкала куча золота, пойти к нему?")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         СhoosePath(call.message)
     elif call.data == "MetalMiningExit":
-        photo15 = open('GameQvest/brokenкирка.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo15)
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы сломали свою Кирку")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         MistakeBroken(call.message)
     elif call.data == "MistakeBroken":
-        photo16 = open('GameQvest/kuznec.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo16)
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Привет, очень печально что ты сломал инструмент")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         BlacksithPurchase(call.message, True)
     elif call.data == "TreeMiningExit":
         photo17 = open('GameQvest/brogenaxe.jpg', 'rb')
