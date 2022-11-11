@@ -565,111 +565,74 @@ def query_handler(call):
         bot.delete_message(call.message.chat.id, call.message.message_id)
         BlacksithPurchase(call.message, True)
     elif call.data == "TreeMiningExit":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         photo17 = open('GameQvest/brogenaxe.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo17)
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы сломали свой Топор")
-        MistakeBroken(call.message)
+        keygameqvest16 = types.InlineKeyboardMarkup()
+        key_MistakeBroken = types.InlineKeyboardButton(text='Вернуться к кузнецу', callback_data='MistakeBroken')
+        keygameqvest16.add(key_MistakeBroken)
+        bot.send_photo(chat_id=call.message.chat.id, photo=photo17,
+                       caption="Вы сломали свой Топор. Отправтесь к кузнецу для покупки доспехов",
+                       reply_markup=keygameqvest16)
     elif call.data == "MetalMiningON":
-        photo18 = open('GameQvest/цфвфц.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo18)
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы Добыли металл")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         GotIt(call.message)
     elif call.data == "TreeMiningON":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         photo18 = open('GameQvest/дерево.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo18)
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы Добыли Дерево")
-        GotIt(call.message)
+        keygameqvest17 = types.InlineKeyboardMarkup()
+        key_GotIt = types.InlineKeyboardButton(text='Пойти к кузнецу за доспехами', callback_data='GotIt')
+        keygameqvest17.add(key_GotIt)
+        bot.send_photo(chat_id=call.message.chat.id, photo=photo18,
+                       caption="Вы Добыли Дерево\nОтправтесь к кузнецу для покупки доспехов",
+                       reply_markup=keygameqvest17)
     elif call.data == "GotIt":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         photo19 = open('GameQvest/Куз2нец.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo19)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Привет, я очень рад что ты все добыл, вот держи свои доспехи ")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы прибыли к кузнецу")
-        Castle(call.message)
+        keygameqvest15 = types.InlineKeyboardMarkup()
+        key_CastleArmor = types.InlineKeyboardButton(text='Отправиться к Жуткому заброшенному замку',
+                                                     callback_data='CastleArmor')
+        keygameqvest15.add(key_CastleArmor)
+        bot.send_photo(chat_id=call.message.chat.id, photo=photo19,
+                       caption="Вы прибыли к кузнецу\nПривет, я очень рад что ты все добыл, вот держи свои доспехи",
+                       reply_markup=keygameqvest15)
     elif call.data == "СhoosePathDragon":
-        photo19 = open('GameQvest/драконзолото.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo19)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вы приблизлись к логову дракона и увидели, что у него в логове полно золота\nДракон смотрит на вас, Но вроде бы не собираеться атаковать вас")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы прибыли к логову дракона")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         DragonDialogue(call.message)
     elif call.data == "DragonDialogue":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Приветствую тебя, Путник. Ты достаточно храбр, чтобы подойти ко мне. Так и быть, исполню одно твое жилание.")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         DragonExit(call.message)
     elif call.data == "DragonExitGold":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         photo20 = open('GameQvest/жеказолото.png', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo20)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Отныне Вы самый богатый человек Мира и вся выша жизнь прошла в роскоши и сытости\n\n\nНебольшой подарок за прохождение игры\nНабор стикеров ZhekaMatuxovbot в средеземье\n\n\nhttps://t.me/addstickers/ZhekaMatuxovbot")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Дракон одарил вас богатсвом")
+        bot.send_photo(chat_id=call.message.chat.id, photo=photo20,
+                       caption="Отныне Вы самый богатый человек Мира и вся выша жизнь прошла в роскоши и сытости\n\nНебольшой подарок за прохождение игры\nНабор стикеров ZhekaMatuxovbot в средеземье\nhttps://t.me/addstickers/ZhekaMatuxovbot")
     elif call.data == "DragonExitLove":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         photo21 = open('GameQvest/жекалюбовь.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo21)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Дракон достает золотую фигурку девушки из своих скоровищ, и преврашает ее в живую девушку из ваших фантазий. Она влюбилась в Вас с первого взгляда. Вы возвращаетесь домой и живете долго и счастливо\n\n\nНебольшой подарок за прохождение игры\nНабор стикеров ZhekaMatuxovbot в средеземье\n\n\nhttps://t.me/addstickers/ZhekaMatuxovbot")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Дракон что-то достает")
+        bot.send_photo(chat_id=call.message.chat.id, photo=photo21,
+                       caption="Дракон достает золотую фигурку девушки из своих скоровищ и преврашает ее в живую девушку из ваших фантазий. Она влюбилась в Вас с первого взгляда. Вы возвращаетесь домой и живете долго и счастливо\n\nНебольшой подарок за прохождение игры\nНабор стикеров ZhekaMatuxovbot в средеземье\nhttps://t.me/addstickers/ZhekaMatuxovbot")
     elif call.data == "DragonExitOver":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         photo22 = open('GameQvest/жекаумер.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo22)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Дракон со словами: \"Да как ты смеешь!!!\". Накинулся на вас. От вас остались только доспехи")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Дракон полон ярости")
+        bot.send_photo(chat_id=call.message.chat.id, photo=photo22,
+                       caption="Дракон полон ярости\nДракон со словами: \"Да как ты смеешь!!!\". Накинулся на вас. От вас остались только доспехи")
     elif call.data == "СhoosePathCastle":
-        photo23 = open('GameQvest/скелетыжека.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo23)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вы приблизились к Замку, скелеты-рыцари увидели вас и двинулись в атаку")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы увидели группу скелетов")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         SkeletonsOfbBry(call.message)
     elif call.data == "SkeletonsOfbBry":
-        photo24 = open('GameQvest/winskelet.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo24)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вы убили всех скелетов-рыцарей\nНа полу вы заметили свиток")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Начался трудный бой")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         Ingot(call.message)
     elif call.data == "IngotYes":
-        photo24 = open('GameQvest/svitok.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo24)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вы подняли свиток, раскрыли его и это оказался свиток усиления\nНадеюсь, он поможет мне в дальнейшем пушествий по замку\nВы пошли дальше")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы подняли свиток ")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         Demon(call.message)
     elif call.data == "Demon":
-        photo25 = open('GameQvest/vulgrim.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo25)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Приблизившись к демону, он обратился к вам:\n-\"Здравствуй, смертный. Меня зовут Вульгрим. Не знаю зачем направляешься к хозяину этой башни темному рыцарю Листату, но следующий его прислужник тебе не по зубам. Однако, я могу оказать тебе услугу\"")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы подошли к демону")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         Demon2(call.message)
     elif call.data == "Demon2":
-        photo26 = open('GameQvest/amulet.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo26)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Демон протягивает некий амулет и говорит:\n-\"Этот артефакт позволит убить твоего следующего противника, его имя Сашаель. Я дам тебе амулет, но взамен ты принесешь мне сердце Сашаеля\"")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Демон продолжил разговор")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         Demon3(call.message)
     elif call.data == "DemonAmuletYes":
-        photo27 = open('GameQvest/image15.jpg', 'rb')
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Демон улыбнулся и сказал:\n-\"Жду не дождусь когда ты принесешь его сердце мне. Не советую меня обманывать\"\n\n\nВы отправились дальше и встретили Сашаеля")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы взяли амулет")
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo27)
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         Boss1(call.message)
     elif call.data == "DemonAmuletNo":
         photo28 = open('GameQvest/image15.jpg', 'rb')

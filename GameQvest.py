@@ -208,12 +208,13 @@ def MistakeBroken(message, res=False):
 
 
 def GotIt(message, res=False):
+    photo18 = open('GameQvest/цфвфц.jpg', 'rb')
     keygameqvest17 = types.InlineKeyboardMarkup()
     key_GotIt = types.InlineKeyboardButton(text='Пойти к кузнецу за доспехами', callback_data='GotIt')
     keygameqvest17.add(key_GotIt)
-    bot.send_message(message.chat.id,
-                     'Отправтесь к кузнецу для покупки доспехов',
-                     reply_markup=keygameqvest17)
+    bot.send_photo(chat_id=message.chat.id, photo=photo18,
+                   caption="Вы Добыли металл\nОтправтесь к кузнецу для покупки доспехов",
+                   reply_markup=keygameqvest17)
 
 
 def СhoosePath(message, res=False):
@@ -230,15 +231,17 @@ def СhoosePath(message, res=False):
 
 
 def DragonDialogue(message, res=False):
+    photo19 = open('GameQvest/драконзолото.jpg', 'rb')
     keygameqvest19 = types.InlineKeyboardMarkup()
     key_DragonDialogue = types.InlineKeyboardButton(text='Подойти к дракону ', callback_data='DragonDialogue')
     keygameqvest19.add(key_DragonDialogue)
-    bot.send_message(message.chat.id,
-                     'Думаю, стоит приблизиться к дракону, кажется он хочет что-то сказать',
-                     reply_markup=keygameqvest19)
+    bot.send_photo(chat_id=message.chat.id, photo=photo19,
+                   caption="Вы приблизлись к логову дракона и увидели, что у него в логове полно золота\nДракон смотрит на вас, но вроде бы не собираеться атаковать вас.\nДумаю, стоит приблизиться к дракону, кажется он хочет что-то сказать",
+                   reply_markup=keygameqvest19)
 
 
 def DragonExit(message, res=False):
+    photo19 = open('GameQvest/драконзолото.jpg', 'rb')
     keygameqvest20 = types.InlineKeyboardMarkup()
     key_DragonExitGold = types.InlineKeyboardButton(text='Хочу Разбогатеть', callback_data='DragonExitGold')
     keygameqvest20.add(key_DragonExitGold)
@@ -246,59 +249,64 @@ def DragonExit(message, res=False):
     keygameqvest20.add(key_DragonExitLove)
     key_DragonExitOver = types.InlineKeyboardButton(text='Хочу, чтобы ты служил мне ', callback_data='DragonExitOver')
     keygameqvest20.add(key_DragonExitOver)
-    bot.send_message(message.chat.id,
-                     'Что ты попросишь?',
-                     reply_markup=keygameqvest20)
+    bot.send_photo(chat_id=message.chat.id, photo=photo19,
+                   caption="Приветствую тебя, Путник. Ты достаточно храбр, раз подошел ко мне. Так и быть, исполню одно твое желание.",
+                   reply_markup=keygameqvest20)
 
 
 def SkeletonsOfbBry(message, res=False):
+    photo23 = open('GameQvest/скелетыжека.jpg', 'rb')
     keygameqvest21 = types.InlineKeyboardMarkup()
     key_SkeletonsOfbBry = types.InlineKeyboardButton(text='Атаковать скелетов', callback_data='SkeletonsOfbBry')
     keygameqvest21.add(key_SkeletonsOfbBry)
-    bot.send_message(message.chat.id,
-                     'Вы достали меч и готовы атаковать скелетов в ответ',
-                     reply_markup=keygameqvest21)
+    bot.send_photo(chat_id=message.chat.id, photo=photo23,
+                   caption="Вы приблизились к Замку, скелеты-рыцари увидели вас и двинулись в атаку\nВы достали меч и готовы атаковать скелетов в ответ",
+                   reply_markup=keygameqvest21)
 
 
 def Ingot(message, res=False):
+    photo24 = open('GameQvest/winskelet.jpg', 'rb')
     keygameqvest22 = types.InlineKeyboardMarkup()
     key_IngotYes = types.InlineKeyboardButton(text='Подобрать свиток', callback_data='IngotYes')
     keygameqvest22.add(key_IngotYes)
-    bot.send_message(message.chat.id,
-                     'Возьми свиток',
-                     reply_markup=keygameqvest22)
-
+    bot.send_photo(chat_id=message.chat.id, photo=photo24,
+                   caption="Вы убили всех скелетов-рыцарей\nНа полу вы заметили свиток. Возьми его",
+                   reply_markup=keygameqvest22)
 
 def Demon(message, res=False):
+    photo24 = open('GameQvest/svitok.jpg', 'rb')
     keygameqvest23 = types.InlineKeyboardMarkup()
     key_Demon = types.InlineKeyboardButton(text='Подойти к демону', callback_data='Demon')
     keygameqvest23.add(key_Demon)
-    bot.send_message(message.chat.id,
-                     'Вы увидели демона',
-                     reply_markup=keygameqvest23)
+    bot.send_photo(chat_id=message.chat.id, photo=photo24,
+                   caption="Вы подняли свиток, раскрыли его и это оказался свиток усиления\nНадеюсь, он поможет мне в дальнейшем пушествий по замку\nВы пошли дальше.\nВы увидели демона.",
+                   reply_markup=keygameqvest23)
 
 
 def Demon2(message, res=False):
+    photo25 = open('GameQvest/vulgrim.jpg', 'rb')
     keygameqvest24 = types.InlineKeyboardMarkup()
     key_Demon2 = types.InlineKeyboardButton(text='Выслушать демона', callback_data='Demon2')
     keygameqvest24.add(key_Demon2)
-    bot.send_message(message.chat.id,
-                     'Демон начал рассказывать',
-                     reply_markup=keygameqvest24)
+    bot.send_photo(chat_id=message.chat.id, photo=photo25,
+                   caption="Приблизившись к демону, он обратился к вам:\n-\"Здравствуй, смертный. Меня зовут Вульгрим. Не знаю зачем направляешься к хозяину этой башни темному рыцарю Листату, но следующий его прислужник тебе не по зубам. Однако, я могу оказать тебе услугу\"",
+                   reply_markup=keygameqvest24)
 
 
 def Demon3(message, res=False):
+    photo26 = open('GameQvest/amulet.jpg', 'rb')
     keygameqvest25 = types.InlineKeyboardMarkup()
     key_DemonAmuletYes = types.InlineKeyboardButton(text='Принять Амулет', callback_data='DemonAmuletYes')
     keygameqvest25.add(key_DemonAmuletYes)
     key_DemonAmuletNo = types.InlineKeyboardButton(text='Отказаться', callback_data='DemonAmuletNo')
     keygameqvest25.add(key_DemonAmuletNo)
-    bot.send_message(message.chat.id,
-                     'Твое решение?',
-                     reply_markup=keygameqvest25)
+    bot.send_photo(chat_id=message.chat.id, photo=photo26,
+                   caption="Демон протягивает некий амулет и говорит:\n-\"Этот артефакт позволит убить твоего следующего противника, его имя Сашаель. Я дам тебе амулет, но взамен ты принесешь мне сердце Сашаеля\"",
+                   reply_markup=keygameqvest25)
 
 
 def Boss1(message, res=False):
+    photo27 = open('GameQvest/image15.jpg', 'rb')
     keygameqvest26 = types.InlineKeyboardMarkup()
     key_BossAmuletYes = types.InlineKeyboardButton(text='Использовать Амулет для Атаки', callback_data='BossAmuletYes')
     keygameqvest26.add(key_BossAmuletYes)
@@ -306,9 +314,9 @@ def Boss1(message, res=False):
     keygameqvest26.add(key_BossAmuletNo)
     key_BossExit = types.InlineKeyboardButton(text='Использовать Свиток для Атаки', callback_data='BossExit')
     keygameqvest26.add(key_BossExit)
-    bot.send_message(message.chat.id,
-                     'Вы увидели демона Сашаеля, как вы хотите его атаковать?',
-                     reply_markup=keygameqvest26)
+    bot.send_photo(chat_id=message.chat.id, photo=photo27,
+                   caption="Вы взяли амулет\nДемон улыбнулся и сказал:\n-\"Жду не дождусь когда ты принесешь его сердце мне. Не советую меня обманывать\"\nВы отправились дальше и встретили Сашаеля\nВы увидели демона Сашаеля, как вы хотите его атаковать?",
+                   reply_markup=keygameqvest26)
 
 
 def Demon4(message, res=False):
