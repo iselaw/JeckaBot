@@ -38,7 +38,7 @@ def getStatistic(message):
         number_of_elements1) + '\n' + "Всего чатов: " + str(number_of_elements + number_of_elements1)+'\n\n'+"Статистика по кнопкам"+'\n'
     db = sqlite3.connect('db/JeckaBot.db')
     cur = db.cursor()
-    for x in cur.execute("SELECT namebutton, count FROM Statistic"):
+    for x in cur.execute("SELECT namebutton, count FROM Statistic Order by count desc"):
         statistic=statistic+x[0]+': '+str(x[1])+'\n'
     db.close()
     bot.edit_message_text(chat_id=message.chat.id, message_id=message.message_id,

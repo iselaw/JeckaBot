@@ -833,6 +833,65 @@ def query_handler(call):
                               text="Приятного просмотра")
         anime(call.message)
         updateStatistic(call.message, "anime")
+    elif call.data == "game":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        game(call.message)
+    elif call.data == "music":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        music(call.message)
+    elif call.data == "weather":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        weather(call.message)
+    elif call.data == "silence":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        muteunmute(call.message)
+    elif call.data == "filmsPanel":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        films(call.message)
+    elif call.data == "goroscope":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        handle_AriesMenu(call.message)
+        updateStatistic(call.message, "goroscope")
+    elif call.data == "aries":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        handle_Aries(call.message, "Овен", "aries")
+    elif call.data == "taurus":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        handle_Aries(call.message, "Телец", "taurus")
+    elif call.data == "gemini":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        handle_Aries(call.message, "Близнецы", "gemini")
+    elif call.data == "cancer":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        handle_Aries(call.message, "Рак", "cancer")
+    elif call.data == "leo":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        handle_Aries(call.message, "Лев", "leo")
+    elif call.data == "virgo":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        handle_Aries(call.message, "Дева", "virgo")
+    elif call.data == "libra":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        handle_Aries(call.message, "Весы", "libra")
+    elif call.data == "scorpio":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        handle_Aries(call.message, "Скорпион", "scorpio")
+    elif call.data == "sagittarius":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        handle_Aries(call.message, "Стрелец", "sagittarius")
+    elif call.data == "capricorn":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        handle_Aries(call.message, "Козерог", "capricorn")
+    elif call.data == "aquarius":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        handle_Aries(call.message, "Водолей", "aquarius")
+    elif call.data == "pisces":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        handle_Aries(call.message, "Рыбы", "pisces")
+    elif call.data == "para":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        hack(call.message)
+        updateStatistic(call.message, "para")
 
 
 # Фильмы
@@ -847,15 +906,8 @@ def films(message, res=False):
     keyfilms.add(key_anime)
     bot.send_message(message.chat.id, 'Что хотите посмотреть ?',
                      reply_markup=keyfilms)
-    isAdmin = False
-    for x in admin:
-        if message.chat.id == x:
-            isAdmin = True
-    if (isAdmin == False):
-        bot.send_message(admin[0], message.from_user.first_name + " - Пошел Искать Фильм")
-        bot.send_message(admin[1], message.from_user.first_name + " - Пошел Искать Фильм")
-        bot.send_message(admin[2], message.from_user.first_name + " - Пошел Искать Фильм")
-        updateStatistic(message, "films")
+    adminNotification(message, "Пошел искать фильм")
+    updateStatistic(message, "films")
 
 
 # Музыка
@@ -868,16 +920,21 @@ def music(message, res=False):
     keymusic.add(key_musicList)
     bot.send_message(message.chat.id, 'Что хотите послушать ?',
                      reply_markup=keymusic)
+    adminNotification(message, "Пошел слушать музыку")
+    updateStatistic(message, "music")
+
+
+def adminNotification(message, text):
     isAdmin = False
     for x in admin:
         if message.chat.id == x:
             isAdmin = True
     if (isAdmin == False):
-        bot.send_message(admin[0], message.from_user.first_name + " - Пошел слушать музыку")
-        bot.send_message(admin[1], message.from_user.first_name + " - Пошел слушать музыку")
-        bot.send_message(admin[2], message.from_user.first_name + " - Пошел слушать музыку")
-    updateStatistic(message, "music")
-
+        for x in admin:
+            try:
+                bot.send_message(x, message.chat.first_name + " - " + text)
+            except:
+                bot.send_message(x, message.chat.title + " - " + text)
 
 # Добавление Аудио
 @bot.message_handler(content_types=['audio'])
@@ -926,7 +983,7 @@ def game(message, res=False):
     cur = db.cursor()
     try:
         cur.execute(
-            "UPDATE Users SET (nickname) = '" + str(message.from_user.first_name) + "'" + " WHERE userId = " + str(
+            "UPDATE Users SET (nickname) = '" + str(message.chat.first_name) + "'" + " WHERE userId = " + str(
                 message.chat.id))
         db.commit()
     except:
@@ -946,15 +1003,8 @@ def game(message, res=False):
     key_StatGame = types.InlineKeyboardButton(text='Статистика', callback_data='StatGame')
     keygame.add(key_StatGame)
     bot.send_message(message.chat.id, 'Во что сыграем ?\nВаш Баланс: ' + str(getBalance(message)), reply_markup=keygame)
-    isAdmin = False
-    for x in admin:
-        if message.chat.id == x:
-            isAdmin = True
-    if (isAdmin == False):
-        bot.send_message(admin[0], message.from_user.first_name + " - Пошел Играть")
-        bot.send_message(admin[1], message.from_user.first_name + " - Пошел Играть")
-        bot.send_message(admin[2], message.from_user.first_name + " - Пошел Играть")
-        updateStatistic(message, "game")
+    adminNotification(message, "Пошел играть")
+    updateStatistic(message, "game")
 
 
 def GameSSP(message, itog, res=False):
@@ -1086,28 +1136,46 @@ def start(message, res=False):
 @bot.message_handler(commands=["help"])
 def help(message, res=False):
     bot.send_message(message.chat.id,
-                     'Привет, вот что я умею' + '\n❕ Список Команд ❕\n/menu - Вызвать меню\n/game - Поиграть в игры\n/films - Подобрать фильм на вечер\n/weather - Погода в вашем городе\n/music - Послушать музыку\n/off - замутить бота\n/on - размутить бота\n/course - Курс различных валют\nЧтобы узнать гороскоп на сегодня, напиши мне, например "гороскоп весы"\nА так же, я могу отвечать на твои сообщения, картинки, стикеры.\nИ каждый день учусь новому.')
+                     'Привет, вот что я умею' + '\n❕ Список Команд ❕\n/menu - Вызвать меню\n/панель - вызвать панель функций бота\nЕще '
+                                                'я могу отвечать на твои сообщения, картинки, стикеры.\nИ каждый день '
+                                                'учусь новому.')
 
 
 # Команда "Бот меню"
 @bot.message_handler(commands=["menu"])
 def menu(message, res=False):
     keyboardgame = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    btn1 = types.KeyboardButton('/погода')
-    btn2 = types.KeyboardButton('/молчанка')
-    btn3 = types.KeyboardButton('/фильмы')
-    btn4 = types.KeyboardButton('/музыка')
-    btn5 = types.KeyboardButton('/игра')
+    btn1 = types.KeyboardButton('/панель')
     btn6 = types.KeyboardButton('/admin')
     isAdmin = False
     for x in admin:
         if message.chat.id == x:
             isAdmin = True
     if (isAdmin == False):
-        keyboardgame.add(btn1, btn2, btn3, btn4, btn5)
+        keyboardgame.add(btn1)
     else:
-        keyboardgame.add(btn1, btn2, btn3, btn4, btn5, btn6)
-    bot.send_message(message.chat.id, 'Что нужно ? ', reply_markup=keyboardgame)
+        keyboardgame.add(btn1, btn6)
+    bot.send_message(message.chat.id, 'Что нужно?', reply_markup=keyboardgame)
+
+
+@bot.message_handler(commands=["панель"])
+def botFeature(message, res=False):
+    botPanel = types.InlineKeyboardMarkup()
+    key_game = types.InlineKeyboardButton(text='Играть', callback_data='game')
+    botPanel.add(key_game)
+    key_music = types.InlineKeyboardButton(text='Музыка', callback_data='music')
+    botPanel.add(key_music)
+    key_weather = types.InlineKeyboardButton(text='Погода', callback_data='weather')
+    botPanel.add(key_weather)
+    key_silence = types.InlineKeyboardButton(text='Молчанка', callback_data='silence')
+    botPanel.add(key_silence)
+    key_film = types.InlineKeyboardButton(text='Фильмы', callback_data='filmsPanel')
+    botPanel.add(key_film)
+    key_goroscope = types.InlineKeyboardButton(text='Гороскоп', callback_data='goroscope')
+    botPanel.add(key_goroscope)
+    key_para = types.InlineKeyboardButton(text='Пара дня', callback_data='para')
+    botPanel.add(key_para)
+    bot.send_message(message.chat.id, 'Чем желаешь заняться?', reply_markup=botPanel)
 
 
 # Команда "Погода"
@@ -1123,7 +1191,11 @@ def weather(message, res=False):
 
 
 def textCity(message):
-    bot.send_message(chat_id=message.chat.id, text=get_weather(message.text, open_weather_token))
+    try:
+        bot.send_message(chat_id=message.chat.id, text=get_weather(message.text, open_weather_token))
+    except:
+        bot.send_message(chat_id=message.chat.id,
+                         text="К сожалению, пока не могу подсказать погоду. Что-то поломалось(")
 
 
 def get_weather(message, open_weather_token):
@@ -1165,98 +1237,44 @@ def get_weather(message, open_weather_token):
 
 
 # Команда "Гороскоп"
-def handle_Aries(message):
-    isGoroscope = False
-    indexCommand = message.text.find(" ")
-    CommandString = message.text[:indexCommand]
-    if (fuzz.token_sort_ratio(CommandString, "гороскоп") > 90):
-        isGoroscope = True
-        Similary = [0] * 12
-        index = message.text.find(" ")
-        sign = message.text[index + 1:]
-        Similary[0] = (fuzz.token_sort_ratio(sign, "овен"))
-        Similary[1] = (fuzz.token_sort_ratio(sign, "телец"))
-        Similary[2] = (fuzz.token_sort_ratio(sign, "близнецы"))
-        Similary[3] = (fuzz.token_sort_ratio(sign, "лев"))
-        Similary[4] = (fuzz.token_sort_ratio(sign, "дева"))
-        Similary[5] = (fuzz.token_sort_ratio(sign, "весы"))
-        Similary[6] = (fuzz.token_sort_ratio(sign, "скорпион"))
-        Similary[7] = (fuzz.token_sort_ratio(sign, "стрелец"))
-        Similary[8] = (fuzz.token_sort_ratio(sign, "козерог"))
-        Similary[9] = (fuzz.token_sort_ratio(sign, "водолей"))
-        Similary[10] = (fuzz.token_sort_ratio(sign, "рыбы"))
-        Similary[11] = (fuzz.token_sort_ratio(sign, "рак"))
-        maxSimilary = max(Similary)
-        count = 0
-        for x in Similary:
-            if x == maxSimilary:
-                ourSignNumber = count
-            count = count + 1
-        engSign = " "
-        if (ourSignNumber == 0):
-            engSign = "aries"
-            sign = "Овен"
-        if (ourSignNumber == 1):
-            engSign = "taurus"
-            sign = "Телец"
-        if (ourSignNumber == 2):
-            engSign = "gemini"
-            sign = "Близнецы"
-        if (ourSignNumber == 11):
-            engSign = "cancer"
-            sign = "Рак"
-        if (ourSignNumber == 3):
-            engSign = "leo"
-            sign = "Лев"
-        if (ourSignNumber == 4):
-            engSign = "virgo"
-            sign = "Дева"
-        if (ourSignNumber == 5):
-            engSign = "libra"
-            sign = "Весы"
-        if (ourSignNumber == 6):
-            engSign = "scorpio"
-            sign = "Скорпион"
-        if (ourSignNumber == 7):
-            engSign = "sagittarius"
-            sign = "Стрелец"
-        if (ourSignNumber == 8):
-            engSign = "capricorn"
-            sign = "Козерог"
-        if (ourSignNumber == 9):
-            engSign = "aquarius"
-            sign = "Водолей"
-        if (ourSignNumber == 10):
-            engSign = "pisces"
-            sign = "Рыбы"
-        if maxSimilary < 70:
-            bot.send_message(message.chat.id, "Не знаю такого знака зодиака")
-        else:
-            file = urllib2.urlopen(
-                'https://ignio.com/r/export/utf/xml/daily/com.xml')
-            data = file.read()
-            file.close()
-            data = xmltodict.parse(data)
-            Aries = sign + '\n' + data["horo"][engSign]["today"]
-            bot.send_message(message.chat.id, Aries)
+def handle_Aries(message, sign, engSign):
+    file = urllib2.urlopen(
+        'https://ignio.com/r/export/utf/xml/daily/com.xml')
+    data = file.read()
+    file.close()
+    data = xmltodict.parse(data)
+    Aries = sign + '\n' + data["horo"][engSign]["today"]
+    bot.send_message(message.chat.id, Aries)
 
-    return isGoroscope
+
+def handle_AriesMenu(message):
+    keyboard = types.InlineKeyboardMarkup(row_width=2)
+    key_aries = types.InlineKeyboardButton(text='Овен', callback_data='aries')
+    key_taurus = types.InlineKeyboardButton(text='Телец', callback_data='taurus')
+    key_gemini = types.InlineKeyboardButton(text='Близнецы', callback_data='gemini')
+    key_cancer = types.InlineKeyboardButton(text='Рак', callback_data='cancer')
+    key_leo = types.InlineKeyboardButton(text='Лев', callback_data='leo')
+    key_virgo = types.InlineKeyboardButton(text='Дева', callback_data='virgo')
+    key_libra = types.InlineKeyboardButton(text='Весы', callback_data='libra')
+    key_scorpio = types.InlineKeyboardButton(text='Скорпион', callback_data='scorpio')
+    key_sagittarius = types.InlineKeyboardButton(text='Стрелец', callback_data='sagittarius')
+    key_capricorn = types.InlineKeyboardButton(text='Козерог', callback_data='capricorn')
+    key_aquarius = types.InlineKeyboardButton(text='Водолей', callback_data='aquarius')
+    key_pisces = types.InlineKeyboardButton(text='Рыбы', callback_data='pisces')
+    keyboard.row(key_aries, key_taurus, key_gemini, key_cancer)
+    keyboard.row(key_leo, key_virgo, key_libra, key_scorpio)
+    keyboard.row(key_sagittarius, key_capricorn, key_aquarius, key_pisces)
+    bot.send_message(message.chat.id, 'Какой знак интересует?', reply_markup=keyboard)
+    adminNotification(message, "Смотрит гороскоп")
 
 
 # Команда "Пара дня"
-def handle_Para(message):
-    para = False
-    if (fuzz.token_sort_ratio(message.text.lower().strip(), "Пара дня") > 70):
-        hack(message)
-        para = True
-    return para
-
-
 def hack(message):
     keylove = types.InlineKeyboardMarkup()
     key_love = types.InlineKeyboardButton(text='Поиск пары дня', callback_data='love')
     keylove.add(key_love)
     bot.send_message(message.chat.id, 'Ну что найдем для тебя пару дня ?', reply_markup=keylove)
+    adminNotification(message, "Смотрит пару дня")
 
 
 # Команда "Орел  Решка"
@@ -1388,9 +1406,7 @@ def handle_text(message):
         muteStatus = x[0]
     db.close()
     handle_UserId(message)
-    para = handle_Para(message)
     Brocok = handle_Brocok(message)
-    isGoroscope = handle_Aries(message)
     isStandarnAnswer = True
     timeAnswer = handle_Time(message.text)
     db = sqlite3.connect('db/JeckaBot.db')
@@ -1420,12 +1436,6 @@ def handle_text(message):
                 realAnswer = "*Был отправлен пуш*"
                 isStandarnAnswer = False
                 isPush = False
-    if (para == True):
-        isStandarnAnswer = False
-        realAnswer = "*Была подобрана пара*"
-    if (isGoroscope == True):
-        isStandarnAnswer = False
-        realAnswer = "*Был отправлен гороскоп*"
     if (Brocok == True):
         isStandarnAnswer = False
         realAnswer = "*Была подкинута монетка*"
