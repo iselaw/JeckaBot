@@ -232,6 +232,7 @@ def voice_processing(message):
         bot.send_voice(admin[1], message.voice.file_id)
         bot.send_voice(admin[2], message.voice.file_id)
 
+
 # Команда "Курс"
 @bot.message_handler(commands=["курс", "course"])
 def startcourse(message, res=False):
@@ -1098,7 +1099,14 @@ def menu(message, res=False):
     btn4 = types.KeyboardButton('/музыка')
     btn5 = types.KeyboardButton('/игра')
     btn6 = types.KeyboardButton('/admin')
-    keyboardgame.add(btn1, btn2, btn3, btn4, btn5, btn6)
+    isAdmin = False
+    for x in admin:
+        if message.chat.id == x:
+            isAdmin = True
+    if (isAdmin == False):
+        keyboardgame.add(btn1, btn2, btn3, btn4, btn5)
+    else:
+        keyboardgame.add(btn1, btn2, btn3, btn4, btn5, btn6)
     bot.send_message(message.chat.id, 'Что нужно ? ', reply_markup=keyboardgame)
 
 
