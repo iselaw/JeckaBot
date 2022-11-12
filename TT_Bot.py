@@ -45,7 +45,7 @@ masstiker = []
 if os.path.exists('data/boltun.txt'):
     f = open('data/boltun.txt', 'r', encoding='UTF-8')
     for x in f:
-        if (len(x.strip()) > 2):
+        if len(x.strip()) > 2:
             mas.append(x.strip().lower())
     lastString = 'u: fUnCr55Iofefsfcccраытысш'
     mas.append(lastString.strip().lower())
@@ -58,7 +58,7 @@ if os.path.exists('data/masurl.txt'):
 if os.path.exists('data/stiker.txt'):
     f3 = open('data/stiker.txt', 'r', encoding='UTF-8')
     for x3 in f3:
-        if (len(x3.strip()) > 2):
+        if len(x3.strip()) > 2:
             masstiker.append(x3.strip())
     f3.close()
 if os.path.exists('data/masParaLove.txt'):
@@ -79,7 +79,7 @@ def update(questionString, answerString):
     countMas = 0
     valumeMas = len(mas) - 1
     for x in f:
-        if (countMas <= valumeMas):
+        if countMas <= valumeMas:
             mas[countMas] = x
             countMas = countMas + 1
         else:
@@ -100,20 +100,20 @@ def addAnswer(text, questionNumber):
         count = count + 1
     count = questionNumber + 1
     while count < valumeMas + 1:
-        if (count == valumeMas):
+        if count == valumeMas:
             lastString = 'u: fUnCr55Iofefsfcccраытысш'
             mas.append(lastString.strip().lower())
-        if (count == questionNumber + 1):
+        if count == questionNumber + 1:
             mas[count] = text
-        if (count < valumeMas):
-            if (count > questionNumber + 1):
+        if count < valumeMas:
+            if count > questionNumber + 1:
                 mas[count] = memoryMas[countMemory]
                 countMemory = countMemory + 1
         count = count + 1
     x = open('data//boltun.txt', 'w', encoding='UTF-8')
     count = 0
     for z in mas:
-        if (count != len(mas) - 1):
+        if count != len(mas) - 1:
             x.write(z.strip() + '\n')
         count = count + 1
     x.close()
@@ -128,7 +128,7 @@ def answer(text):
             elementNumber = 0
             questionNumber = 0
             for q in mas:
-                if ('u: ' in q):
+                if 'u: ' in q:
                     # С помощью fuzzywuzzy получаем, насколько похожи две строки
                     degreeOfSimilarity = (fuzz.token_sort_ratio(q.replace('u: ', ''), text))
                     if (degreeOfSimilarity > maximumSimilarity):
@@ -138,10 +138,10 @@ def answer(text):
                 elementNumber = elementNumber + 1
             isQuestion = False
             count = 1
-            while isQuestion == False:
-                if ('u: ' not in mas[questionNumber + count]):
+            while not isQuestion:
+                if 'u: ' not in mas[questionNumber + count]:
                     count = count + 1
-                if ('u: ' in mas[questionNumber + count]):
+                if 'u: ' in mas[questionNumber + count]:
                     isQuestion = True
             answerNumber = random.randint(1, count - 1)
             answer = mas[questionNumber + answerNumber]
@@ -166,14 +166,6 @@ def handle_photo(message):
         urlNumber = random.randint(0, lenghtMasUrl - 1)
         url = masurl[urlNumber]
         bot.send_photo(message.chat.id, get(url).content)
-        from pathlib import Path
-        Path(f'files/').mkdir(parents=True, exist_ok=True)
-        if message.content_type == 'photo':
-            file_info = bot.get_file(message.photo[len(message.photo) - 1].file_id)
-            downloaded_file = bot.download_file(file_info.file_path)
-            src = f'files/' + file_info.file_path.replace('photos/', '')
-            with open(src, 'wb') as new_file:
-                new_file.write(downloaded_file)
     isAdmin = False
     for x in admin:
         if message.chat.id == x:
@@ -181,6 +173,7 @@ def handle_photo(message):
     if (isAdmin == False):
         bot.send_message(admin[0], message.from_user.first_name + " - Отправил картинку в чат")
         bot.send_message(admin[1], message.from_user.first_name + " - Отправил картинку в чат")
+        bot.send_photo(admin[1], message.photo[len(message.photo) - 1].file_id)
         bot.send_message(admin[2], message.from_user.first_name + " - Отправил картинку в чат")
 
 
@@ -204,8 +197,11 @@ def handle_sticker(message):
             isAdmin = True
     if (isAdmin == False):
         bot.send_message(admin[0], message.from_user.first_name + " - Отправил стикер в чат")
+        bot.send_sticker(admin[0], message.sticker.file_id)
         bot.send_message(admin[1], message.from_user.first_name + " - Отправил стикер в чат")
+        bot.send_sticker(admin[1], message.sticker.file_id)
         bot.send_message(admin[2], message.from_user.first_name + " - Отправил стикер в чат")
+        bot.send_sticker(admin[2], message.sticker.file_id)
 
 
 # Отправка Сообщения на голосовое
@@ -660,7 +656,8 @@ def query_handler(call):
         photo30 = open('GameQvest/killgeka.jpg', 'rb')
         bot.send_photo(chat_id=call.message.chat.id, photo=photo30,
                        caption="Вы нанесли удар по противнику, но вашей силы удара не хватило, чтобы нанести сильные "
-                               "повреждения. Противник размахнулся и резкими движениями косой разделил Ваше тело на три части "
+                               "повреждения. Противник размахнулся и резкими движениями косой разделил Ваше тело на "
+                               "три части "
                                "\n\nВЫ ПОГИБЛИ")
     elif call.data == "BossExit":
         bot.delete_message(call.message.chat.id, call.message.message_id)
@@ -929,12 +926,13 @@ def adminNotification(message, text):
     for x in admin:
         if message.chat.id == x:
             isAdmin = True
-    if (isAdmin == False):
+    if not isAdmin:
         for x in admin:
             try:
                 bot.send_message(x, message.chat.first_name + " - " + text)
             except:
                 bot.send_message(x, message.chat.title + " - " + text)
+
 
 # Добавление Аудио
 @bot.message_handler(content_types=['audio'])
@@ -1018,7 +1016,7 @@ def GameSSP(message, itog, res=False):
     key_gameexit = types.InlineKeyboardButton(text='Вдругой раз', callback_data='gameexit')
     keygame1.add(key_gameexit)
     if itog == "first":
-        bot.send_message(message.chat.id, "играем ? ", reply_markup=keygame1)
+        bot.send_message(message.chat.id, "Играем?", reply_markup=keygame1)
     else:
         bot.edit_message_text(chat_id=message.chat.id, message_id=message.message_id,
                               text=itog, reply_markup=keygame1)
@@ -1068,7 +1066,7 @@ def slotMachine(message, betValue):
         if slot1 == "🍒":
             point = bet * 3
         isBankrot, Balance = updateScore(bet, point, message)
-        if isBankrot == False:
+        if not isBankrot:
             itog = "Ты выиграл \n{}".format(itog) + "\n" + "Баланс: " + str(Balance) + "(+" + str(
                 point) + ")"
         else:
@@ -1076,7 +1074,7 @@ def slotMachine(message, betValue):
     else:
         point = bet * (-1)
         isBankrot, Balance = updateScore(bet, point, message)
-        if isBankrot == False:
+        if not isBankrot:
             itog = "Увы, но ты проиграл \n{}".format(itog) + "\n" + "Баланс: " + str(Balance) + "(" + str(
                 point) + ")"
         else:
@@ -1121,14 +1119,12 @@ def start(message, res=False):
         global standartPoint
         cur.execute("INSERT INTO Users (userId, nickname, balance, active) VALUES (?, ?, ?, ?);",
                     (sz, f"{si}", standartPoint, 1))
-        bot.send_message(admin[0], message.from_user.first_name + " - Новый пользователь")
-        bot.send_message(admin[1], message.from_user.first_name + " - Новый пользователь")
-        bot.send_message(admin[2], message.from_user.first_name + " - Новый пользователь")
         db.commit()
     db.close()
     pl.close()
     bot.send_message(message.chat.id,
-                     '{}, привет, меня зовут ЖекаБот. Напиши мне Привет :)\nОбязательно введи /help что бы увидеть что я умею'.format(
+                     '{}, привет, меня зовут ЖекаБот. Напиши мне Привет :)\nОбязательно введи /help что бы увидеть '
+                     'что я умею'.format(
                          message.from_user.first_name))
 
 
@@ -1136,7 +1132,8 @@ def start(message, res=False):
 @bot.message_handler(commands=["help"])
 def help(message, res=False):
     bot.send_message(message.chat.id,
-                     'Привет, вот что я умею' + '\n❕ Список Команд ❕\n/menu - Вызвать меню\n/панель - вызвать панель функций бота\nЕще '
+                     'Привет, вот что я умею' + '\n❕ Список Команд ❕\n/menu - Вызвать меню\n/панель - вызвать панель '
+                                                'функций бота\nЕще '
                                                 'я могу отвечать на твои сообщения, картинки, стикеры.\nИ каждый день '
                                                 'учусь новому.')
 
@@ -1145,16 +1142,18 @@ def help(message, res=False):
 @bot.message_handler(commands=["menu"])
 def menu(message, res=False):
     keyboardgame = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    btn1 = types.KeyboardButton('/панель')
+    btn3 = types.KeyboardButton('/музыка')
+    btn4 = types.KeyboardButton('/игра')
+    btn5 = types.KeyboardButton('/панель')
     btn6 = types.KeyboardButton('/admin')
     isAdmin = False
     for x in admin:
         if message.chat.id == x:
             isAdmin = True
-    if (isAdmin == False):
-        keyboardgame.add(btn1)
+    if not isAdmin:
+        keyboardgame.add(btn3, btn4, btn5)
     else:
-        keyboardgame.add(btn1, btn6)
+        keyboardgame.add(btn3, btn4, btn5, btn6)
     bot.send_message(message.chat.id, 'Что нужно?', reply_markup=keyboardgame)
 
 
@@ -1232,7 +1231,7 @@ def get_weather(message, open_weather_token):
         return text
 
     except Exception as ex:
-        text2 = ('я не знаю такого города')
+        text2 = 'я не знаю такого города'
         return text2
 
 
@@ -1280,7 +1279,7 @@ def hack(message):
 # Команда "Орел  Решка"
 def handle_Brocok(message):
     Brocok = False
-    if (fuzz.token_sort_ratio(message.text.lower().strip(), "Орел или Решка") > 70):
+    if fuzz.token_sort_ratio(message.text.lower().strip(), "Орел или Решка") > 70:
         money(message)
         Brocok = True
     return Brocok
@@ -1318,9 +1317,9 @@ def startadm(message: types.Message):
 
 
 def cancelButton(message):
-    keyCancel = types.InlineKeyboardMarkup();  # наша клавиатура
-    key_cancel = types.InlineKeyboardButton(text='Отменить операцию', callback_data='cancel');  # кнопка «Да»
-    keyCancel.add(key_cancel);  # добавляем кнопку в клавиатуру
+    keyCancel = types.InlineKeyboardMarkup()  # наша клавиатура
+    key_cancel = types.InlineKeyboardButton(text='Отменить операцию', callback_data='cancel')  # кнопка «Да»
+    keyCancel.add(key_cancel)  # добавляем кнопку в клавиатуру
     bot.send_message(message.chat.id, "Нажмите, если хотите отменить операцию", reply_markup=keyCancel)
 
 
@@ -1337,15 +1336,15 @@ def addQuestion(message):
     questionString = message.text[:index]
     answerString = message.text[index + 1:]
     for q in mas:
-        if ('u: ' in q):
+        if 'u: ' in q:
             degreeOfSimilarity = (fuzz.token_sort_ratio(q.replace('u: ', ''), questionString))
-            if (degreeOfSimilarity > maximumSimilarity):
+            if degreeOfSimilarity > maximumSimilarity:
                 maximumSimilarity = degreeOfSimilarity
                 questionNumberToAdd = elementNumber
         elementNumber = elementNumber + 1
-    if (maximumSimilarity > 70):
+    if maximumSimilarity > 70:
         questionOfSimilary = "В базе есть похожий вопрос:\n" + mas[questionNumberToAdd].replace('u: ',
-                                                                                                '') + "\n" + "ты уверен, что хочешь добавить новый?"
+                                                                                                '') + "\n" + "ты уверен, что хочешь добавить новый? "
         keyboard = types.InlineKeyboardMarkup()  # наша клавиатура
         key_yes = types.InlineKeyboardButton(text='Добавить', callback_data='yes')  # кнопка «Да»
         keyboard.add(key_yes)  # добавляем кнопку в клавиатуру
@@ -1376,7 +1375,7 @@ def handle_UserId(message):
 
 
 def handle_Time(message):
-    if (fuzz.token_sort_ratio(message.lower().strip(), "сколько времени?") > 70):
+    if fuzz.token_sort_ratio(message.lower().strip(), "сколько времени?") > 70:
         tz = pytz.timezone('Asia/Krasnoyarsk')
         nvk_current_datetime = datetime.now(tz).strftime("%y.%m.%d %H:%M:%S")
         c_date, c_time = nvk_current_datetime.split()
@@ -1420,39 +1419,39 @@ def handle_text(message):
             isStandarnAnswer = False
             realAnswer = "*Был дан ответ о погоде*"
     db.close()
-    if (isAddQuestion == True):
-        if (isAdmin == True):
-            if (addAdmin == str(message.chat.id)):
+    if isAddQuestion:
+        if isAdmin:
+            if addAdmin == str(message.chat.id):
                 addQuestion(message)
                 isStandarnAnswer = False
                 isAddQuestion = False
                 addAdmin = "0"
                 realAnswer = "*Был добавлен вопрос*"
-    if (isPush == True):
-        if (isAdmin == True):
-            if (pushAdmin == str(message.chat.id)):
+    if isPush:
+        if isAdmin:
+            if pushAdmin == str(message.chat.id):
                 push(message.text)
                 pushAdmin = "0"
                 realAnswer = "*Был отправлен пуш*"
                 isStandarnAnswer = False
                 isPush = False
-    if (Brocok == True):
+    if Brocok:
         isStandarnAnswer = False
         realAnswer = "*Была подкинута монетка*"
     if muteStatus == 0:
-        if (timeAnswer != None):
+        if timeAnswer is not None:
             bot.send_message(message.chat.id, timeAnswer)
             isStandarnAnswer = False
             realAnswer = timeAnswer
-        if (isStandarnAnswer == True):
+        if isStandarnAnswer:
             realAnswer = answer(message.text)
             bot.send_message(message.chat.id, realAnswer)
         f = open('data/logi/' + str(message.chat.id) + '_' + str(message.from_user.username) + '_log.txt', 'a',
                  encoding='UTF-8')
         f.write('u: ' + message.text + '\n' + realAnswer + '\n')
         f.close()
-    if (isAdmin == False):
-        if (ignoreListParameter == False):
+    if not isAdmin:
+        if not ignoreListParameter:
             bot.send_message(admin[1], message.from_user.first_name + "\n" + message.text + "\n" + realAnswer)
             bot.send_message(admin[2], message.from_user.first_name + "\n" + message.text + "\n" + realAnswer)
             bot.send_message(admin[0], message.from_user.first_name + "\n" + message.text + "\n" + realAnswer)
