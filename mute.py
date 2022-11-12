@@ -2,7 +2,6 @@ import sqlite3
 
 from telebot import types
 from Login import *
-from TT_Bot import adminNotification
 
 
 @bot.message_handler(commands=["off"])
@@ -13,7 +12,16 @@ def mute(message, res=False):
     db.commit()
     db.close()
     bot.send_message(message.chat.id, 'Хорошо, помолчим. Если захочешь поболтать, введи /on')
-    adminNotification(message, "Замутил бота")
+    isAdmin = False
+    for x in admin:
+        if message.chat.id == x:
+            isAdmin = True
+    if not isAdmin:
+        for x in admin:
+            try:
+                bot.send_message(x, message.chat.first_name + " - Замутил бота")
+            except:
+                bot.send_message(x, message.chat.title + " - Замутил бота")
 
 
 @bot.message_handler(commands=["on"])
@@ -24,7 +32,16 @@ def unmute(message, res=False):
     db.commit()
     db.close()
     bot.send_message(message.chat.id, 'Привет, мы снова можем поболтать')
-    adminNotification(message, "Размутил бота")
+    isAdmin = False
+    for x in admin:
+        if message.chat.id == x:
+            isAdmin = True
+    if not isAdmin:
+        for x in admin:
+            try:
+                bot.send_message(x, message.chat.first_name + " - Размутил бота")
+            except:
+                bot.send_message(x, message.chat.title + " - Размутил бота")
 
 
 @bot.message_handler(commands=["молчанка"])
