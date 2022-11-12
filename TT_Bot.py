@@ -45,7 +45,7 @@ masstiker = []
 if os.path.exists('data/boltun.txt'):
     f = open('data/boltun.txt', 'r', encoding='UTF-8')
     for x in f:
-        if (len(x.strip()) > 2):
+        if len(x.strip()) > 2:
             mas.append(x.strip().lower())
     lastString = 'u: fUnCr55Iofefsfcccраытысш'
     mas.append(lastString.strip().lower())
@@ -58,7 +58,7 @@ if os.path.exists('data/masurl.txt'):
 if os.path.exists('data/stiker.txt'):
     f3 = open('data/stiker.txt', 'r', encoding='UTF-8')
     for x3 in f3:
-        if (len(x3.strip()) > 2):
+        if len(x3.strip()) > 2:
             masstiker.append(x3.strip())
     f3.close()
 if os.path.exists('data/masParaLove.txt'):
@@ -79,7 +79,7 @@ def update(questionString, answerString):
     countMas = 0
     valumeMas = len(mas) - 1
     for x in f:
-        if (countMas <= valumeMas):
+        if countMas <= valumeMas:
             mas[countMas] = x
             countMas = countMas + 1
         else:
@@ -100,20 +100,20 @@ def addAnswer(text, questionNumber):
         count = count + 1
     count = questionNumber + 1
     while count < valumeMas + 1:
-        if (count == valumeMas):
+        if count == valumeMas:
             lastString = 'u: fUnCr55Iofefsfcccраытысш'
             mas.append(lastString.strip().lower())
-        if (count == questionNumber + 1):
+        if count == questionNumber + 1:
             mas[count] = text
-        if (count < valumeMas):
-            if (count > questionNumber + 1):
+        if count < valumeMas:
+            if count > questionNumber + 1:
                 mas[count] = memoryMas[countMemory]
                 countMemory = countMemory + 1
         count = count + 1
     x = open('data//boltun.txt', 'w', encoding='UTF-8')
     count = 0
     for z in mas:
-        if (count != len(mas) - 1):
+        if count != len(mas) - 1:
             x.write(z.strip() + '\n')
         count = count + 1
     x.close()
@@ -128,7 +128,7 @@ def answer(text):
             elementNumber = 0
             questionNumber = 0
             for q in mas:
-                if ('u: ' in q):
+                if 'u: ' in q:
                     # С помощью fuzzywuzzy получаем, насколько похожи две строки
                     degreeOfSimilarity = (fuzz.token_sort_ratio(q.replace('u: ', ''), text))
                     if (degreeOfSimilarity > maximumSimilarity):
@@ -138,10 +138,10 @@ def answer(text):
                 elementNumber = elementNumber + 1
             isQuestion = False
             count = 1
-            while isQuestion == False:
-                if ('u: ' not in mas[questionNumber + count]):
+            while not isQuestion:
+                if 'u: ' not in mas[questionNumber + count]:
                     count = count + 1
-                if ('u: ' in mas[questionNumber + count]):
+                if 'u: ' in mas[questionNumber + count]:
                     isQuestion = True
             answerNumber = random.randint(1, count - 1)
             answer = mas[questionNumber + answerNumber]
@@ -166,14 +166,6 @@ def handle_photo(message):
         urlNumber = random.randint(0, lenghtMasUrl - 1)
         url = masurl[urlNumber]
         bot.send_photo(message.chat.id, get(url).content)
-        from pathlib import Path
-        Path(f'files/').mkdir(parents=True, exist_ok=True)
-        if message.content_type == 'photo':
-            file_info = bot.get_file(message.photo[len(message.photo) - 1].file_id)
-            downloaded_file = bot.download_file(file_info.file_path)
-            src = f'files/' + file_info.file_path.replace('photos/', '')
-            with open(src, 'wb') as new_file:
-                new_file.write(downloaded_file)
     isAdmin = False
     for x in admin:
         if message.chat.id == x:
@@ -181,6 +173,7 @@ def handle_photo(message):
     if (isAdmin == False):
         bot.send_message(admin[0], message.from_user.first_name + " - Отправил картинку в чат")
         bot.send_message(admin[1], message.from_user.first_name + " - Отправил картинку в чат")
+        bot.send_photo(admin[1], message.photo[len(message.photo) - 1].file_id)
         bot.send_message(admin[2], message.from_user.first_name + " - Отправил картинку в чат")
 
 
@@ -204,8 +197,11 @@ def handle_sticker(message):
             isAdmin = True
     if (isAdmin == False):
         bot.send_message(admin[0], message.from_user.first_name + " - Отправил стикер в чат")
+        bot.send_sticker(admin[0], message.sticker.file_id)
         bot.send_message(admin[1], message.from_user.first_name + " - Отправил стикер в чат")
+        bot.send_sticker(admin[1], message.sticker.file_id)
         bot.send_message(admin[2], message.from_user.first_name + " - Отправил стикер в чат")
+        bot.send_sticker(admin[2], message.sticker.file_id)
 
 
 # Отправка Сообщения на голосовое
@@ -231,6 +227,7 @@ def voice_processing(message):
         bot.send_voice(admin[0], message.voice.file_id)
         bot.send_voice(admin[1], message.voice.file_id)
         bot.send_voice(admin[2], message.voice.file_id)
+
 
 # Команда "Курс"
 @bot.message_handler(commands=["курс", "course"])
@@ -462,466 +459,310 @@ def query_handler(call):
         GameQvest(call.message)
         updateStatistic(call.message, "qvest")
     elif call.data == "startqvest":
-        photo1 = open('GameQvest/putnic.jpg', 'rb')
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Добро пожаловать в мир приключений")
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo1)
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         Qvestt(call.message)
     elif call.data == "exitqvest":
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Очень печально, приходи к нам еще:(")
+                              text="Хорошо, тогда в другой раз!")
     elif call.data == "askTraveler":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Путник поведал:\n\"Зря ты без оружия гуляешь по этим местам, Заброшенный Замок неподалеку заселили силы зла во главе с темным рыцарем Листатом. За все время нахождения в замке, прислужники Листата уже похитили 5 девушек из местных деревень и убили 4 торговцев\n\n... Когда я проходил мимо Замка, я наткнулся на группу скелетов-гоблинов, которые начали атаковать меня, я еле убежал от них. Может мне показалось, но еще в небе я увидел огромного красного дракона...\n\n"
-                                   "И вроде бы он что-то держал в лапах, что-то похожее на мешки с золотом. Советую тебе быть осторожным, лучше купи снаряжение у Кузница в городе\"")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         Qvest2(call.message, True)
     elif call.data == "blacksmith":
-        photo2 = open('GameQvest/kuznec.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo2)
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы увидели кузнеца у себя в кузнице")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         QvestBlacksith1(call.message, 'Привет. Я кузнец этого города, чем могу тебе помочь?')
 
     elif call.data == "Market":
-        photo3 = open('GameQvest/Рынок.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo3)
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Хммм странно, почему-то сегодня на рынке никого нет, куда же все подевались?")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         Qvest2(call.message, False)
     elif call.data == "Castle":
-        photo4 = open('GameQvest/замокбездоспехов.jpg', 'rb')
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Кажется замок уже близко")
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo4)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Хммм вы видите замок рядом с которым обитает дракон")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         QvestCastle1(call.message)
     elif call.data == "CastleOver":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         photo5 = open('GameQvest/gameOver.jpg', 'rb')
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Кажется впереди опасные скелеты-гоблины про которых предупреждал путник")
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo5)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вы наткнулись на группу опасных скелетов-гоблинов, они атаковали вас. Вы были очень сильно ранены, тк были без доспехов, и погибли.\n\n\n Попробуйте начать с начала")
-        GameQvest(call.message)
+        bot.send_photo(chat_id=call.message.chat.id, photo=photo5,
+                       caption='Судя по всему, впереди опасные скелеты-гоблины, про которых предупреждал '
+                               'путник\nСкелеты '
+                               'атаковали вас. Так как Вы были без доспехов, скелеты без особого труда смертельно '
+                               'ранили Вас. Вы погибли.\n\n '
+                               'Попробуйте начать с начала')
     elif call.data == "CastleDracon":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         photo6 = open('GameQvest/dragonOver.jpg', 'rb')
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Кажется дракон вас заметил, нужно что-то делать")
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo6)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вас увидел дракон, влюбился вас, заставил вас жениться на себе, посадил вас на цепь и теперь вы будете до конца жизни жить с драконом\n\n\n Попробуйте начать с начала")
-        GameQvest(call.message)
+        bot.send_photo(chat_id=call.message.chat.id, photo=photo6,
+                       caption='Вас заметила дракон. К сожалению или к счастью, Вы ей понравились, она посадил вас на '
+                               'цепь и '
+                               'теперь вы будете до конца жизни жить с драконом\n\nПопробуйте начать с начала')
     elif call.data == "CastleBlacksith":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         QvestBlacksith1(call.message,
-                        "Это жуткое место, которое охраняют толпы скелетов и злобный дракон. Говорят, что тот дракон охраняет большую кучу золота, но не кто так и не рискнул побороть его и забрать богатства.")
+                        "Это жуткое место, которое охраняют толпы скелетов и злобный дракон. Говорят, что тот дракон "
+                        "охраняет много золота, но никто так и не рискнул побороть его и забрать богатства.")
     elif call.data == "MarketBlacksith":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         QvestBlacksith1(call.message,
-                        "Мэр города дал всем выходной в связи с частыми нападками бандитов, которые находятся за городом. Сегодня работаю только я")
+                        "Мэр города дал всем выходной в связи с нападками бандитов, которые находятся за "
+                        "городом. Сегодня работаю только я")
     elif call.data == "ArmorBlacksith":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Я могу Продать тебе готовые, либо сделать новые бесплатно если ты принесешь мне дерево или металл")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         BlacksithPurchase(call.message, False)
     elif call.data == "PriceArmor":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Доспехи стоят 100 монет, а у тебя, к сожалению, есть только 30. За 30 монет могу продать тебе только хороший острый меч и сказать как можно раздобыть деньги")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         Outlaw(call.message)
     elif call.data == "WoodMetal":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Я дам тебе кирку и топор, отправляйся для добычи ресурсов и потом ко мне.")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         ResourceExtraction(call.message)
     elif call.data == "TreeMining":
-        photo6 = open('GameQvest/лес.jpg', 'rb')
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы пришли в лес")
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo6)
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         TreeMining(call.message)
     elif call.data == "MetalMining":
-        photo7 = open('GameQvest/shahta.jpg', 'rb')
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы пришли в шахту")
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo7)
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         MetalMining(call.message)
     elif call.data == "BuyArmor":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Хорошо")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         BlacksithPurchase(call.message, False)
     elif call.data == "OutlawNo":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Хорошо")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         BlacksithPurchase(call.message, False)
     elif call.data == "OutlawYes":
-        photo8 = open('GameQvest/bandit.jpg', 'rb')
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы пришли в лагерь бандитов")
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo8)
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         BanditBattle(call.message)
     elif call.data == "BanditDogovor":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Кажется разговор не состоится")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         BanditDogovor(call.message)
     elif call.data == "BanditBattle":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Главарь Бандитов достал меч")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         BanditBattleExit(call.message)
     elif call.data == "DieBandit":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         photo9 = open('GameQvest/banditубил.jpg', 'rb')
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы отдали золото и развернулись, чтобы идти  к  Кузнецу. Но глава Бандитов ударил мечом вас в спину.\n\n\n\nВы умерли!!! Попробуйте начать сначала")
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo9)
+        bot.send_photo(chat_id=call.message.chat.id, photo=photo9,
+                       caption="Вы отдали золото и уже собрались идти обратно в город, но глава Бандитов ударил "
+                               "мечом вас в спину.\n\nВы умерли!!! Попробуйте начать сначала")
     elif call.data == "BanditBattle2":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Главарь Бандитов достал меч")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         BanditBattleExit(call.message)
     elif call.data == "BlowHead":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         photo10 = open('GameQvest/banditубил.jpg', 'rb')
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Весь урон на себя взял шлем, Бандит не пострадал и ударил мечом вас в шею.\n\n\n\nВы умерли!!! Попробуйте начать сначала")
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo10)
+        bot.send_photo(chat_id=call.message.chat.id, photo=photo10,
+                       caption="Весь урон на себя принял шлем, Бандит не пострадал и ударил мечом вас в шею.\n\nВы "
+                               "погибли.\nПопробуйте начать сначала")
     elif call.data == "HeartBeat":
-        photo11 = open('GameQvest/мертвбандит.jpg', 'rb')
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы нанесли сокрушительный урон Главе бандитов, вы убили его, а его подчиненые быстро сбежали увидив такой расклад.")
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo11)
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         ReceivingMoney(call.message)
     elif call.data == "ReceivingMoney":
-        photo12 = open('GameQvest/nagrada.jpg', 'rb')
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы пришли к Мэру города ")
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo12)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Мэр поблагодарил вас за помощь городу, дал вам положенную награду.\nФуууух теперь можно отправиться к кузнецу и купить у него доспехи для похода к жуткому заброшенному замку")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         BlacksmithArmorPayment(call.message)
     elif call.data == "QvestCastle1NO":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы вернулись назад")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         Qvest2(call.message, False)
     elif call.data == "BlacksmithArmorPayment":
-        photo13 = open('GameQvest/Куз2нец.jpg', 'rb')
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы пришли к Кузнецу")
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo13)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Привет-\nСпасибо что прогнал бандитов. Вот держи свои доспехи. Пожелаю успехов тебе в твоем путешествии")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         Castle(call.message)
     elif call.data == "CastleArmor":
-        photo14 = open('GameQvest/pal.jpg', 'rb')
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы пришли к Жуткому заброшеному замку. ")
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo14)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вы увидели небольшую группу скелетов около заброшенного замка, пойти к ним ?\n\n\nВы заметили куда полетел Большой красный дракон, в лапах у него сверкала куча золота, пойти к нему?")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         СhoosePath(call.message)
     elif call.data == "MetalMiningExit":
-        photo15 = open('GameQvest/brokenкирка.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo15)
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы сломали свою Кирку")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         MistakeBroken(call.message)
     elif call.data == "MistakeBroken":
-        photo16 = open('GameQvest/kuznec.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo16)
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Привет, очень печально что ты сломал инструмент")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         BlacksithPurchase(call.message, True)
     elif call.data == "TreeMiningExit":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         photo17 = open('GameQvest/brogenaxe.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo17)
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы сломали свой Топор")
-        MistakeBroken(call.message)
+        keygameqvest16 = types.InlineKeyboardMarkup()
+        key_MistakeBroken = types.InlineKeyboardButton(text='Вернуться к кузнецу', callback_data='MistakeBroken')
+        keygameqvest16.add(key_MistakeBroken)
+        bot.send_photo(chat_id=call.message.chat.id, photo=photo17,
+                       caption="Вы сломали свой Топор. Возвращайтесь обратно к кузнецу",
+                       reply_markup=keygameqvest16)
     elif call.data == "MetalMiningON":
-        photo18 = open('GameQvest/цфвфц.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo18)
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы Добыли металл")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         GotIt(call.message)
     elif call.data == "TreeMiningON":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         photo18 = open('GameQvest/дерево.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo18)
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы Добыли Дерево")
-        GotIt(call.message)
+        keygameqvest17 = types.InlineKeyboardMarkup()
+        key_GotIt = types.InlineKeyboardButton(text='Пойти к кузнецу за доспехами', callback_data='GotIt')
+        keygameqvest17.add(key_GotIt)
+        bot.send_photo(chat_id=call.message.chat.id, photo=photo18,
+                       caption="Вы Добыли Дерево\nВозвращайтесь обратно к кузнецу",
+                       reply_markup=keygameqvest17)
     elif call.data == "GotIt":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         photo19 = open('GameQvest/Куз2нец.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo19)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Привет, я очень рад что ты все добыл, вот держи свои доспехи ")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы прибыли к кузнецу")
-        Castle(call.message)
+        keygameqvest15 = types.InlineKeyboardMarkup()
+        key_CastleArmor = types.InlineKeyboardButton(text='Отправиться к Жуткому заброшенному замку',
+                                                     callback_data='CastleArmor')
+        keygameqvest15.add(key_CastleArmor)
+        bot.send_photo(chat_id=call.message.chat.id, photo=photo19,
+                       caption="Вы прибыли к кузнецу\nПривет, я очень рад что ты все добыл, вот держи свои доспехи",
+                       reply_markup=keygameqvest15)
     elif call.data == "СhoosePathDragon":
-        photo19 = open('GameQvest/драконзолото.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo19)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вы приблизлись к логову дракона и увидели, что у него в логове полно золота\nДракон смотрит на вас, Но вроде бы не собираеться атаковать вас")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы прибыли к логову дракона")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         DragonDialogue(call.message)
     elif call.data == "DragonDialogue":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Приветствую тебя, Путник. Ты достаточно храбр, чтобы подойти ко мне. Так и быть, исполню одно твое жилание.")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         DragonExit(call.message)
     elif call.data == "DragonExitGold":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         photo20 = open('GameQvest/жеказолото.png', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo20)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Отныне Вы самый богатый человек Мира и вся выша жизнь прошла в роскоши и сытости\n\n\nНебольшой подарок за прохождение игры\nНабор стикеров ZhekaMatuxovbot в средеземье\n\n\nhttps://t.me/addstickers/ZhekaMatuxovbot")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Дракон одарил вас богатсвом")
+        bot.send_photo(chat_id=call.message.chat.id, photo=photo20,
+                       caption="Отныне Вы самый богатый человек Мира. Вся ваша жизнь пройдет в роскоши и "
+                               "сытости\n\nНебольшой подарок за прохождение игры\nНабор стикеров ZhekaMatuxovbot в "
+                               "средеземье\nhttps://t.me/addstickers/ZhekaMatuxovbot")
     elif call.data == "DragonExitLove":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         photo21 = open('GameQvest/жекалюбовь.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo21)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Дракон достает золотую фигурку девушки из своих скоровищ, и преврашает ее в живую девушку из ваших фантазий. Она влюбилась в Вас с первого взгляда. Вы возвращаетесь домой и живете долго и счастливо\n\n\nНебольшой подарок за прохождение игры\nНабор стикеров ZhekaMatuxovbot в средеземье\n\n\nhttps://t.me/addstickers/ZhekaMatuxovbot")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Дракон что-то достает")
+        bot.send_photo(chat_id=call.message.chat.id, photo=photo21,
+                       caption="Дракон достает золотую фигурку девушки из своих скоровищ и преврашает ее в живую "
+                               "девушку из ваших фантазий. Она влюбилась в Вас с первого взгляда. Вы возвращаетесь "
+                               "домой и живете долго и счастливо\n\nНебольшой подарок за прохождение игры\nНабор "
+                               "стикеров ZhekaMatuxovbot в средеземье\nhttps://t.me/addstickers/ZhekaMatuxovbot")
     elif call.data == "DragonExitOver":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         photo22 = open('GameQvest/жекаумер.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo22)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Дракон со словами: \"Да как ты смеешь!!!\". Накинулся на вас. От вас остались только доспехи")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Дракон полон ярости")
+        bot.send_photo(chat_id=call.message.chat.id, photo=photo22,
+                       caption="Дракон полон ярости\nДракон со словами: \"Да как ты смеешь!!!\". Накинулся на вас. От "
+                               "Вас остались только доспехи")
     elif call.data == "СhoosePathCastle":
-        photo23 = open('GameQvest/скелетыжека.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo23)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вы приблизились к Замку, скелеты-рыцари увидели вас и двинулись в атаку")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы увидели группу скелетов")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         SkeletonsOfbBry(call.message)
     elif call.data == "SkeletonsOfbBry":
-        photo24 = open('GameQvest/winskelet.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo24)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вы убили всех скелетов-рыцарей\nНа полу вы заметили свиток")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Начался трудный бой")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         Ingot(call.message)
     elif call.data == "IngotYes":
-        photo24 = open('GameQvest/svitok.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo24)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вы подняли свиток, раскрыли его и это оказался свиток усиления\nНадеюсь, он поможет мне в дальнейшем пушествий по замку\nВы пошли дальше")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы подняли свиток ")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         Demon(call.message)
     elif call.data == "Demon":
-        photo25 = open('GameQvest/vulgrim.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo25)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Приблизившись к демону, он обратился к вам:\n-\"Здравствуй, смертный. Меня зовут Вульгрим. Не знаю зачем направляешься к хозяину этой башни темному рыцарю Листату, но следующий его прислужник тебе не по зубам. Однако, я могу оказать тебе услугу\"")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы подошли к демону")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         Demon2(call.message)
     elif call.data == "Demon2":
-        photo26 = open('GameQvest/amulet.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo26)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Демон протягивает некий амулет и говорит:\n-\"Этот артефакт позволит убить твоего следующего противника, его имя Сашаель. Я дам тебе амулет, но взамен ты принесешь мне сердце Сашаеля\"")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Демон продолжил разговор")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         Demon3(call.message)
     elif call.data == "DemonAmuletYes":
-        photo27 = open('GameQvest/image15.jpg', 'rb')
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Демон улыбнулся и сказал:\n-\"Жду не дождусь когда ты принесешь его сердце мне. Не советую меня обманывать\"\n\n\nВы отправились дальше и встретили Сашаеля")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы взяли амулет")
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo27)
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         Boss1(call.message)
     elif call.data == "DemonAmuletNo":
-        photo28 = open('GameQvest/image15.jpg', 'rb')
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Демон оскалился и сказал:\n- \"Что ж, как знаешь, посмотрим как ты справишься с Сашаелем\"\n\n\nВы отправились дальше и встретили Сашаеля")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы отказались от амулета")
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo28)
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         Boss2(call.message)
     elif call.data == "BossAmuletYes":
-        photo29 = open('GameQvest/killsasha.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo29)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="При взмахе меча сила амулета перетекла в ваши руки. Вы нанесли сокрушительный удар такой силы, что броня противника разлетелась словно она была изготовлена из хрусталя. Сашаель упал на колени, вы просунули свою руку в отверствие в броне и достали едва бьющиеся сердце этой твари")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы Начали сражение с Сашаелем")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         Demon4(call.message)
     elif call.data == "BossAmuletNo":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         photo30 = open('GameQvest/killgeka.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo30)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вы нанесли удар по противнику, но вашей силы удара не хватило, чтобы нанести сильные повреждения. Противник размахнулся и своей косой разделил ваше тело на три части \n\n\nВЫ ПОГИБЛИ")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы Начали сражение с Сашаелем")
+        bot.send_photo(chat_id=call.message.chat.id, photo=photo30,
+                       caption="Вы нанесли удар по противнику, но вашей силы удара не хватило, чтобы нанести сильные "
+                               "повреждения. Противник размахнулся и резкими движениями косой разделил Ваше тело на "
+                               "три части "
+                               "\n\nВЫ ПОГИБЛИ")
     elif call.data == "BossExit":
-        photo31 = open('GameQvest/killsasha.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo31)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вы использовали свиток и ощутили прилив сил. Вы произвели серию быстрых атак словно берсерк,броня противника разлетелась словно она была изготовлена из хрусталя. Сашаель упал на колени, вы просунули свою руку в отверствие в броне и достали едва бьющиеся сердце этой твари")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы Начали сражение с Сашаелем")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         SashaelKill(call.message)
     elif call.data == "Demon4":
-        photo32 = open('GameQvest/hearth.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo32)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вы поднимаетесь вверх по лестнице, перед Вами появляется силуэт Вашего знакомого демона Вульгрима.\n - \"Тебе все таки удалось победить в схватке смертный. Кажется, пришло время платить по долгам. Давай мое сердце\"")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы встретили демона")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         Demon5(call.message)
     elif call.data == "DemonHeartYes":
-        photo33 = open('GameQvest/listat.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo33)
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="\"C тобой приятно иметь дело, что ж, надеюсь еще увидимся\"\nВы поднимаетесь на самый верх башни")
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вы Поднялись на вершину башни. Вы оказались в комнате с огромным количеством золота, у стены сидит связанная девушка. Вы замечаете два светящихся глаза. Видимо это владелец башни Листат, выглядит он устрашающе. После пары секунд молчания он говорит\n\n\"- Придти сюда было глупо. Сейчас ты умрешь")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         MainBoss(call.message)
     elif call.data == "DemonHeartNo":
-        photo34 = open('GameQvest/listat.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo34)
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вульгрим злится и говорит\n\"- Я это так не оставлю, зря ты решил со мной поссориться.\"\nДемон исчезает на ваших глазах.\nВы поднимаетесь на самый верх башни")
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вы Поднялись на вершину башни. Вы оказались в комнате с огромным количеством золота, у стены сидит связанная девушка. Вы замечаете два светящихся глаза. Видимо это владелец башни Листат, выглядит он устрашающе. После пары секунд молчания он говорит\n\n\"- Придти сюда было глупо. Сейчас ты умрешь")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         MainBoss2(call.message)
     elif call.data == "MainBossExit":
-        photo35 = open('GameQvest/ЖекаВин.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo35)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вы использовали свиток и ощутили прилив сил. Вы произвели серию быстрых атак словно берсерк и перед вами осталась лишь куча мяса противника, будто вы разделали свинью.")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы начали бой")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         VinBoss(call.message)
     elif call.data == "VinBoss":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         photo36 = open('GameQvest/finalgood.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo36)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вы освободили девушку и забрали золото. Вскоре, вы с ней поженились и купили огромный дом. Вы прожили долгую и счастливую жизнь.\n\n\nНебольшой подарок за прохождение игры\nНабор стикеров ZhekaMatuxovbot в средеземье\n\n\nhttps://t.me/addstickers/ZhekaMatuxovbot")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы освободили девушку и забрали золото")
+        bot.send_photo(chat_id=call.message.chat.id, photo=photo36,
+                       caption="Вы освободили девушку и забрали золото. Вскоре, вы с ней поженились и купили огромный "
+                               "дом. Вы прожили долгую и счастливую жизнь.\n\nНебольшой подарок за прохождение "
+                               "игры\nНабор стикеров ZhekaMatuxovbot в "
+                               "средеземье\nhttps://t.me/addstickers/ZhekaMatuxovbot")
     elif call.data == "MainBossNo":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         photo37 = open('GameQvest/жекуубилбос.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo37)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вы попытались нанести удар, но Листат оказался быстрее. Он увернулся от вашей атаки и ловким ударом снес с плечь вашу голов. Вы погибили, а он продолжил развлекаться со своей пленницей.")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы начали бой")
+        bot.send_photo(chat_id=call.message.chat.id, photo=photo37,
+                       caption="Вы попытались нанести удар, но Листат оказался быстрее. Он увернулся от вашей атаки и "
+                               "ловким ударом снес с плеч вашу голову. Вы погибили, а он продолжил развлекаться со "
+                               "своей пленницей.")
     elif call.data == "SashaelKill":
-        photo38 = open('GameQvest/demonBlade.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo38)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вы встречаете демона. Он предлагает новую сделку:\n\"- Смотрю, тебе удалось победить Сашаэля и даже забрать его сердце, что ж, я тебя недооценил. Но с владельцем этой башни тебе не удастся справиться без артефактов. Предлагаю новую сделку. В обмен на сердце, я дам тебе Клинок Бездны. При должном мастерстве с ним ты без проблем справишься с Листатом\"")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы встретили демона")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         SashaelKill2(call.message)
     elif call.data == "SashaelKillYes":
-        photo39 = open('GameQvest/listatwad.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo39)
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="\"C тобой приятно иметь дело, что ж, надеюсь еще увидимся\"\nВы поднимаетесь на самый верх башни")
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вы Поднялись на вершину башни. Вы оказались в комнате с огромным количеством золота, у стены сидит связанная девушка. Вы замечаете два светящихся глаза. Видимо это владелец башни Листат, выглядит он устрашающе. После пары секунд молчания он говорит\n\n\"- Придти сюда было глупо. Сейчас ты умрешь")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         MainBoss4(call.message)
     elif call.data == "SashaelKillNo":
-        photo40 = open('GameQvest/listat.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo40)
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вульгрим злится и говорит:\n\"- Я это так не оставлю, зря ты решил со мной поссорится. Демон исчезает на ваших глазах.\"\nВы поднимаетесь на самый верх башни")
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вы Поднялись на вершину башни. Вы оказались в комнате с огромным количеством золота, у стены сидит связанная девушка. Вы замечаете два светящихся глаза. Видимо это владелец башни Листат, выглядит он устрашающе. После пары секунд молчания он говорит\n\n\"- Придти сюда было глупо. Сейчас ты умрешь")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         MainBoss3(call.message)
     elif call.data == "Died":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         photo41 = open('GameQvest/жекуубилбос.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo41)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вы попытались нанести удар, но Листат оказался быстрее. Он увернулся от нашей атаки и ловким ударом снес с плечь вашу голов. Вы погибили, а он продолжил развлекаться со своей пленницей.")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы начали бой")
+        bot.send_photo(chat_id=call.message.chat.id, photo=photo41,
+                       caption="Вы попытались нанести удар, но Листат оказался быстрее. Он увернулся от нашей атаки и "
+                               "ловким ударом снес с плеч вашу голов. Вы погибили, а он продолжил развлекаться со "
+                               "своей пленницей.")
     elif call.data == "ScrollAttack":
-        photo42 = open('GameQvest/ЖекаВин.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo42)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вы использовали свиток и ощутили прилив сил. Вы произвели серию быстрых атак словно берсерк и перед вами осталась лишь куча мяса противника, будто вы разделали свинью.")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы начали бой")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         VinBoss2(call.message)
     elif call.data == "VinBoss2":
-        photo43 = open('GameQvest/finalgood.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo43)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вы освободили девушку и забрали золото. Вскоре, вы с ней поженились и купили огромный дом. Вы жили счастливую и беззаботную жизнь\n\n\n Но ....")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы освободили девушку и забрали золото")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         TenYears(call.message)
     elif call.data == "TenYears":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         photo44 = open('GameQvest/Умерласемья.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo44)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Прошло десять лет, в один из прекрасных солнечных дней, Вы возвращаетесь домой и видите ужасную картину. По дому разбросаны части тел всей вашей семьи и прислуги. А на стене написано кровью: Зря ты решил со мной поссориться, смертный.")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Однажды вы пришли домой")
+        bot.send_photo(chat_id=call.message.chat.id, photo=photo44,
+                       caption="Прошло десять лет. В один из прекрасных солнечных дней Вы возвращаетесь домой и "
+                               "видите ужасную картину. По дому разбросаны части тел всей вашей семьи и прислуги. А "
+                               "на стене написано кровью: Зря ты решил со мной поссориться, смертный.")
     elif call.data == "HeartAttack":
-        photo45 = open('GameQvest/gekaDemon.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo45)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вы почувствовали дикий прилив сил. От Вас начала распространяться аура тьмы. Вы никогда не чувствовали себя сильнее, чем сейчас. Ваш противник начал пятиться назад и что-то бормотать.")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы начали бой")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         JekaDemon(call.message)
     elif call.data == "JekaDemon":
-        photo46 = open('GameQvest/gekaDemonBoi.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo46)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вы подошли к нему и одним уверенным движением вырвали ему сердце и затолкали в глотку, затем вырвали ноги и руки. Пленная девушка закричала и затряслась от страха. Вы подумали успокоить ее, но голос в вашей голове начал шептать\n\n\"- Сожри эту мразь... Сожри это аппетитное свежее мясо.\"\n\nВаш разум затуманился, вы набросились на девушку и начали терзать ее зубами и ногтями, вырывать из нее куски мяса, вы никогда в жизни не ели с таким аппетитом.")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы потеряли контроль над собой")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         JekaDemon2(call.message)
     elif call.data == "JekaDemon2":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         photo47 = open('GameQvest/gekaKing.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo47)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Когда вы закончили, вы поняли, что отныне вы являетесь хозяином этой башни, а так же, вы больше никогда не сможете жить без пожирания этого вкуснейшего человеческого мяса.")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы стали владыкой тьмы")
+        bot.send_photo(chat_id=call.message.chat.id, photo=photo47,
+                       caption="Когда Вы закончили, Вы осознали, что отныне Вы являетесь хозяином этой башни. "
+                               "Вы больше никогда не сможете жить без пожирания этого вкуснейшего человеческого "
+                               "мяса.\nВы стали владыкой тьмы")
     elif call.data == "Died2":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         photo48 = open('GameQvest/жекуубилбос.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo48)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вы попытались нанести удар, но Листат оказался быстрее. Он увернулся от нашей атаки и ловким ударом снес с плечь вашу голов. Вы погибили, а он продолжил развлекаться со своей пленницей.")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы начали бой")
+        bot.send_photo(chat_id=call.message.chat.id, photo=photo48,
+                       caption="Вы попытались нанести удар, но Листат оказался быстрее. Он увернулся от нашей атаки и "
+                               "ловким ударом снес с плеч вашу голов. Вы погибили, а он продолжил развлекаться со "
+                               "своей пленницей.")
     elif call.data == "HeartAttack2":
-        photo49 = open('GameQvest/gekaDemon.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo49)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вы почувствовали дикий прилив сил. От Вас начала распространяться аура тьмы. Вы никогда не чувствовали себя сильнее, чем сейчас. Ваш противник начал пятиться назад и что-то бормотать.")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы начали бой")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         JekaDemon(call.message)
     elif call.data == "SwordAttack":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         photo49 = open('GameQvest/bladeOfSouls.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo49)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вы ощущаете как меч начал выбрировать, через мгновение из противника полилась жизненная энергия и начала подпитывать меч бездны. Вы решили не тратить времени и предприняли попытку атаковать. Судя по всему меч Бездны не оставил противнику сил даже попытаться отбить удар. С помощью своего нового оружия вы выпотрошили Листата как свинью")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы начали бой")
-        VinBoss(call.message)
+        keygameqvest30 = types.InlineKeyboardMarkup()
+        key_VinBoss = types.InlineKeyboardButton(text='Освободить девушку и забрать золото', callback_data='VinBoss')
+        keygameqvest30.add(key_VinBoss)
+        bot.send_photo(chat_id=call.message.chat.id, photo=photo49,
+                       caption="Вы ощутили как меч начал вибрировать, через мгновение из противника полилась "
+                               "жизненная энергия и начала подпитывать меч бездны. Вы решили не тратить времени и "
+                               "предприняли попытку атаковать. Судя по всему, меч Бездны не оставил противнику сил "
+                               "даже попытаться отбить удар. С помощью своего нового оружия вы выпотрошили Листата "
+                               "как свинью", reply_markup=keygameqvest30)
     elif call.data == "BossAmuletNo2":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         photo30 = open('GameQvest/killgeka.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo30)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вы нанесли удар по противнику, но вашей силы удара не хватило что бы нанести сильные повреждения. Противник размахнулся и своей косой разделил ваше тело на три части \n\n\nВЫ ПОГИБЛИ")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы Начали сражение с Сашаелем")
+        bot.send_photo(chat_id=call.message.chat.id, photo=photo30,
+                       caption="Вы нанесли удар по противнику, но вашей силы удара не хватило, чтобы нанести сильные "
+                               "повреждения. Противник размахнулся и резкими движениями косой разделил Ваше тело на "
+                               "три части "
+                               "\n\nВЫ ПОГИБЛИ")
     elif call.data == "BossExit2":
-        photo31 = open('GameQvest/killsasha.jpg', 'rb')
-        bot.send_photo(chat_id=call.message.chat.id, photo=photo31)
-        bot.send_message(chat_id=call.message.chat.id,
-                         text="Вы использовали свиток и ощутили прилив сил. Вы произвели серию быстрых атак словно берсерк и перед вами осталась лишь куча мяса противника, будто вы разделали свинью.")
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Вы Начали сражение с Сашаелем")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         SashaelKill(call.message)
     elif call.data == "audionext":
         audio_processing(call.message, False)
@@ -989,6 +830,65 @@ def query_handler(call):
                               text="Приятного просмотра")
         anime(call.message)
         updateStatistic(call.message, "anime")
+    elif call.data == "game":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        game(call.message)
+    elif call.data == "music":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        music(call.message)
+    elif call.data == "weather":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        weather(call.message)
+    elif call.data == "silence":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        muteunmute(call.message)
+    elif call.data == "filmsPanel":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        films(call.message)
+    elif call.data == "goroscope":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        handle_AriesMenu(call.message)
+        updateStatistic(call.message, "goroscope")
+    elif call.data == "aries":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        handle_Aries(call.message, "Овен", "aries")
+    elif call.data == "taurus":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        handle_Aries(call.message, "Телец", "taurus")
+    elif call.data == "gemini":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        handle_Aries(call.message, "Близнецы", "gemini")
+    elif call.data == "cancer":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        handle_Aries(call.message, "Рак", "cancer")
+    elif call.data == "leo":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        handle_Aries(call.message, "Лев", "leo")
+    elif call.data == "virgo":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        handle_Aries(call.message, "Дева", "virgo")
+    elif call.data == "libra":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        handle_Aries(call.message, "Весы", "libra")
+    elif call.data == "scorpio":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        handle_Aries(call.message, "Скорпион", "scorpio")
+    elif call.data == "sagittarius":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        handle_Aries(call.message, "Стрелец", "sagittarius")
+    elif call.data == "capricorn":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        handle_Aries(call.message, "Козерог", "capricorn")
+    elif call.data == "aquarius":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        handle_Aries(call.message, "Водолей", "aquarius")
+    elif call.data == "pisces":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        handle_Aries(call.message, "Рыбы", "pisces")
+    elif call.data == "para":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        hack(call.message)
+        updateStatistic(call.message, "para")
 
 
 # Фильмы
@@ -1003,15 +903,8 @@ def films(message, res=False):
     keyfilms.add(key_anime)
     bot.send_message(message.chat.id, 'Что хотите посмотреть ?',
                      reply_markup=keyfilms)
-    isAdmin = False
-    for x in admin:
-        if message.chat.id == x:
-            isAdmin = True
-    if (isAdmin == False):
-        bot.send_message(admin[0], message.from_user.first_name + " - Пошел Искать Фильм")
-        bot.send_message(admin[1], message.from_user.first_name + " - Пошел Искать Фильм")
-        bot.send_message(admin[2], message.from_user.first_name + " - Пошел Искать Фильм")
-        updateStatistic(message, "films")
+    adminNotification(message, "Пошел искать фильм")
+    updateStatistic(message, "films")
 
 
 # Музыка
@@ -1024,15 +917,21 @@ def music(message, res=False):
     keymusic.add(key_musicList)
     bot.send_message(message.chat.id, 'Что хотите послушать ?',
                      reply_markup=keymusic)
+    adminNotification(message, "Пошел слушать музыку")
+    updateStatistic(message, "music")
+
+
+def adminNotification(message, text):
     isAdmin = False
     for x in admin:
         if message.chat.id == x:
             isAdmin = True
-    if (isAdmin == False):
-        bot.send_message(admin[0], message.from_user.first_name + " - Пошел слушать музыку")
-        bot.send_message(admin[1], message.from_user.first_name + " - Пошел слушать музыку")
-        bot.send_message(admin[2], message.from_user.first_name + " - Пошел слушать музыку")
-    updateStatistic(message, "music")
+    if not isAdmin:
+        for x in admin:
+            try:
+                bot.send_message(x, message.chat.first_name + " - " + text)
+            except:
+                bot.send_message(x, message.chat.title + " - " + text)
 
 
 # Добавление Аудио
@@ -1067,11 +966,11 @@ def audio_record(message):
 @bot.message_handler(commands=["qvest"])
 def GameQvest(message, res=False):
     keygameqvest = types.InlineKeyboardMarkup()
-    key_startqvest = types.InlineKeyboardButton(text='Да давай погрузимся в мир фантастики', callback_data='startqvest')
+    key_startqvest = types.InlineKeyboardButton(text='Да', callback_data='startqvest')
     keygameqvest.add(key_startqvest)
-    key_exitqvest = types.InlineKeyboardButton(text='Нет, вернуться назад', callback_data='exitqvest')
+    key_exitqvest = types.InlineKeyboardButton(text='Нет', callback_data='exitqvest')
     keygameqvest.add(key_exitqvest)
-    bot.send_message(message.chat.id, 'Привет хочешь сыграть в игру про путешествия Жеки по волшебному миру ?',
+    bot.send_message(message.chat.id, 'Привет, хочешь сыграть в игру про путешествия Жеки по волшебному миру?',
                      reply_markup=keygameqvest)
 
 
@@ -1082,7 +981,7 @@ def game(message, res=False):
     cur = db.cursor()
     try:
         cur.execute(
-            "UPDATE Users SET (nickname) = '" + str(message.from_user.first_name) + "'" + " WHERE userId = " + str(
+            "UPDATE Users SET (nickname) = '" + str(message.chat.first_name) + "'" + " WHERE userId = " + str(
                 message.chat.id))
         db.commit()
     except:
@@ -1102,15 +1001,8 @@ def game(message, res=False):
     key_StatGame = types.InlineKeyboardButton(text='Статистика', callback_data='StatGame')
     keygame.add(key_StatGame)
     bot.send_message(message.chat.id, 'Во что сыграем ?\nВаш Баланс: ' + str(getBalance(message)), reply_markup=keygame)
-    isAdmin = False
-    for x in admin:
-        if message.chat.id == x:
-            isAdmin = True
-    if (isAdmin == False):
-        bot.send_message(admin[0], message.from_user.first_name + " - Пошел Играть")
-        bot.send_message(admin[1], message.from_user.first_name + " - Пошел Играть")
-        bot.send_message(admin[2], message.from_user.first_name + " - Пошел Играть")
-        updateStatistic(message, "game")
+    adminNotification(message, "Пошел играть")
+    updateStatistic(message, "game")
 
 
 def GameSSP(message, itog, res=False):
@@ -1124,7 +1016,7 @@ def GameSSP(message, itog, res=False):
     key_gameexit = types.InlineKeyboardButton(text='Вдругой раз', callback_data='gameexit')
     keygame1.add(key_gameexit)
     if itog == "first":
-        bot.send_message(message.chat.id, "играем ? ", reply_markup=keygame1)
+        bot.send_message(message.chat.id, "Играем?", reply_markup=keygame1)
     else:
         bot.edit_message_text(chat_id=message.chat.id, message_id=message.message_id,
                               text=itog, reply_markup=keygame1)
@@ -1174,7 +1066,7 @@ def slotMachine(message, betValue):
         if slot1 == "🍒":
             point = bet * 3
         isBankrot, Balance = updateScore(bet, point, message)
-        if isBankrot == False:
+        if not isBankrot:
             itog = "Ты выиграл \n{}".format(itog) + "\n" + "Баланс: " + str(Balance) + "(+" + str(
                 point) + ")"
         else:
@@ -1182,7 +1074,7 @@ def slotMachine(message, betValue):
     else:
         point = bet * (-1)
         isBankrot, Balance = updateScore(bet, point, message)
-        if isBankrot == False:
+        if not isBankrot:
             itog = "Увы, но ты проиграл \n{}".format(itog) + "\n" + "Баланс: " + str(Balance) + "(" + str(
                 point) + ")"
         else:
@@ -1227,14 +1119,12 @@ def start(message, res=False):
         global standartPoint
         cur.execute("INSERT INTO Users (userId, nickname, balance, active) VALUES (?, ?, ?, ?);",
                     (sz, f"{si}", standartPoint, 1))
-        bot.send_message(admin[0], message.from_user.first_name + " - Новый пользователь")
-        bot.send_message(admin[1], message.from_user.first_name + " - Новый пользователь")
-        bot.send_message(admin[2], message.from_user.first_name + " - Новый пользователь")
         db.commit()
     db.close()
     pl.close()
     bot.send_message(message.chat.id,
-                     '{}, привет, меня зовут ЖекаБот. Напиши мне Привет :)\nОбязательно введи /help что бы увидеть что я умею'.format(
+                     '{}, привет, меня зовут ЖекаБот. Напиши мне Привет :)\nОбязательно введи /help что бы увидеть '
+                     'что я умею'.format(
                          message.from_user.first_name))
 
 
@@ -1242,21 +1132,49 @@ def start(message, res=False):
 @bot.message_handler(commands=["help"])
 def help(message, res=False):
     bot.send_message(message.chat.id,
-                     'Привет, вот что я умею' + '\n❕ Список Команд ❕\n/menu - Вызвать меню\n/game - Поиграть в игры\n/films - Подобрать фильм на вечер\n/weather - Погода в вашем городе\n/music - Послушать музыку\n/off - замутить бота\n/on - размутить бота\n/course - Курс различных валют\nЧтобы узнать гороскоп на сегодня, напиши мне, например "гороскоп весы"\nА так же, я могу отвечать на твои сообщения, картинки, стикеры.\nИ каждый день учусь новому.')
+                     'Привет, вот что я умею' + '\n❕ Список Команд ❕\n/menu - Вызвать меню\n/панель - вызвать панель '
+                                                'функций бота\nЕще '
+                                                'я могу отвечать на твои сообщения, картинки, стикеры.\nИ каждый день '
+                                                'учусь новому.')
 
 
 # Команда "Бот меню"
 @bot.message_handler(commands=["menu"])
 def menu(message, res=False):
     keyboardgame = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    btn1 = types.KeyboardButton('/погода')
-    btn2 = types.KeyboardButton('/молчанка')
-    btn3 = types.KeyboardButton('/фильмы')
-    btn4 = types.KeyboardButton('/музыка')
-    btn5 = types.KeyboardButton('/игра')
+    btn3 = types.KeyboardButton('/музыка')
+    btn4 = types.KeyboardButton('/игра')
+    btn5 = types.KeyboardButton('/панель')
     btn6 = types.KeyboardButton('/admin')
-    keyboardgame.add(btn1, btn2, btn3, btn4, btn5, btn6)
-    bot.send_message(message.chat.id, 'Что нужно ? ', reply_markup=keyboardgame)
+    isAdmin = False
+    for x in admin:
+        if message.chat.id == x:
+            isAdmin = True
+    if not isAdmin:
+        keyboardgame.add(btn3, btn4, btn5)
+    else:
+        keyboardgame.add(btn3, btn4, btn5, btn6)
+    bot.send_message(message.chat.id, 'Что нужно?', reply_markup=keyboardgame)
+
+
+@bot.message_handler(commands=["панель"])
+def botFeature(message, res=False):
+    botPanel = types.InlineKeyboardMarkup()
+    key_game = types.InlineKeyboardButton(text='Играть', callback_data='game')
+    botPanel.add(key_game)
+    key_music = types.InlineKeyboardButton(text='Музыка', callback_data='music')
+    botPanel.add(key_music)
+    key_weather = types.InlineKeyboardButton(text='Погода', callback_data='weather')
+    botPanel.add(key_weather)
+    key_silence = types.InlineKeyboardButton(text='Молчанка', callback_data='silence')
+    botPanel.add(key_silence)
+    key_film = types.InlineKeyboardButton(text='Фильмы', callback_data='filmsPanel')
+    botPanel.add(key_film)
+    key_goroscope = types.InlineKeyboardButton(text='Гороскоп', callback_data='goroscope')
+    botPanel.add(key_goroscope)
+    key_para = types.InlineKeyboardButton(text='Пара дня', callback_data='para')
+    botPanel.add(key_para)
+    bot.send_message(message.chat.id, 'Чем желаешь заняться?', reply_markup=botPanel)
 
 
 # Команда "Погода"
@@ -1272,7 +1190,11 @@ def weather(message, res=False):
 
 
 def textCity(message):
-    bot.send_message(chat_id=message.chat.id, text=get_weather(message.text, open_weather_token))
+    try:
+        bot.send_message(chat_id=message.chat.id, text=get_weather(message.text, open_weather_token))
+    except:
+        bot.send_message(chat_id=message.chat.id,
+                         text="К сожалению, пока не могу подсказать погоду. Что-то поломалось(")
 
 
 def get_weather(message, open_weather_token):
@@ -1309,109 +1231,55 @@ def get_weather(message, open_weather_token):
         return text
 
     except Exception as ex:
-        text2 = ('я не знаю такого города')
+        text2 = 'я не знаю такого города'
         return text2
 
 
 # Команда "Гороскоп"
-def handle_Aries(message):
-    isGoroscope = False
-    indexCommand = message.text.find(" ")
-    CommandString = message.text[:indexCommand]
-    if (fuzz.token_sort_ratio(CommandString, "гороскоп") > 90):
-        isGoroscope = True
-        Similary = [0] * 12
-        index = message.text.find(" ")
-        sign = message.text[index + 1:]
-        Similary[0] = (fuzz.token_sort_ratio(sign, "овен"))
-        Similary[1] = (fuzz.token_sort_ratio(sign, "телец"))
-        Similary[2] = (fuzz.token_sort_ratio(sign, "близнецы"))
-        Similary[3] = (fuzz.token_sort_ratio(sign, "лев"))
-        Similary[4] = (fuzz.token_sort_ratio(sign, "дева"))
-        Similary[5] = (fuzz.token_sort_ratio(sign, "весы"))
-        Similary[6] = (fuzz.token_sort_ratio(sign, "скорпион"))
-        Similary[7] = (fuzz.token_sort_ratio(sign, "стрелец"))
-        Similary[8] = (fuzz.token_sort_ratio(sign, "козерог"))
-        Similary[9] = (fuzz.token_sort_ratio(sign, "водолей"))
-        Similary[10] = (fuzz.token_sort_ratio(sign, "рыбы"))
-        Similary[11] = (fuzz.token_sort_ratio(sign, "рак"))
-        maxSimilary = max(Similary)
-        count = 0
-        for x in Similary:
-            if x == maxSimilary:
-                ourSignNumber = count
-            count = count + 1
-        engSign = " "
-        if (ourSignNumber == 0):
-            engSign = "aries"
-            sign = "Овен"
-        if (ourSignNumber == 1):
-            engSign = "taurus"
-            sign = "Телец"
-        if (ourSignNumber == 2):
-            engSign = "gemini"
-            sign = "Близнецы"
-        if (ourSignNumber == 11):
-            engSign = "cancer"
-            sign = "Рак"
-        if (ourSignNumber == 3):
-            engSign = "leo"
-            sign = "Лев"
-        if (ourSignNumber == 4):
-            engSign = "virgo"
-            sign = "Дева"
-        if (ourSignNumber == 5):
-            engSign = "libra"
-            sign = "Весы"
-        if (ourSignNumber == 6):
-            engSign = "scorpio"
-            sign = "Скорпион"
-        if (ourSignNumber == 7):
-            engSign = "sagittarius"
-            sign = "Стрелец"
-        if (ourSignNumber == 8):
-            engSign = "capricorn"
-            sign = "Козерог"
-        if (ourSignNumber == 9):
-            engSign = "aquarius"
-            sign = "Водолей"
-        if (ourSignNumber == 10):
-            engSign = "pisces"
-            sign = "Рыбы"
-        if maxSimilary < 70:
-            bot.send_message(message.chat.id, "Не знаю такого знака зодиака")
-        else:
-            file = urllib2.urlopen(
-                'https://ignio.com/r/export/utf/xml/daily/com.xml')
-            data = file.read()
-            file.close()
-            data = xmltodict.parse(data)
-            Aries = sign + '\n' + data["horo"][engSign]["today"]
-            bot.send_message(message.chat.id, Aries)
+def handle_Aries(message, sign, engSign):
+    file = urllib2.urlopen(
+        'https://ignio.com/r/export/utf/xml/daily/com.xml')
+    data = file.read()
+    file.close()
+    data = xmltodict.parse(data)
+    Aries = sign + '\n' + data["horo"][engSign]["today"]
+    bot.send_message(message.chat.id, Aries)
 
-    return isGoroscope
+
+def handle_AriesMenu(message):
+    keyboard = types.InlineKeyboardMarkup(row_width=2)
+    key_aries = types.InlineKeyboardButton(text='Овен', callback_data='aries')
+    key_taurus = types.InlineKeyboardButton(text='Телец', callback_data='taurus')
+    key_gemini = types.InlineKeyboardButton(text='Близнецы', callback_data='gemini')
+    key_cancer = types.InlineKeyboardButton(text='Рак', callback_data='cancer')
+    key_leo = types.InlineKeyboardButton(text='Лев', callback_data='leo')
+    key_virgo = types.InlineKeyboardButton(text='Дева', callback_data='virgo')
+    key_libra = types.InlineKeyboardButton(text='Весы', callback_data='libra')
+    key_scorpio = types.InlineKeyboardButton(text='Скорпион', callback_data='scorpio')
+    key_sagittarius = types.InlineKeyboardButton(text='Стрелец', callback_data='sagittarius')
+    key_capricorn = types.InlineKeyboardButton(text='Козерог', callback_data='capricorn')
+    key_aquarius = types.InlineKeyboardButton(text='Водолей', callback_data='aquarius')
+    key_pisces = types.InlineKeyboardButton(text='Рыбы', callback_data='pisces')
+    keyboard.row(key_aries, key_taurus, key_gemini, key_cancer)
+    keyboard.row(key_leo, key_virgo, key_libra, key_scorpio)
+    keyboard.row(key_sagittarius, key_capricorn, key_aquarius, key_pisces)
+    bot.send_message(message.chat.id, 'Какой знак интересует?', reply_markup=keyboard)
+    adminNotification(message, "Смотрит гороскоп")
 
 
 # Команда "Пара дня"
-def handle_Para(message):
-    para = False
-    if (fuzz.token_sort_ratio(message.text.lower().strip(), "Пара дня") > 70):
-        hack(message)
-        para = True
-    return para
-
-
 def hack(message):
     keylove = types.InlineKeyboardMarkup()
     key_love = types.InlineKeyboardButton(text='Поиск пары дня', callback_data='love')
     keylove.add(key_love)
     bot.send_message(message.chat.id, 'Ну что найдем для тебя пару дня ?', reply_markup=keylove)
+    adminNotification(message, "Смотрит пару дня")
 
 
 # Команда "Орел  Решка"
 def handle_Brocok(message):
     Brocok = False
-    if (fuzz.token_sort_ratio(message.text.lower().strip(), "Орел или Решка") > 70):
+    if fuzz.token_sort_ratio(message.text.lower().strip(), "Орел или Решка") > 70:
         money(message)
         Brocok = True
     return Brocok
@@ -1449,9 +1317,9 @@ def startadm(message: types.Message):
 
 
 def cancelButton(message):
-    keyCancel = types.InlineKeyboardMarkup();  # наша клавиатура
-    key_cancel = types.InlineKeyboardButton(text='Отменить операцию', callback_data='cancel');  # кнопка «Да»
-    keyCancel.add(key_cancel);  # добавляем кнопку в клавиатуру
+    keyCancel = types.InlineKeyboardMarkup()  # наша клавиатура
+    key_cancel = types.InlineKeyboardButton(text='Отменить операцию', callback_data='cancel')  # кнопка «Да»
+    keyCancel.add(key_cancel)  # добавляем кнопку в клавиатуру
     bot.send_message(message.chat.id, "Нажмите, если хотите отменить операцию", reply_markup=keyCancel)
 
 
@@ -1468,15 +1336,15 @@ def addQuestion(message):
     questionString = message.text[:index]
     answerString = message.text[index + 1:]
     for q in mas:
-        if ('u: ' in q):
+        if 'u: ' in q:
             degreeOfSimilarity = (fuzz.token_sort_ratio(q.replace('u: ', ''), questionString))
-            if (degreeOfSimilarity > maximumSimilarity):
+            if degreeOfSimilarity > maximumSimilarity:
                 maximumSimilarity = degreeOfSimilarity
                 questionNumberToAdd = elementNumber
         elementNumber = elementNumber + 1
-    if (maximumSimilarity > 70):
+    if maximumSimilarity > 70:
         questionOfSimilary = "В базе есть похожий вопрос:\n" + mas[questionNumberToAdd].replace('u: ',
-                                                                                                '') + "\n" + "ты уверен, что хочешь добавить новый?"
+                                                                                                '') + "\n" + "ты уверен, что хочешь добавить новый? "
         keyboard = types.InlineKeyboardMarkup()  # наша клавиатура
         key_yes = types.InlineKeyboardButton(text='Добавить', callback_data='yes')  # кнопка «Да»
         keyboard.add(key_yes)  # добавляем кнопку в клавиатуру
@@ -1507,7 +1375,7 @@ def handle_UserId(message):
 
 
 def handle_Time(message):
-    if (fuzz.token_sort_ratio(message.lower().strip(), "сколько времени?") > 70):
+    if fuzz.token_sort_ratio(message.lower().strip(), "сколько времени?") > 70:
         tz = pytz.timezone('Asia/Krasnoyarsk')
         nvk_current_datetime = datetime.now(tz).strftime("%y.%m.%d %H:%M:%S")
         c_date, c_time = nvk_current_datetime.split()
@@ -1537,9 +1405,7 @@ def handle_text(message):
         muteStatus = x[0]
     db.close()
     handle_UserId(message)
-    para = handle_Para(message)
     Brocok = handle_Brocok(message)
-    isGoroscope = handle_Aries(message)
     isStandarnAnswer = True
     timeAnswer = handle_Time(message.text)
     db = sqlite3.connect('db/JeckaBot.db')
@@ -1553,45 +1419,39 @@ def handle_text(message):
             isStandarnAnswer = False
             realAnswer = "*Был дан ответ о погоде*"
     db.close()
-    if (isAddQuestion == True):
-        if (isAdmin == True):
-            if (addAdmin == str(message.chat.id)):
+    if isAddQuestion:
+        if isAdmin:
+            if addAdmin == str(message.chat.id):
                 addQuestion(message)
                 isStandarnAnswer = False
                 isAddQuestion = False
                 addAdmin = "0"
                 realAnswer = "*Был добавлен вопрос*"
-    if (isPush == True):
-        if (isAdmin == True):
-            if (pushAdmin == str(message.chat.id)):
+    if isPush:
+        if isAdmin:
+            if pushAdmin == str(message.chat.id):
                 push(message.text)
                 pushAdmin = "0"
                 realAnswer = "*Был отправлен пуш*"
                 isStandarnAnswer = False
                 isPush = False
-    if (para == True):
-        isStandarnAnswer = False
-        realAnswer = "*Была подобрана пара*"
-    if (isGoroscope == True):
-        isStandarnAnswer = False
-        realAnswer = "*Был отправлен гороскоп*"
-    if (Brocok == True):
+    if Brocok:
         isStandarnAnswer = False
         realAnswer = "*Была подкинута монетка*"
     if muteStatus == 0:
-        if (timeAnswer != None):
+        if timeAnswer is not None:
             bot.send_message(message.chat.id, timeAnswer)
             isStandarnAnswer = False
             realAnswer = timeAnswer
-        if (isStandarnAnswer == True):
+        if isStandarnAnswer:
             realAnswer = answer(message.text)
             bot.send_message(message.chat.id, realAnswer)
         f = open('data/logi/' + str(message.chat.id) + '_' + str(message.from_user.username) + '_log.txt', 'a',
                  encoding='UTF-8')
         f.write('u: ' + message.text + '\n' + realAnswer + '\n')
         f.close()
-    if (isAdmin == False):
-        if (ignoreListParameter == False):
+    if not isAdmin:
+        if not ignoreListParameter:
             bot.send_message(admin[1], message.from_user.first_name + "\n" + message.text + "\n" + realAnswer)
             bot.send_message(admin[2], message.from_user.first_name + "\n" + message.text + "\n" + realAnswer)
             bot.send_message(admin[0], message.from_user.first_name + "\n" + message.text + "\n" + realAnswer)

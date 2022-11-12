@@ -1,7 +1,7 @@
 {
-  'content_type': 'voice',
-  'id': 228844,
-  'message_id': 228844,
+  'content_type': 'sticker',
+  'id': 14018,
+  'message_id': 14018,
   'from_user': {
     'id': 425041981,
     'is_bot': False,
@@ -13,7 +13,7 @@
     'can_read_all_group_messages': None,
     'supports_inline_queries': None
   },
-  'date': 1668085971,
+  'date': 1668242650,
   'chat': {
     'id': 425041981,
     'type': 'private',
@@ -56,20 +56,25 @@
   'audio': None,
   'document': None,
   'photo': None,
-  'sticker': None,
+  'sticker': {
+    'file_id': 'CAACAgIAAxkBAAI2wmNvXNqxaQN-K40qp_c_2i8T8SnYAAK2EwACPzfpS94s_xOxQLUvKwQ',
+    'file_unique_id': 'AgADthMAAj836Us',
+    'width': 512,
+    'height': 512,
+    'is_animated': False,
+    'is_video': True,
+    'thumb': <telebot.types.PhotoSize
+    object
+    at
+    0x00000190FAC46610>,
+    'emoji': '👊',
+    'set_name': 'hasbikgif',
+    'mask_position': None,
+    'file_size': 79856
+  },
   'video': None,
   'video_note': None,
-  'voice': {
-    'file_id': 'AwACAgIAAxkBAAEDfexjbPjT8ed04J1hWKG6KD0uZAjFuAACbh0AAgpKaEtwixhHSbp2RisE',
-    'file_unique_id': 'AgADbh0AAgpKaEs',
-    'duration': 2,
-    'performer': None,
-    'title': None,
-    'file_name': None,
-    'mime_type': 'audio/ogg',
-    'file_size': 43277,
-    'thumb': None
-  },
+  'voice': None,
   'caption': None,
   'contact': None,
   'location': None,
@@ -93,7 +98,7 @@
   'connected_website': None,
   'reply_markup': None,
   'json': {
-    'message_id': 228844,
+    'message_id': 14018,
     'from': {
       'id': 425041981,
       'is_bot': False,
@@ -110,13 +115,25 @@
       'username': 'vmbyvkim6a',
       'type': 'private'
     },
-    'date': 1668085971,
-    'voice': {
-      'duration': 2,
-      'mime_type': 'audio/ogg',
-      'file_id': 'AwACAgIAAxkBAAEDfexjbPjT8ed04J1hWKG6KD0uZAjFuAACbh0AAgpKaEtwixhHSbp2RisE',
-      'file_unique_id': 'AgADbh0AAgpKaEs',
-      'file_size': 43277
+    'date': 1668242650,
+    'sticker': {
+      'width': 512,
+      'height': 512,
+      'emoji': '👊',
+      'set_name': 'hasbikgif',
+      'is_animated': False,
+      'is_video': True,
+      'type': 'regular',
+      'thumb': {
+        'file_id': 'AAMCAgADGQEAAjbCY29c2rFpA34rjSqn9z_aLxPxKdgAArYTAAI_N-lL3iz_E7FAtS8BAAdtAAMrBA',
+        'file_unique_id': 'AQADthMAAj836Uty',
+        'file_size': 4484,
+        'width': 320,
+        'height': 320
+      },
+      'file_id': 'CAACAgIAAxkBAAI2wmNvXNqxaQN-K40qp_c_2i8T8SnYAAK2EwACPzfpS94s_xOxQLUvKwQ',
+      'file_unique_id': 'AgADthMAAj836Us',
+      'file_size': 79856
     }
   }
 }
