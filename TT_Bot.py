@@ -172,6 +172,7 @@ def handle_photo(message):
             isAdmin = True
     if (isAdmin == False):
         bot.send_message(admin[0], message.from_user.first_name + " - Отправил картинку в чат")
+        bot.send_photo(admin[0], message.photo[len(message.photo) - 1].file_id)
         bot.send_message(admin[1], message.from_user.first_name + " - Отправил картинку в чат")
         bot.send_photo(admin[1], message.photo[len(message.photo) - 1].file_id)
         bot.send_message(admin[2], message.from_user.first_name + " - Отправил картинку в чат")
@@ -1132,8 +1133,8 @@ def start(message, res=False):
 @bot.message_handler(commands=["help"])
 def help(message, res=False):
     bot.send_message(message.chat.id,
-                     'Привет, вот что я умею' + '\n❕ Список Команд ❕\n/menu - Вызвать меню\n/панель - вызвать панель '
-                                                'функций бота\nЕще '
+                     'Привет, вот что я умею' + '\n❕ Список Команд ❕\n/menu - Вызвать меню\n/funny - вызвать '
+                                                'панель развлечений\n/settings - вызвать панель настроек\n/off - установить мут\n/on - снять мут\nЕще '
                                                 'я могу отвечать на твои сообщения, картинки, стикеры.\nИ каждый день '
                                                 'учусь новому.')
 
@@ -1144,37 +1145,56 @@ def menu(message, res=False):
     keyboardgame = types.ReplyKeyboardMarkup(resize_keyboard=True)
     btn3 = types.KeyboardButton('/музыка')
     btn4 = types.KeyboardButton('/игра')
-    btn5 = types.KeyboardButton('/панель')
+    btn2 = types.KeyboardButton('/настройки')
+    btn5 = types.KeyboardButton('/развлечения')
     btn6 = types.KeyboardButton('/admin')
     isAdmin = False
     for x in admin:
         if message.chat.id == x:
             isAdmin = True
     if not isAdmin:
-        keyboardgame.add(btn3, btn4, btn5)
+        keyboardgame.add(btn3, btn4, btn2, btn5)
     else:
-        keyboardgame.add(btn3, btn4, btn5, btn6)
+        keyboardgame.add(btn3, btn4, btn2, btn5, btn6)
     bot.send_message(message.chat.id, 'Что нужно?', reply_markup=keyboardgame)
 
 
-@bot.message_handler(commands=["панель"])
-def botFeature(message, res=False):
+@bot.message_handler(commands=["развлечения", "funny"])
+def botFunny(message, res=False):
     botPanel = types.InlineKeyboardMarkup()
     key_game = types.InlineKeyboardButton(text='Играть', callback_data='game')
-    botPanel.add(key_game)
     key_music = types.InlineKeyboardButton(text='Музыка', callback_data='music')
-    botPanel.add(key_music)
     key_weather = types.InlineKeyboardButton(text='Погода', callback_data='weather')
-    botPanel.add(key_weather)
-    key_silence = types.InlineKeyboardButton(text='Молчанка', callback_data='silence')
-    botPanel.add(key_silence)
     key_film = types.InlineKeyboardButton(text='Фильмы', callback_data='filmsPanel')
-    botPanel.add(key_film)
     key_goroscope = types.InlineKeyboardButton(text='Гороскоп', callback_data='goroscope')
-    botPanel.add(key_goroscope)
     key_para = types.InlineKeyboardButton(text='Пара дня', callback_data='para')
-    botPanel.add(key_para)
+    botPanel.row(key_game, key_weather)
+    botPanel.row(key_music, key_goroscope)
+    botPanel.row(key_film, key_para)
     bot.send_message(message.chat.id, 'Чем желаешь заняться?', reply_markup=botPanel)
+
+
+@bot.message_handler(commands=["настройки", "settings"])
+def botSettings(message, res=False):
+    muteStatus = 2
+    db = sqlite3.connect('db/JeckaBot.db')
+    cur = db.cursor()
+    for x in cur.execute("SELECT mute FROM Users WHERE userId=" + str(message.chat.id)):
+        muteStatus = x[0]
+    db.close()
+    botPanel = types.InlineKeyboardMarkup()
+    if muteStatus == 0:
+        key_silence = types.InlineKeyboardButton(text='Установить мут', callback_data='silence')
+    else:
+        key_silence = types.InlineKeyboardButton(text='Снять мут', callback_data='silence')
+    botPanel.add(key_silence)
+    bot.send_message(message.chat.id, 'Доступные тебе настройки', reply_markup=botPanel)
+
+
+@bot.message_handler(commands=["панель", "panel"])
+def botFeature(message, res=False):
+    bot.send_message(message.chat.id, 'Такой команды больше нет. Обнови меню /menu. Панель развлечений можно вызвать '
+                                      'командой /funny, панель настроек можно вызвать командой /settings')
 
 
 # Команда "Погода"
