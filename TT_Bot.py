@@ -1133,8 +1133,9 @@ def start(message, res=False):
 @bot.message_handler(commands=["help"])
 def help(message, res=False):
     bot.send_message(message.chat.id,
-                     'Привет, вот что я умею' + '\n❕ Список Команд ❕\n/menu - Вызвать меню\n/funny - вызвать '
-                                                'панель развлечений\n/settings - вызвать панель настроек\n/off - установить мут\n/on - снять мут\nЕще '
+                     'Привет, вот что я умею' + '\n❕ Список Команд ❕\n/menu - Вызвать меню\n/apps - вызвать '
+                                                'панель приложений\n/settings - вызвать панель настроек\n/off - '
+                                                'установить мут\n/on - снять мут\nЕще '
                                                 'я могу отвечать на твои сообщения, картинки, стикеры.\nИ каждый день '
                                                 'учусь новому.')
 
@@ -1146,7 +1147,7 @@ def menu(message, res=False):
     btn3 = types.KeyboardButton('/музыка')
     btn4 = types.KeyboardButton('/игра')
     btn2 = types.KeyboardButton('/настройки')
-    btn5 = types.KeyboardButton('/развлечения')
+    btn5 = types.KeyboardButton('/приложения')
     btn6 = types.KeyboardButton('/admin')
     isAdmin = False
     for x in admin:
@@ -1159,7 +1160,7 @@ def menu(message, res=False):
     bot.send_message(message.chat.id, 'Что нужно?', reply_markup=keyboardgame)
 
 
-@bot.message_handler(commands=["развлечения", "funny"])
+@bot.message_handler(commands=["приложения", "apps"])
 def botFunny(message, res=False):
     botPanel = types.InlineKeyboardMarkup()
     key_game = types.InlineKeyboardButton(text='Играть', callback_data='game')
@@ -1193,8 +1194,8 @@ def botSettings(message, res=False):
 
 @bot.message_handler(commands=["панель", "panel"])
 def botFeature(message, res=False):
-    bot.send_message(message.chat.id, 'Такой команды больше нет. Обнови меню /menu. Панель развлечений можно вызвать '
-                                      'командой /funny, панель настроек можно вызвать командой /settings')
+    bot.send_message(message.chat.id, 'Такой команды больше нет. Обнови меню /menu. Панель приложений можно вызвать '
+                                      'командой /apps, панель настроек можно вызвать командой /settings')
 
 
 # Команда "Погода"
