@@ -1173,6 +1173,7 @@ def botFunny(message, res=False):
     botPanel.row(key_music, key_goroscope)
     botPanel.row(key_film, key_para)
     bot.send_message(message.chat.id, 'Чем желаешь заняться?', reply_markup=botPanel)
+    adminNotification(message, "Вызвал панель приложений")
 
 
 @bot.message_handler(commands=["настройки", "settings"])
@@ -1190,12 +1191,14 @@ def botSettings(message, res=False):
         key_silence = types.InlineKeyboardButton(text='Снять мут', callback_data='silence')
     botPanel.add(key_silence)
     bot.send_message(message.chat.id, 'Доступные тебе настройки', reply_markup=botPanel)
+    adminNotification(message, "Вызвал панель настроек")
 
 
 @bot.message_handler(commands=["панель", "panel"])
 def botFeature(message, res=False):
     bot.send_message(message.chat.id, 'Такой команды больше нет. Обнови меню /menu. Панель приложений можно вызвать '
                                       'командой /apps, панель настроек можно вызвать командой /settings')
+    adminNotification(message, "Попытался вызвать панель командой /панель")
 
 
 # Команда "Погода"
