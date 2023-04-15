@@ -1498,7 +1498,6 @@ def handle_text(message):
             for x in admin:
                 try:
                     bot.send_message(x, message.from_user.first_name + "\n" + message.text + "\n" + realAnswer)
-                    bot.send_voice(x, message.voice.file_id)
                 except:
                     print('Не удалось отправить сообщение администратору')
 
