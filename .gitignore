@@ -111,6 +111,8 @@ ENV/
 env.bak/
 venv.bak/
 db/
+db/JeckaBot.db
+db/PlayList.db
 # Spyder project settings
 .spyderproject
 .spyproject
