@@ -145,7 +145,7 @@ def answer(text):
                     isQuestion = True
             answerNumber = random.randint(1, count - 1)
             answer = mas[questionNumber + answerNumber]
-            return answer
+            return answer, maximumSimilarity
         else:
             return 'Не понял, перефразируй'
     except:
@@ -1485,12 +1485,14 @@ def handle_text(message):
             isStandarnAnswer = False
             realAnswer = timeAnswer
         if isStandarnAnswer:
-            realAnswer = answer(message.text)
+            realAnswer, Similarity = answer(message.text)
             bot.send_message(message.chat.id, realAnswer)
-        f = open('data/logi/' + str(message.chat.id) + '_' + str(message.from_user.username) + '_log.txt', 'a',
-                 encoding='UTF-8')
-        f.write('u: ' + message.text + '\n' + realAnswer + '\n')
-        f.close()
+            if Similarity < 60:
+                f = open('data/failedQuestion.txt', 'a',
+                         encoding='UTF-8')
+                f.write(
+                    'Написали боту: ' + message.text + '\n' + 'Бот ответил: ' + realAnswer + '\n' + 'сходство: ' + str(Similarity) + '\n')
+                f.close()
     if not isAdmin:
         if not ignoreListParameter:
             for x in admin:
