@@ -282,7 +282,7 @@ def query_handler(call):
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                               text='Какая валюта тебя интересует ?', reply_markup=keycourse)
     elif call.data == "crip":
-        keycoursecrip = types.InlineKeyboardMarkup();
+        keycoursecrip = types.InlineKeyboardMarkup()
         key_Bitcoin = types.InlineKeyboardButton(text='Bitcoin', callback_data='Bitcoin')
         keycoursecrip.add(key_Bitcoin)
         key_Ethereum = types.InlineKeyboardButton(text='Ethereum', callback_data='Ethereum')
@@ -322,13 +322,23 @@ def query_handler(call):
         GameSSP(call.message, "first")
         updateStatistic(call.message, "GameSSP")
     elif call.data == "StatGame":
-        static = []
-        staticMessage = ""
         db = sqlite3.connect('db/JeckaBot.db')
         cur = db.cursor()
-        for x in cur.execute("Select nickname, balance from users where balance>5000 ORDER BY balance DESC Limit 10"):
-            static.append(x[0])
-            static.append(x[1])
+        static = []
+        staticMessage = ""
+        for x in cur.execute(
+                "Select count(*) from users where balance>5000 and active=1"):
+            amount = x[0]
+        if amount >= 10:
+            for x in cur.execute(
+                    "Select nickname, balance from users where balance>5000 and active=1 ORDER BY balance DESC Limit 10"):
+                static.append(x[0])
+                static.append(x[1])
+        else:
+            for x in cur.execute(
+                    "Select nickname, balance from users where balance>5000 ORDER BY balance DESC Limit 10"):
+                static.append(x[0])
+                static.append(x[1])
         count = 0
         while count < 20:
             if count % 2 == 0:
@@ -1169,7 +1179,7 @@ def botFunny(message, res=False):
     key_game = types.InlineKeyboardButton(text='Играть', callback_data='game')
     key_music = types.InlineKeyboardButton(text='Музыка', callback_data='music')
     key_weather = types.InlineKeyboardButton(text='Погода', callback_data='weather')
-    key_course=types.InlineKeyboardButton(text='Курс валют', callback_data='coursePanel')
+    key_course = types.InlineKeyboardButton(text='Курс валют', callback_data='coursePanel')
     # key_film = types.InlineKeyboardButton(text='Фильмы', callback_data='filmsPanel')
     key_goroscope = types.InlineKeyboardButton(text='Гороскоп', callback_data='goroscope')
     key_para = types.InlineKeyboardButton(text='Пара дня', callback_data='para')
