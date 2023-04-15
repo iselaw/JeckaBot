@@ -846,6 +846,9 @@ def query_handler(call):
     elif call.data == "filmsPanel":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         films(call.message)
+    elif call.data == "coursePanel":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        startcourse(call.message)
     elif call.data == "goroscope":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         handle_AriesMenu(call.message)
@@ -1166,12 +1169,13 @@ def botFunny(message, res=False):
     key_game = types.InlineKeyboardButton(text='Играть', callback_data='game')
     key_music = types.InlineKeyboardButton(text='Музыка', callback_data='music')
     key_weather = types.InlineKeyboardButton(text='Погода', callback_data='weather')
-    key_film = types.InlineKeyboardButton(text='Фильмы', callback_data='filmsPanel')
+    key_course=types.InlineKeyboardButton(text='Курс валют', callback_data='coursePanel')
+    # key_film = types.InlineKeyboardButton(text='Фильмы', callback_data='filmsPanel')
     key_goroscope = types.InlineKeyboardButton(text='Гороскоп', callback_data='goroscope')
     key_para = types.InlineKeyboardButton(text='Пара дня', callback_data='para')
     botPanel.row(key_game, key_weather)
     botPanel.row(key_music, key_goroscope)
-    botPanel.row(key_film, key_para)
+    botPanel.row(key_course, key_para)
     bot.send_message(message.chat.id, 'Чем желаешь заняться?', reply_markup=botPanel)
     adminNotification(message, "Вызвал панель приложений")
 
