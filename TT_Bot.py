@@ -145,7 +145,7 @@ def answer(text):
                     isQuestion = True
             answerNumber = random.randint(1, count - 1)
             answer = mas[questionNumber + answerNumber]
-            return answer
+            return answer, maximumSimilarity
         else:
             return 'Не понял, перефразируй'
     except:
@@ -171,11 +171,12 @@ def handle_photo(message):
         if message.chat.id == x:
             isAdmin = True
     if (isAdmin == False):
-        bot.send_message(admin[0], message.from_user.first_name + " - Отправил картинку в чат")
-        bot.send_photo(admin[0], message.photo[len(message.photo) - 1].file_id)
-        bot.send_message(admin[1], message.from_user.first_name + " - Отправил картинку в чат")
-        bot.send_photo(admin[1], message.photo[len(message.photo) - 1].file_id)
-        bot.send_message(admin[2], message.from_user.first_name + " - Отправил картинку в чат")
+        for x in admin:
+            try:
+                bot.send_message(x, message.from_user.first_name + " - Отправил картинку в чат")
+                bot.send_photo(x, message.photo[len(message.photo) - 1].file_id)
+            except:
+                print('Не удалось отправить сообщение администратору')
 
 
 # Отправка Стикеров на Стикер
@@ -197,12 +198,12 @@ def handle_sticker(message):
         if message.chat.id == x:
             isAdmin = True
     if (isAdmin == False):
-        bot.send_message(admin[0], message.from_user.first_name + " - Отправил стикер в чат")
-        bot.send_sticker(admin[0], message.sticker.file_id)
-        bot.send_message(admin[1], message.from_user.first_name + " - Отправил стикер в чат")
-        bot.send_sticker(admin[1], message.sticker.file_id)
-        bot.send_message(admin[2], message.from_user.first_name + " - Отправил стикер в чат")
-        bot.send_sticker(admin[2], message.sticker.file_id)
+        for x in admin:
+            try:
+                bot.send_message(x, message.from_user.first_name + " - Отправил стикер в чат")
+                bot.send_photo(x, message.sticker.file_id)
+            except:
+                print('Не удалось отправить сообщение администратору')
 
 
 # Отправка Сообщения на голосовое
@@ -222,12 +223,12 @@ def voice_processing(message):
         if message.chat.id == x:
             isAdmin = True
     if (isAdmin == False):
-        bot.send_message(admin[0], message.from_user.first_name + " - Отправил голосовое в чат")
-        bot.send_message(admin[1], message.from_user.first_name + " - Отправил голосовое в чат")
-        bot.send_message(admin[2], message.from_user.first_name + " - Отправил голосовое в чат")
-        bot.send_voice(admin[0], message.voice.file_id)
-        bot.send_voice(admin[1], message.voice.file_id)
-        bot.send_voice(admin[2], message.voice.file_id)
+        for x in admin:
+            try:
+                bot.send_message(x, message.from_user.first_name + " - Отправил голосовое в чат")
+                bot.send_voice(x, message.voice.file_id)
+            except:
+                print('Не удалось отправить сообщение администратору')
 
 
 # Команда "Курс"
@@ -282,7 +283,7 @@ def query_handler(call):
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                               text='Какая валюта тебя интересует ?', reply_markup=keycourse)
     elif call.data == "crip":
-        keycoursecrip = types.InlineKeyboardMarkup();
+        keycoursecrip = types.InlineKeyboardMarkup()
         key_Bitcoin = types.InlineKeyboardButton(text='Bitcoin', callback_data='Bitcoin')
         keycoursecrip.add(key_Bitcoin)
         key_Ethereum = types.InlineKeyboardButton(text='Ethereum', callback_data='Ethereum')
@@ -322,13 +323,23 @@ def query_handler(call):
         GameSSP(call.message, "first")
         updateStatistic(call.message, "GameSSP")
     elif call.data == "StatGame":
-        static = []
-        staticMessage = ""
         db = sqlite3.connect('db/JeckaBot.db')
         cur = db.cursor()
-        for x in cur.execute("Select nickname, balance from users where balance>5000 ORDER BY balance DESC Limit 10"):
-            static.append(x[0])
-            static.append(x[1])
+        static = []
+        staticMessage = ""
+        for x in cur.execute(
+                "Select count(*) from users where balance>5000 and active=1"):
+            amount = x[0]
+        if amount >= 10:
+            for x in cur.execute(
+                    "Select nickname, balance from users where balance>5000 and active=1 ORDER BY balance DESC Limit 10"):
+                static.append(x[0])
+                static.append(x[1])
+        else:
+            for x in cur.execute(
+                    "Select nickname, balance from users where balance>5000 ORDER BY balance DESC Limit 10"):
+                static.append(x[0])
+                static.append(x[1])
         count = 0
         while count < 20:
             if count % 2 == 0:
@@ -846,6 +857,9 @@ def query_handler(call):
     elif call.data == "filmsPanel":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         films(call.message)
+    elif call.data == "coursePanel":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        startcourse(call.message)
     elif call.data == "goroscope":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         handle_AriesMenu(call.message)
@@ -1166,12 +1180,13 @@ def botFunny(message, res=False):
     key_game = types.InlineKeyboardButton(text='Играть', callback_data='game')
     key_music = types.InlineKeyboardButton(text='Музыка', callback_data='music')
     key_weather = types.InlineKeyboardButton(text='Погода', callback_data='weather')
-    key_film = types.InlineKeyboardButton(text='Фильмы', callback_data='filmsPanel')
+    key_course = types.InlineKeyboardButton(text='Курс валют', callback_data='coursePanel')
+    # key_film = types.InlineKeyboardButton(text='Фильмы', callback_data='filmsPanel')
     key_goroscope = types.InlineKeyboardButton(text='Гороскоп', callback_data='goroscope')
     key_para = types.InlineKeyboardButton(text='Пара дня', callback_data='para')
     botPanel.row(key_game, key_weather)
     botPanel.row(key_music, key_goroscope)
-    botPanel.row(key_film, key_para)
+    botPanel.row(key_course, key_para)
     bot.send_message(message.chat.id, 'Чем желаешь заняться?', reply_markup=botPanel)
     adminNotification(message, "Вызвал панель приложений")
 
@@ -1335,9 +1350,11 @@ def startadm(message: types.Message):
                          reply_markup=keyadmin)
     else:
         bot.send_message(message.chat.id, ' {}, у Вас нет прав администратора'.format(message.from_user.first_name))
-        bot.send_message(admin[0], message.from_user.first_name + " - Попытался вызвать панель админа")
-        bot.send_message(admin[1], message.from_user.first_name + " - Попытался вызвать панель админа")
-        bot.send_message(admin[2], message.from_user.first_name + " - Попытался вызвать панель админа")
+        for x in admin:
+            try:
+                bot.send_message(x, message.from_user.first_name + " - Попытался вызвать панель админа")
+            except:
+                print('Не удалось отправить сообщение администратору')
 
 
 def cancelButton(message):
@@ -1468,17 +1485,22 @@ def handle_text(message):
             isStandarnAnswer = False
             realAnswer = timeAnswer
         if isStandarnAnswer:
-            realAnswer = answer(message.text)
+            realAnswer, Similarity = answer(message.text)
             bot.send_message(message.chat.id, realAnswer)
-        f = open('data/logi/' + str(message.chat.id) + '_' + str(message.from_user.username) + '_log.txt', 'a',
-                 encoding='UTF-8')
-        f.write('u: ' + message.text + '\n' + realAnswer + '\n')
-        f.close()
+            if Similarity < 60:
+                f = open('data/failedQuestion.txt', 'a',
+                         encoding='UTF-8')
+                f.write(
+                    'Написали боту: ' + message.text + '\n' + 'Бот ответил: ' + realAnswer + '\n' + 'сходство: ' + str(Similarity) + '\n')
+                f.close()
     if not isAdmin:
         if not ignoreListParameter:
-            bot.send_message(admin[1], message.from_user.first_name + "\n" + message.text + "\n" + realAnswer)
-            bot.send_message(admin[2], message.from_user.first_name + "\n" + message.text + "\n" + realAnswer)
-            bot.send_message(admin[0], message.from_user.first_name + "\n" + message.text + "\n" + realAnswer)
+            for x in admin:
+                try:
+                    bot.send_message(x, message.from_user.first_name + "\n" + message.text + "\n" + realAnswer)
+                    bot.send_voice(x, message.voice.file_id)
+                except:
+                    print('Не удалось отправить сообщение администратору')
 
 
 # Запускаем бота
