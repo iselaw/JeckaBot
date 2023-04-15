@@ -171,11 +171,12 @@ def handle_photo(message):
         if message.chat.id == x:
             isAdmin = True
     if (isAdmin == False):
-        bot.send_message(admin[0], message.from_user.first_name + " - Отправил картинку в чат")
-        bot.send_photo(admin[0], message.photo[len(message.photo) - 1].file_id)
-        bot.send_message(admin[1], message.from_user.first_name + " - Отправил картинку в чат")
-        bot.send_photo(admin[1], message.photo[len(message.photo) - 1].file_id)
-        bot.send_message(admin[2], message.from_user.first_name + " - Отправил картинку в чат")
+        for x in admin:
+            try:
+                bot.send_message(x, message.from_user.first_name + " - Отправил картинку в чат")
+                bot.send_photo(x, message.photo[len(message.photo) - 1].file_id)
+            except:
+                print('Не удалось отправить сообщение администратору')
 
 
 # Отправка Стикеров на Стикер
@@ -197,12 +198,12 @@ def handle_sticker(message):
         if message.chat.id == x:
             isAdmin = True
     if (isAdmin == False):
-        bot.send_message(admin[0], message.from_user.first_name + " - Отправил стикер в чат")
-        bot.send_sticker(admin[0], message.sticker.file_id)
-        bot.send_message(admin[1], message.from_user.first_name + " - Отправил стикер в чат")
-        bot.send_sticker(admin[1], message.sticker.file_id)
-        bot.send_message(admin[2], message.from_user.first_name + " - Отправил стикер в чат")
-        bot.send_sticker(admin[2], message.sticker.file_id)
+        for x in admin:
+            try:
+                bot.send_message(x, message.from_user.first_name + " - Отправил стикер в чат")
+                bot.send_photo(x, message.sticker.file_id)
+            except:
+                print('Не удалось отправить сообщение администратору')
 
 
 # Отправка Сообщения на голосовое
@@ -222,12 +223,12 @@ def voice_processing(message):
         if message.chat.id == x:
             isAdmin = True
     if (isAdmin == False):
-        bot.send_message(admin[0], message.from_user.first_name + " - Отправил голосовое в чат")
-        bot.send_message(admin[1], message.from_user.first_name + " - Отправил голосовое в чат")
-        bot.send_message(admin[2], message.from_user.first_name + " - Отправил голосовое в чат")
-        bot.send_voice(admin[0], message.voice.file_id)
-        bot.send_voice(admin[1], message.voice.file_id)
-        bot.send_voice(admin[2], message.voice.file_id)
+        for x in admin:
+            try:
+                bot.send_message(x, message.from_user.first_name + " - Отправил голосовое в чат")
+                bot.send_voice(x, message.voice.file_id)
+            except:
+                print('Не удалось отправить сообщение администратору')
 
 
 # Команда "Курс"
@@ -1349,9 +1350,11 @@ def startadm(message: types.Message):
                          reply_markup=keyadmin)
     else:
         bot.send_message(message.chat.id, ' {}, у Вас нет прав администратора'.format(message.from_user.first_name))
-        bot.send_message(admin[0], message.from_user.first_name + " - Попытался вызвать панель админа")
-        bot.send_message(admin[1], message.from_user.first_name + " - Попытался вызвать панель админа")
-        bot.send_message(admin[2], message.from_user.first_name + " - Попытался вызвать панель админа")
+        for x in admin:
+            try:
+                bot.send_message(x, message.from_user.first_name + " - Попытался вызвать панель админа")
+            except:
+                print('Не удалось отправить сообщение администратору')
 
 
 def cancelButton(message):
@@ -1490,9 +1493,12 @@ def handle_text(message):
         f.close()
     if not isAdmin:
         if not ignoreListParameter:
-            bot.send_message(admin[1], message.from_user.first_name + "\n" + message.text + "\n" + realAnswer)
-            bot.send_message(admin[2], message.from_user.first_name + "\n" + message.text + "\n" + realAnswer)
-            bot.send_message(admin[0], message.from_user.first_name + "\n" + message.text + "\n" + realAnswer)
+            for x in admin:
+                try:
+                    bot.send_message(x, message.from_user.first_name + "\n" + message.text + "\n" + realAnswer)
+                    bot.send_voice(x, message.voice.file_id)
+                except:
+                    print('Не удалось отправить сообщение администратору')
 
 
 # Запускаем бота
