@@ -980,6 +980,7 @@ def audio_record(message):
                    (Track_Name, Track_performer, Track_title, Track_Unique, Track_id))
         db.commit()
         bot.send_message(message.chat.id, Track_performer + " - " + Track_title + " - Трек сохранен ")
+        musicList.append(Track_performer+Track_title)
     db.close()
 
 
