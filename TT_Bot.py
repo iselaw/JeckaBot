@@ -42,6 +42,12 @@ mas = []
 masurl = []
 masParaLove = []
 masstiker = []
+musicList = []
+db = sqlite3.connect('db/JeckaBot.db')
+cur = db.cursor()
+for s in cur.execute('SELECT Performer||Title FROM Music where Performer is not null AND Title IS NOT NULL'):
+    musicList.append(s[0])
+db.close()
 if os.path.exists('data/boltun.txt'):
     f = open('data/boltun.txt', 'r', encoding='UTF-8')
     for x in f:
@@ -1479,6 +1485,28 @@ def handle_text(message):
     if Brocok:
         isStandarnAnswer = False
         realAnswer = "*Была подкинута монетка*"
+    if 'жека включи ' in message.text.lower():
+        isStandarnAnswer = False
+        maximumSimilarity = 0
+        maxMusicName = ''
+        varFileId = ''
+        musicName = (message.text.lower())[12:]
+        for q in musicList:
+            degreeOfSimilarity = (fuzz.token_sort_ratio(musicName, q))
+            if (degreeOfSimilarity > maximumSimilarity):
+                maximumSimilarity = degreeOfSimilarity
+                maxMusicName = q
+        if maximumSimilarity == 0:
+            bot.send_message(message.chat.id, 'Прости, я не смог найти в библиотеке ничего подходящего')
+            realAnswer = '*Неудачный поиск музыки*'
+        else:
+            db = sqlite3.connect('db/JeckaBot.db')
+            cur = db.cursor()
+            for s in cur.execute("SELECT FileId FROM Music where Performer||Title=" + "'" + maxMusicName + "'"):
+                varFileId = s[0]
+            db.close()
+            bot.send_audio(chat_id=message.chat.id, audio=varFileId)
+            realAnswer = '*была отправлена песня-' + maxMusicName + '*'
     if muteStatus == 0:
         if timeAnswer is not None:
             bot.send_message(message.chat.id, timeAnswer)
@@ -1491,7 +1519,8 @@ def handle_text(message):
                 f = open('data/failedQuestion.txt', 'a',
                          encoding='UTF-8')
                 f.write(
-                    'Написали боту: ' + message.text + '\n' + 'Бот ответил: ' + realAnswer + '\n' + 'сходство: ' + str(Similarity) + '\n')
+                    'Написали боту: ' + message.text + '\n' + 'Бот ответил: ' + realAnswer + '\n' + 'сходство: ' + str(
+                        Similarity) + '\n')
                 f.close()
     if not isAdmin:
         if not ignoreListParameter:
