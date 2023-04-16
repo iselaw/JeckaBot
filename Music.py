@@ -52,7 +52,7 @@ def LikePlayList(message):
         isNew = True
         UniqueId_list = []
         for UniqueId in Plist.execute('SELECT UniqueId FROM pList_' + MessageGroupId + '  WHERE UniqueId LIKE ?',
-                                          ('%' + track + '%',)):
+                                      ('%' + track + '%',)):
             UniqueId_list.append(UniqueId[0])
             UniqueId_list1 = UniqueId_list[0]
             if str(UniqueId_list1) == str(message.audio.file_unique_id):
@@ -63,8 +63,8 @@ def LikePlayList(message):
             Track_id = message.audio.file_id
             Track_Unique = message.audio.file_unique_id
             db.execute(
-                    "INSERT INTO " + "pList_" + MessageGroupId + " (Performer, Title, FileId, UniqueId) VALUES (?, ?, ?, ?);",
-                    (Track_performer, Track_title, Track_id, Track_Unique))
+                "INSERT INTO " + "pList_" + MessageGroupId + " (Performer, Title, FileId, UniqueId) VALUES (?, ?, ?, ?);",
+                (Track_performer, Track_title, Track_id, Track_Unique))
             db.commit()
             bot.send_message(message.chat.id, Track_performer + " - " + Track_title + " - Трек сохранен ")
         db.close()
@@ -118,7 +118,7 @@ def PlayList(message):
                 bot.send_audio(chat_id=message.chat.id, audio=audioo)
         except:
             bot.edit_message_text(chat_id=message.chat.id, message_id=message.message_id,
-                              text="Ваш плейлист пуст")
+                                  text="Ваш плейлист пуст")
         db.close()
     except:
         db = sqlite3.connect('db/PlayList.db')
@@ -129,5 +129,5 @@ def PlayList(message):
                 bot.send_audio(chat_id=message.chat.id, audio=audioo)
         except:
             bot.edit_message_text(chat_id=message.chat.id, message_id=message.message_id,
-                              text="Ваш плейлист пуст")
+                                  text="Ваш плейлист пуст")
         db.close()
