@@ -147,9 +147,9 @@ def answer(text):
             answer = mas[questionNumber + answerNumber]
             return answer, maximumSimilarity
         else:
-            return 'Не понял, перефразируй'
+            return 'Не понял, перефразируй', 0
     except:
-        return 'Не совсем понял вопрос'
+        return 'Не совсем понял вопрос', 0
 
 
 # Отправка фото на фото
@@ -201,7 +201,7 @@ def handle_sticker(message):
         for x in admin:
             try:
                 bot.send_message(x, message.from_user.first_name + " - Отправил стикер в чат")
-                bot.send_photo(x, message.sticker.file_id)
+                bot.send_sticker(x, message.sticker.file_id)
             except:
                 print('Не удалось отправить сообщение администратору')
 
