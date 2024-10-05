@@ -34,7 +34,7 @@ isAddQuestion = False
 questionString = ""
 answerString = ""
 questionNumberToAdd = 0
-worksheet = sh.sheet1
+# worksheet = sh.sheet1
 # Загружаем в массив
 standartPoint = 5000
 masVerify = []
@@ -238,14 +238,14 @@ def voice_processing(message):
 
 
 # Команда "Курс"
-@bot.message_handler(commands=["курс", "course"])
-def startcourse(message, res=False):
-    keycoursemenu = types.InlineKeyboardMarkup()
-    key_rub = types.InlineKeyboardButton(text='Курс Валюты', callback_data='rub')
-    keycoursemenu.add(key_rub)
-    key_crip = types.InlineKeyboardButton(text='Курс Криптовалюты', callback_data='crip')
-    keycoursemenu.add(key_crip)
-    bot.send_message(message.chat.id, 'Что именно тебя интересует ?', reply_markup=keycoursemenu)
+# @bot.message_handler(commands=["курс", "course"])
+# def startcourse(message, res=False):
+#     keycoursemenu = types.InlineKeyboardMarkup()
+#     key_rub = types.InlineKeyboardButton(text='Курс Валюты', callback_data='rub')
+#     keycoursemenu.add(key_rub)
+#     key_crip = types.InlineKeyboardButton(text='Курс Криптовалюты', callback_data='crip')
+#     keycoursemenu.add(key_crip)
+#     bot.send_message(message.chat.id, 'Что именно тебя интересует ?', reply_markup=keycoursemenu)
 
 
 @bot.callback_query_handler(func=lambda call: True)
@@ -257,18 +257,18 @@ def query_handler(call):
         isPush = False
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                               text="Операция отменена")
-    elif call.data == "dollar":
-        resd = worksheet.get('A2')
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Доллар стоит сейчас " + str(resd))
-    elif call.data == "Euro":
-        rese = worksheet.get('B2')
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Евро сейчас стоит" + str(rese))
-    elif call.data == "Hryvnia":
-        resh = worksheet.get('C2')
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Гривна сейчас стоит" + str(resh))
+    # elif call.data == "dollar":
+    #     resd = worksheet.get('A2')
+    #     bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
+    #                           text="Доллар стоит сейчас " + str(resd))
+    # elif call.data == "Euro":
+    #     rese = worksheet.get('B2')
+    #     bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
+    #                           text="Евро сейчас стоит" + str(rese))
+    # elif call.data == "Hryvnia":
+    #     resh = worksheet.get('C2')
+    #     bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
+    #                           text="Гривна сейчас стоит" + str(resh))
     elif call.data == "spam":
         global pushAdmin
         pushAdmin = str(call.message.chat.id)
@@ -288,22 +288,22 @@ def query_handler(call):
         keycourse.add(key_Hryvnia)
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                               text='Какая валюта тебя интересует ?', reply_markup=keycourse)
-    elif call.data == "crip":
-        keycoursecrip = types.InlineKeyboardMarkup()
-        key_Bitcoin = types.InlineKeyboardButton(text='Bitcoin', callback_data='Bitcoin')
-        keycoursecrip.add(key_Bitcoin)
-        key_Ethereum = types.InlineKeyboardButton(text='Ethereum', callback_data='Ethereum')
-        keycoursecrip.add(key_Ethereum)
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text='Какой курс криптовалюты тебя интересует ?', reply_markup=keycoursecrip)
-    elif call.data == "Bitcoin":
-        resbit = worksheet.get('C10')
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Bitcoin в долларах сейчас стоит " + str(resbit))
-    elif call.data == "Ethereum":
-        reseth = worksheet.get('C11')
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Ethereum в долларах сейчас стоит " + str(reseth))
+    # elif call.data == "crip":
+    #     keycoursecrip = types.InlineKeyboardMarkup()
+    #     key_Bitcoin = types.InlineKeyboardButton(text='Bitcoin', callback_data='Bitcoin')
+    #     keycoursecrip.add(key_Bitcoin)
+    #     key_Ethereum = types.InlineKeyboardButton(text='Ethereum', callback_data='Ethereum')
+    #     keycoursecrip.add(key_Ethereum)
+    #     bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
+    #                           text='Какой курс криптовалюты тебя интересует ?', reply_markup=keycoursecrip)
+    # elif call.data == "Bitcoin":
+    #     resbit = worksheet.get('C10')
+    #     bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
+    #                           text="Bitcoin в долларах сейчас стоит " + str(resbit))
+    # elif call.data == "Ethereum":
+    #     reseth = worksheet.get('C11')
+    #     bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
+    #                           text="Ethereum в долларах сейчас стоит " + str(reseth))
     elif call.data == "yes":
         global answerString
         global questionNumberToAdd
@@ -863,9 +863,9 @@ def query_handler(call):
     elif call.data == "filmsPanel":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         films(call.message)
-    elif call.data == "coursePanel":
-        bot.delete_message(call.message.chat.id, call.message.message_id)
-        startcourse(call.message)
+    # elif call.data == "coursePanel":
+    #     bot.delete_message(call.message.chat.id, call.message.message_id)
+    #     startcourse(call.message)
     elif call.data == "goroscope":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         handle_AriesMenu(call.message)
@@ -1187,13 +1187,14 @@ def botFunny(message, res=False):
     key_game = types.InlineKeyboardButton(text='Играть', callback_data='game')
     key_music = types.InlineKeyboardButton(text='Музыка', callback_data='music')
     key_weather = types.InlineKeyboardButton(text='Погода', callback_data='weather')
-    key_course = types.InlineKeyboardButton(text='Курс валют', callback_data='coursePanel')
+    # key_course = types.InlineKeyboardButton(text='Курс валют', callback_data='coursePanel')
     # key_film = types.InlineKeyboardButton(text='Фильмы', callback_data='filmsPanel')
     key_goroscope = types.InlineKeyboardButton(text='Гороскоп', callback_data='goroscope')
     key_para = types.InlineKeyboardButton(text='Пара дня', callback_data='para')
     botPanel.row(key_game, key_weather)
     botPanel.row(key_music, key_goroscope)
-    botPanel.row(key_course, key_para)
+    # botPanel.row(key_course, key_para)
+    botPanel.row(key_para)
     bot.send_message(message.chat.id, 'Чем желаешь заняться?', reply_markup=botPanel)
     adminNotification(message, "Вызвал панель приложений")
 
