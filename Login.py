@@ -1,5 +1,4 @@
 import telebot
-import gspread
 # ZhekaMatuxovbotTestbot token
 bot = telebot.TeleBot('5231426811:AAEgODwFTSgKDcRnIL1smBYtDZpw2Cf5w64')
 # Prod token
