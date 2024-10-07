@@ -819,9 +819,6 @@ def query_handler(call):
     elif call.data == "silence":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         muteunmute(call.message)
-    elif call.data == "filmsPanel":
-        bot.delete_message(call.message.chat.id, call.message.message_id)
-        films(call.message)
     elif call.data == "goroscope":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         handle_AriesMenu(call.message)
