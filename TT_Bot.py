@@ -387,25 +387,26 @@ def query_handler(call):
     elif call.data == "GetCardYes":
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                               text="Жека-крупье вытаскивает карту из колоды")
-        BlackJackNext(call.message, True)
+        BlackJack.BlackJackNext(call.message, True)
     elif call.data == "GetCardNo":
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                               text="Очередь Жеки-крупье тянуть карты")
-        BlackJackNext(call.message, False)
+        BlackJack.BlackJackNext(call.message, False)
     elif call.data == "BlackJack50":
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                               text="Ставка 50\nВаш баланс: " + str(int(getBalance(call.message)) - 50))
-        BlackJackFirst(call.message, 50)
+        BlackJack.BlackJackFirst(call.message, 50)
     elif call.data == "BlackJack100":
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                               text="Ставка 100\nВаш баланс: " + str(int(getBalance(call.message)) - 100))
-        BlackJackFirst(call.message, 100)
+        BlackJack.BlackJackFirst(call.message, 100)
     elif call.data == "BlackJack200":
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                               text="Ставка 200\nВаш баланс: " + str(int(getBalance(call.message)) - 200))
-        BlackJackFirst(call.message, 200)
+        BlackJack.BlackJackFirst(call.message, 200)
     elif call.data == "BlackJack":
-        BJBet(call.message, "Выбрано: Блекджек\nВаш баланс: " + str(getBalance(call.message)))
+
+        BlackJack.BJBet(call.message, "Выбрано: Блекджек\nВаш баланс: " + str(getBalance(call.message)))
         updateStatistic(call.message, "BlackJack")
     elif call.data == "krutkonec":
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Приходи еще")
