@@ -17,7 +17,6 @@ import urllib.request as urllib2
 from telebot.types import InputMediaAudio
 from typing import Any
 from GameQvest import *
-from Films import *
 from Login import *
 from Music import *
 from Push import *
@@ -769,22 +768,6 @@ def query_handler(call):
             bot.send_sticker(chat_id=call.message.chat.id, sticker=itog)
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                   text="Ничья")
-    elif call.data == "films":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Приятного просмотра")
-        film(call.message)
-        updateStatistic(call.message, "randfilm")
-    elif call.data == "mult":
-
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Приятного просмотра")
-        mult(call.message)
-        updateStatistic(call.message, "mult")
-    elif call.data == "anime":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Приятного просмотра")
-        anime(call.message)
-        updateStatistic(call.message, "anime")
     elif call.data == "game":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         game(call.message)
