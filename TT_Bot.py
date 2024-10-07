@@ -24,7 +24,7 @@ from Push import *
 from millionaire import *
 from mute import *
 from statistic import *
-from BlackJack import *
+from BlackJack import BlackJack
 
 # Создаем бота
 isPush = False
@@ -237,6 +237,7 @@ def voice_processing(message):
 
 @bot.callback_query_handler(func=lambda call: True)
 def query_handler(call):
+    BlackJack.bj_handler(call)
     if call.data == "cancel":
         global isAddQuestion
         global isPush
@@ -384,30 +385,6 @@ def query_handler(call):
     elif call.data == "SlotBet50":
         itog = slotMachine(call.message, 50)
         SlotBet(call.message, itog)
-    elif call.data == "GetCardYes":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Жека-крупье вытаскивает карту из колоды")
-        BlackJack.BlackJackNext(call.message, True)
-    elif call.data == "GetCardNo":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Очередь Жеки-крупье тянуть карты")
-        BlackJack.BlackJackNext(call.message, False)
-    elif call.data == "BlackJack50":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Ставка 50\nВаш баланс: " + str(int(getBalance(call.message)) - 50))
-        BlackJack.BlackJackFirst(call.message, 50)
-    elif call.data == "BlackJack100":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Ставка 100\nВаш баланс: " + str(int(getBalance(call.message)) - 100))
-        BlackJack.BlackJackFirst(call.message, 100)
-    elif call.data == "BlackJack200":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Ставка 200\nВаш баланс: " + str(int(getBalance(call.message)) - 200))
-        BlackJack.BlackJackFirst(call.message, 200)
-    elif call.data == "BlackJack":
-
-        BlackJack.BJBet(call.message, "Выбрано: Блекджек\nВаш баланс: " + str(getBalance(call.message)))
-        updateStatistic(call.message, "BlackJack")
     elif call.data == "krutkonec":
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Приходи еще")
     elif call.data == "millionaire":
@@ -1465,7 +1442,6 @@ def handle_text(message):
                     bot.send_message(x, message.from_user.first_name + "\n" + message.text + "\n" + realAnswer)
                 except:
                     print('Не удалось отправить сообщение администратору')
-
 
 # Запускаем бота
 bot.polling(none_stop=True, interval=0)
