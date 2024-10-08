@@ -34,7 +34,7 @@ class Millionaire:
 
     @staticmethod
     def startMillionaire(message, balance, isStarting, messageId, res=False):
-        if isStarting == True:
+        if isStarting:
             x = open('millionaire//player' + str(message.chat.id) + '.txt', 'w', encoding='UTF-8')
             x.write("0" + '\n' + "0" + '\n' + "1")
             x.close()
@@ -105,7 +105,7 @@ class Millionaire:
 
     @staticmethod
     def resultMillionaire(call, isTrueAnswer, res=False):
-        if isTrueAnswer == False:
+        if not isTrueAnswer:
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                   text="Неправильный ответ :(")
             sleep(3)
@@ -113,7 +113,7 @@ class Millionaire:
             Millionaire.millionaireStart(call.message)
         else:
             isWin = Millionaire.winMillionaire(call.message)
-            if isWin == False:
+            if not isWin:
                 milMas = []
                 ff = open('millionaire//player' + str(call.message.chat.id) + '.txt', 'r', encoding='UTF-8')
                 for s in ff:
