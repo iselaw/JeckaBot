@@ -16,11 +16,11 @@ import xmltodict
 import urllib.request as urllib2
 from telebot.types import InputMediaAudio
 from typing import Any
-from GameQvest import GameQuest
+from GameQuest import GameQuest
 from Login import *
 from Music import *
 from Push import *
-from millionaire import millionaire
+from Millionaire import Millionaire
 from mute import *
 from statistic import *
 from BlackJack import BlackJack
@@ -239,7 +239,7 @@ def voice_processing(message):
 def query_handler(call):
     GameQuest.gameQuest_handler(call)
     BlackJack.bj_handler(call)
-    millionaire.millionaire_handler(call)
+    Millionaire.millionaire_handler(call)
     if call.data == "cancel":
         global isAddQuestion
         global isPush
@@ -575,8 +575,8 @@ def game(message, res=False):
     keygame.add(key_Game2)
     key_Game3 = types.InlineKeyboardButton(text='Блекджек', callback_data='BlackJack')
     keygame.add(key_Game3)
-    key_qvest = types.InlineKeyboardButton(text='Путешествие Жеки', callback_data='qvest')
-    keygame.add(key_qvest)
+    key_Quest = types.InlineKeyboardButton(text='Путешествие Жеки', callback_data='Quest')
+    keygame.add(key_Quest)
     key_StatGame = types.InlineKeyboardButton(text='Статистика', callback_data='StatGame')
     keygame.add(key_StatGame)
     bot.send_message(message.chat.id, 'Во что сыграем ?\nВаш Баланс: ' + str(getBalance(message)), reply_markup=keygame)
@@ -644,17 +644,17 @@ def slotMachine(message, betValue):
             point = bet * 5
         if slot1 == "🍒":
             point = bet * 3
-        isBankrot, Balance = updateScore(bet, point, message)
+        isBankrot, balance = updateScore(bet, point, message)
         if not isBankrot:
-            itog = "Ты выиграл \n{}".format(itog) + "\n" + "Баланс: " + str(Balance) + "(+" + str(
+            itog = "Ты выиграл \n{}".format(itog) + "\n" + "Баланс: " + str(balance) + "(+" + str(
                 point) + ")"
         else:
             itog = "bankrot"
     else:
         point = bet * (-1)
-        isBankrot, Balance = updateScore(bet, point, message)
+        isBankrot, balance = updateScore(bet, point, message)
         if not isBankrot:
-            itog = "Увы, но ты проиграл \n{}".format(itog) + "\n" + "Баланс: " + str(Balance) + "(" + str(
+            itog = "Увы, но ты проиграл \n{}".format(itog) + "\n" + "Баланс: " + str(balance) + "(" + str(
                 point) + ")"
         else:
             itog = "bankrot"

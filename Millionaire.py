@@ -5,32 +5,32 @@ from telebot import types
 from Login import *
 from statistic import updateStatistic
 
-class millionaire:
+class Millionaire:
 
     @staticmethod
     def getBalance(message):
-        Balance = 0
+        balance = 0
         db = sqlite3.connect('db/JeckaBot.db')
         cur = db.cursor()
         for x in cur.execute("SELECT balance FROM Users where userId=" + str(message.chat.id)):
-            Balance = x[0]
+            balance = x[0]
         db.close()
-        return Balance
+        return balance
 
     @staticmethod
     def updateScore(bet, point, message):
         isBankrot = False
-        Balance = millionaire.getBalance(message)
-        if Balance >= bet:
-            Balance = Balance + point
+        balance = Millionaire.getBalance(message)
+        if balance >= bet:
+            balance = balance + point
             db = sqlite3.connect('db/JeckaBot.db')
             cur = db.cursor()
-            cur.execute("UPDATE Users SET balance = " + str(Balance) + " WHERE userId = " + str(message.chat.id))
+            cur.execute("UPDATE Users SET balance = " + str(balance) + " WHERE userId = " + str(message.chat.id))
             db.commit()
             db.close()
         else:
             isBankrot = True
-        return isBankrot, Balance
+        return isBankrot, balance
 
     @staticmethod
     def startMillionaire(message, balance, isStarting, messageId, res=False):
@@ -49,7 +49,7 @@ class millionaire:
         keyC = types.InlineKeyboardButton(text='C', callback_data='C')
         keyD = types.InlineKeyboardButton(text='D', callback_data='D')
         keyboard.row(keyA, keyB, keyC, keyD)
-        Question = millionaire.randomQuestion(message, balance, int(milMas[2]))
+        Question = Millionaire.randomQuestion(message, balance, int(milMas[2]))
         if messageId == 0:
             bot.send_message(chat_id=message.chat.id, text=Question, reply_markup=keyboard)
         else:
@@ -110,9 +110,9 @@ class millionaire:
                                   text="Неправильный ответ :(")
             sleep(3)
             bot.delete_message(call.message.chat.id, call.message.message_id)
-            millionaire.millionaireStart(call.message)
+            Millionaire.millionaireStart(call.message)
         else:
-            isWin = millionaire.winMillionaire(call.message)
+            isWin = Millionaire.winMillionaire(call.message)
             if isWin == False:
                 milMas = []
                 ff = open('millionaire//player' + str(call.message.chat.id) + '.txt', 'r', encoding='UTF-8')
@@ -126,13 +126,13 @@ class millionaire:
                                       text="Правильный ответ!" + '\n' + "Выигрыш: " + str(
                                           int(milMas[0]) + 100000) + "$")
                 sleep(1)
-                millionaire.startMillionaire(call.message, int(milMas[0]) + 100000, False, call.message.message_id)
+                Millionaire.startMillionaire(call.message, int(milMas[0]) + 100000, False, call.message.message_id)
             else:
-                Balance = millionaire.getBalance(call.message)
+                balance = Millionaire.getBalance(call.message)
                 db = sqlite3.connect('db/JeckaBot.db')
                 cur = db.cursor()
                 cur.execute(
-                    "UPDATE Users SET balance = " + str(Balance + 500) + " WHERE userId = " + str(call.message.chat.id))
+                    "UPDATE Users SET balance = " + str(balance + 500) + " WHERE userId = " + str(call.message.chat.id))
                 db.commit()
                 db.close()
                 bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
@@ -140,13 +140,13 @@ class millionaire:
                 sleep(2)
                 bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                       text="Поздравляю! Вы ответили правильно на все 10 вопросов." + '\n' + "В качестве приза Вы получаете 500 очков на баланс" + '\n' + "Баланс: " + str(
-                                          Balance + 500) + " (+500)")
+                                          balance + 500) + " (+500)")
                 x = open('millionaire//player' + str(call.message.chat.id) + '.txt', 'w', encoding='UTF-8')
                 x.write("0" + '\n' + "0" + '\n' + "1")
                 x.close()
                 sleep(4)
                 bot.delete_message(call.message.chat.id, call.message.message_id)
-                millionaire.millionaireStart(call.message)
+                Millionaire.millionaireStart(call.message)
 
     @staticmethod
     def millionaireStart(message, res=False):
@@ -159,20 +159,20 @@ class millionaire:
     def millionaire_handler(call):
         if call.data == "millionaire":
             bot.delete_message(call.message.chat.id, call.message.message_id)
-            millionaire.millionaireStart(call.message)
+            Millionaire.millionaireStart(call.message)
             updateStatistic(call.message, "millionaire")
         elif call.data == "startMillionaire":
             bot.delete_message(call.message.chat.id, call.message.message_id)
-            millionaire.startMillionaire(call.message, 0, True, 0)
+            Millionaire.startMillionaire(call.message, 0, True, 0)
         elif call.data == "A":
-            isTrueAnswer = millionaire.checkAnswer(call.message, 1)
-            millionaire.resultMillionaire(call, isTrueAnswer)
+            isTrueAnswer = Millionaire.checkAnswer(call.message, 1)
+            Millionaire.resultMillionaire(call, isTrueAnswer)
         elif call.data == "B":
-            isTrueAnswer = millionaire.checkAnswer(call.message, 2)
-            millionaire.resultMillionaire(call, isTrueAnswer)
+            isTrueAnswer = Millionaire.checkAnswer(call.message, 2)
+            Millionaire.resultMillionaire(call, isTrueAnswer)
         elif call.data == "C":
-            isTrueAnswer = millionaire.checkAnswer(call.message, 3)
-            millionaire.resultMillionaire(call, isTrueAnswer)
+            isTrueAnswer = Millionaire.checkAnswer(call.message, 3)
+            Millionaire.resultMillionaire(call, isTrueAnswer)
         elif call.data == "D":
-            isTrueAnswer = millionaire.checkAnswer(call.message, 4)
-            millionaire.resultMillionaire(call, isTrueAnswer)
+            isTrueAnswer = Millionaire.checkAnswer(call.message, 4)
+            Millionaire.resultMillionaire(call, isTrueAnswer)
