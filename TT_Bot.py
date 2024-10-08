@@ -968,7 +968,7 @@ def handle_UserId(message):
     sz = message.chat.id
     for s in cur.execute("SELECT * FROM Users WHERE userId =" + str(message.chat.id)):
         UserId = s[0]
-    if (UserId == 0):
+    if UserId == 0:
         global standartPoint
         cur.execute("INSERT INTO Users (userId, nickname, balance, active) VALUES (?, ?, ?, ?);",
                     (sz, f"{si}", standartPoint, 1))
@@ -1049,7 +1049,7 @@ def handle_text(message):
         musicName = (message.text.lower())[12:]
         for q in musicList:
             degreeOfSimilarity = (fuzz.token_sort_ratio(musicName, q))
-            if (degreeOfSimilarity > maximumSimilarity):
+            if degreeOfSimilarity > maximumSimilarity:
                 maximumSimilarity = degreeOfSimilarity
                 maxMusicName = q
         if maximumSimilarity == 0:
@@ -1071,13 +1071,6 @@ def handle_text(message):
         if isStandarnAnswer:
             realAnswer, Similarity = answer(message.text)
             bot.send_message(message.chat.id, realAnswer)
-            if Similarity < 60:
-                f = open('data/failedQuestion.txt', 'a',
-                         encoding='UTF-8')
-                f.write(
-                    'Написали боту: ' + message.text + '\n' + 'Бот ответил: ' + realAnswer + '\n' + 'сходство: ' + str(
-                        Similarity) + '\n')
-                f.close()
     if not isAdmin:
         if not ignoreListParameter:
             for x in admin:
