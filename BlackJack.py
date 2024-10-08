@@ -72,7 +72,7 @@ class BlackJack:
             if playerScore == 21:
                 isBankrot, balance = BlackJack.updateScoreBJ(bet, 2 * bet, message)
                 BlackJack.save_player_data(message.chat.id, bet, 0, itog)
-                BlackJack.BJBet(message, f'Ты выиграл, набрав {playerScore} \n{itog}\nБаланс: {Balance}(+{bet})')
+                BlackJack.BJBet(message, f'Ты выиграл, набрав {playerScore} \n{itog}\nБаланс: {balance}(+{bet})')
             else:
                 BlackJack.save_player_data(message.chat.id, bet, playerScore, itog)
                 BlackJack.BJGetCard(message, playerScore, itog)
@@ -90,11 +90,11 @@ class BlackJack:
             if playerScore == 21:
                 isBankrot, balance = BlackJack.updateScoreBJ(bet, 2 * bet, message)
                 BlackJack.save_player_data(message.chat.id, bet, 0, itog)
-                BlackJack.BJBet(message, f'Ты выиграл, набрав {playerScore} \n{itog}\nБаланс: {Balance}(+{bet})')
+                BlackJack.BJBet(message, f'Ты выиграл, набрав {playerScore} \n{itog}\nБаланс: {balance}(+{bet})')
             elif playerScore > 21:
                 isBankrot, balance = BlackJack.updateScoreBJ(bet, 0, message)
                 BlackJack.save_player_data(message.chat.id, bet, 0, itog)
-                BlackJack.BJBet(message, f'Ты проиграл, набрав {playerScore} \n{itog}\nБаланс: {Balance}(-{bet})')
+                BlackJack.BJBet(message, f'Ты проиграл, набрав {playerScore} \n{itog}\nБаланс: {balance}(-{bet})')
             else:
                 BlackJack.save_player_data(message.chat.id, bet, playerScore, itog)
                 BlackJack.BJGetCard(message, playerScore, itog)
@@ -109,18 +109,18 @@ class BlackJack:
                 isBankrot, balance = BlackJack.updateScoreBJ(bet, 2 * bet, message)
                 BlackJack.save_player_data(message.chat.id, bet, 0, itog)
                 BlackJack.BJBet(message,
-                                f'Ты выиграл, Жека-крупье набрал {botScore} \n{botItog}\nТвой Баланс: {Balance}(+{bet})')
+                                f'Ты выиграл, Жека-крупье набрал {botScore} \n{botItog}\nТвой Баланс: {balance}(+{bet})')
             elif botScore == playerScore:
                 isBankrot, balance = BlackJack.updateScoreBJ(bet, bet, message)
                 BlackJack.save_player_data(message.chat.id, bet, 0, itog)
                 BlackJack.BJBet(message,
-                                f'Ничья, Жека-крупье набрал {botScore} \n{botItog}\nТвой Баланс: {Balance}(+0)')
+                                f'Ничья, Жека-крупье набрал {botScore} \n{botItog}\nТвой Баланс: {balance}(+0)')
             else:
                 if botScore <= 21:
                     isBankrot, balance = BlackJack.updateScoreBJ(bet, 0, message)
                 BlackJack.save_player_data(message.chat.id, bet, 0, itog)
                 BlackJack.BJBet(message,
-                                f'Ты проиграл, Жека-крупье набрал {botScore} \n{botItog}\nТвой Баланс: {Balance}(-{bet})')
+                                f'Ты проиграл, Жека-крупье набрал {botScore} \n{botItog}\nТвой Баланс: {balance}(-{bet})')
 
     @staticmethod
     def randomCard(poolCard, playerScore, itog):
