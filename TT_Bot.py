@@ -562,7 +562,7 @@ def query_handler(call):
         DragonExit(call.message)
     elif call.data == "DragonExitGold":
         bot.delete_message(call.message.chat.id, call.message.message_id)
-        photo20 = open('GameQvest/жеказолото.png', 'rb')
+        photo20 = open('GameQvest/жеказолото.jpg', 'rb')
         bot.send_photo(chat_id=call.message.chat.id, photo=photo20,
                        caption="Отныне Вы самый богатый человек Мира. Вся ваша жизнь пройдет в роскоши и "
                                "сытости\n\nНебольшой подарок за прохождение игры\nНабор стикеров ZhekaMatuxovbot в "
