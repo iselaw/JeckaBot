@@ -37,7 +37,6 @@ questionNumberToAdd = 0
 standartPoint = 5000
 masVerify = []
 mas = []
-masurl = []
 masParaLove = []
 masstiker = []
 musicList = []
@@ -54,11 +53,6 @@ if os.path.exists('data/boltun.txt'):
     lastString = 'u: fUnCr55Iofefsfcccраытысш'
     mas.append(lastString.strip().lower())
     f.close()
-if os.path.exists('data/masurl.txt'):
-    f2 = open('data/masurl.txt', 'r', encoding='UTF-8')
-    for x2 in f2:
-        masurl.append(x2)
-    f2.close()
 if os.path.exists('data/stiker.txt'):
     f3 = open('data/stiker.txt', 'r', encoding='UTF-8')
     for x3 in f3:
@@ -166,10 +160,9 @@ def handle_photo(message):
         muteStatus = x[0]
     db.close()
     if muteStatus == 0:
-        lenghtMasUrl = len(masurl)
-        urlNumber = random.randint(0, lenghtMasUrl - 1)
-        url = masurl[urlNumber]
-        bot.send_photo(message.chat.id, get(url).content)
+        photo = open('photos/1.jpg', 'rb')
+        bot.send_photo(chat_id=message.chat.id, photo=photo,
+                       caption='Крутая фотка, а это я в Америке')
     isAdmin = False
     for x in admin:
         if message.chat.id == x:
