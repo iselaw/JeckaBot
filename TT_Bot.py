@@ -167,7 +167,7 @@ def handle_photo(message):
     for x in admin:
         if message.chat.id == x:
             isAdmin = True
-    if (isAdmin == False):
+    if not isAdmin:
         for x in admin:
             try:
                 bot.send_message(x, message.from_user.first_name + " - Отправил картинку в чат")
@@ -194,7 +194,7 @@ def handle_sticker(message):
     for x in admin:
         if message.chat.id == x:
             isAdmin = True
-    if (isAdmin == False):
+    if not isAdmin:
         for x in admin:
             try:
                 bot.send_message(x, message.from_user.first_name + " - Отправил стикер в чат")
@@ -219,7 +219,7 @@ def voice_processing(message):
     for x in admin:
         if message.chat.id == x:
             isAdmin = True
-    if (isAdmin == False):
+    if not isAdmin:
         for x in admin:
             try:
                 bot.send_message(x, message.from_user.first_name + " - Отправил голосовое в чат")

@@ -9,7 +9,7 @@ def updateStatistic(message, button):
     for x in admin:
         if message.chat.id == x:
             isAdmin = True
-    if (isAdmin == False):
+    if not isAdmin:
         db = sqlite3.connect('db/JeckaBot.db')
         cur = db.cursor()
         cur.execute(
