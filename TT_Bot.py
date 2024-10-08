@@ -514,6 +514,7 @@ def query_handler(call):
         hack(call.message)
         updateStatistic(call.message, "para")
 
+
 # Музыка
 @bot.message_handler(commands=["music", "музыка"])
 def music(message, res=False):
@@ -566,8 +567,9 @@ def audio_record(message):
                    (Track_Name, Track_performer, Track_title, Track_Unique, Track_id))
         db.commit()
         bot.send_message(message.chat.id, Track_performer + " - " + Track_title + " - Трек сохранен ")
-        musicList.append(Track_performer+Track_title)
+        musicList.append(Track_performer + Track_title)
     db.close()
+
 
 # Команда "Игра"
 @bot.message_handler(commands=["game", "игра"])
@@ -1101,6 +1103,7 @@ def handle_text(message):
                     bot.send_message(x, message.from_user.first_name + "\n" + message.text + "\n" + realAnswer)
                 except:
                     print('Не удалось отправить сообщение администратору')
+
 
 # Запускаем бота
 bot.polling(none_stop=True, interval=0)
