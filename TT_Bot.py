@@ -20,10 +20,11 @@ from GameQvest import GameQuest
 from Login import *
 from Music import *
 from Push import *
-from millionaire import *
+from millionaire import millionaire
 from mute import *
 from statistic import *
 from BlackJack import BlackJack
+from OthersGameMethods import *
 
 # Создаем бота
 isPush = False
@@ -238,6 +239,7 @@ def voice_processing(message):
 def query_handler(call):
     GameQuest.gameQuest_handler(call)
     BlackJack.bj_handler(call)
+    millionaire.millionaire_handler(call)
     if call.data == "cancel":
         global isAddQuestion
         global isPush
@@ -387,26 +389,6 @@ def query_handler(call):
         SlotBet(call.message, itog)
     elif call.data == "krutkonec":
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Приходи еще")
-    elif call.data == "millionaire":
-        bot.delete_message(call.message.chat.id, call.message.message_id)
-        millionaire(call.message)
-        updateStatistic(call.message, "millionaire")
-    elif call.data == "startMillionaire":
-        bot.delete_message(call.message.chat.id, call.message.message_id)
-        startMillionaire(call.message, 0, True, 0)
-    # Игра Кто хочет стать миллионером
-    elif call.data == "A":
-        isTrueAnswer = checkAnswer(call.message, 1)
-        resultMillionaire(call, isTrueAnswer)
-    elif call.data == "B":
-        isTrueAnswer = checkAnswer(call.message, 2)
-        resultMillionaire(call, isTrueAnswer)
-    elif call.data == "C":
-        isTrueAnswer = checkAnswer(call.message, 3)
-        resultMillionaire(call, isTrueAnswer)
-    elif call.data == "D":
-        isTrueAnswer = checkAnswer(call.message, 4)
-        resultMillionaire(call, isTrueAnswer)
     elif call.data == "audionext":
         audio_processing(call.message, False)
     elif call.data == "musicStart":

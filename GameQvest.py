@@ -572,7 +572,6 @@ class GameQuest:
 
     @staticmethod
     def gameQuest_handler(call):
-        # Игра с жекой
         if call.data == "qvest":
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                   text="Поиграем?")
