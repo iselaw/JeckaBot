@@ -870,7 +870,7 @@ def hack(message):
     adminNotification(message, "Смотрит пару дня")
 
 
-# Команда "Орел  Решка"
+# Команда "Орел Решка"
 def handle_Brocok(message):
     Brocok = False
     if fuzz.token_sort_ratio(message.text.lower().strip(), "Орел или Решка") > 70:
