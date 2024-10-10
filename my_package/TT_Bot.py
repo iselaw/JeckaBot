@@ -117,9 +117,9 @@ def answer(text):
                 if 'u: ' in q:
                     # С помощью fuzzywuzzy получаем, насколько похожи две строки
                     degreeOfSimilarity = (fuzz.token_sort_ratio(q.replace('u: ', ''), text))
-                    if (degreeOfSimilarity > maximumSimilarity):
+                    if degreeOfSimilarity > maximumSimilarity:
                         maximumSimilarity = degreeOfSimilarity
-                        if (elementNumber != valumeMas):
+                        if elementNumber != valumeMas:
                             questionNumber = elementNumber
                 elementNumber = elementNumber + 1
             isQuestion = False
@@ -539,7 +539,7 @@ def start(message, res=False):
     sz = message.chat.id
     for s in cur.execute("SELECT * FROM Users WHERE userId =" + str(message.chat.id)):
         UserId = s[0]
-    if (UserId == 0):
+    if UserId == 0:
         global standardPoint
         cur.execute("INSERT INTO Users (userId, nickname, balance, active) VALUES (?, ?, ?, ?);",
                     (sz, f"{si}", standardPoint, 1))
