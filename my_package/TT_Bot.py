@@ -383,24 +383,6 @@ def query_handler(call):
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                               text="Твоя Любовь найдена  ❤ ")
         bot.send_photo(chat_id=call.message.chat.id, photo=get(url).content)
-    elif call.data == "money":
-        money_list = ['moneyOrel', 'moneyRechka', 'moneyBock']
-        itog = random.choice(money_list)
-        if itog == 'moneyRechka':
-            itog = "CAACAgIAAxkBAAEExZhihz9nld8zDsx_xGIJe1UohKY1fQACGRUAAna_QEhmJTifqgABlUUkBA"
-            bot.send_sticker(chat_id=call.message.chat.id, sticker=itog)
-            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                                  text="Выпала Решка")
-        if itog == 'moneyOrel':
-            itog = "CAACAgIAAxkBAAEExZpih0AP0h2kGOxA6im8S-JnV0TzGgACex0AAqIeOEhfUFiQUgr4EyQE"
-            bot.send_sticker(chat_id=call.message.chat.id, sticker=itog)
-            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                                  text="Выпал Орел")
-        if itog == 'moneyBock':
-            itog = "CAACAgIAAxkBAAEExZxih0AlAr4WhBhh2ziJhpW6amwxQwACfRcAAvUgQEif-5XszcoaBCQE"
-            bot.send_sticker(chat_id=call.message.chat.id, sticker=itog)
-            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                                  text="Ничья")
     elif call.data == "game":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         game(call.message)
@@ -683,22 +665,6 @@ def hack(message):
     adminNotification(message, "Смотрит пару дня")
 
 
-# Команда "Орел Решка"
-def handle_Brocok(message):
-    Brocok = False
-    if fuzz.token_sort_ratio(message.text.lower().strip(), "Орел или Решка") > 70:
-        money(message)
-        Brocok = True
-    return Brocok
-
-
-def money(message):
-    keymoney = types.InlineKeyboardMarkup()
-    key_money = types.InlineKeyboardButton(text='Бросить монету', callback_data='money')
-    keymoney.add(key_money)
-    bot.send_message(message.chat.id, 'Подбросим монету ?', reply_markup=keymoney)
-
-
 # Команда "Админ"
 @bot.message_handler(commands=['admin'])
 def startadm(message: types.Message):
@@ -805,7 +771,6 @@ def handle_text(message):
         muteStatus = x[0]
     db.close()
     handle_UserId(message)
-    Brocok = handle_Brocok(message)
     isStandardAnswer = True
     db = sqlite3.connect('../resources/db/JeckaBot.db')
     cur = db.cursor()
@@ -834,9 +799,6 @@ def handle_text(message):
                 realAnswer = "*Был отправлен пуш*"
                 isStandardAnswer = False
                 isPush = False
-    if Brocok:
-        isStandardAnswer = False
-        realAnswer = "*Была подкинута монетка*"
     if 'жека включи ' in message.text.lower():
         isStandardAnswer = False
         maximumSimilarity = 0
