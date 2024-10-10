@@ -34,12 +34,12 @@ class BlackJack:
 
     @staticmethod
     def save_player_data(chat_id, bet, player_score, itog):
-        with open(f'bjSaves//player{chat_id}.txt', 'w', encoding='UTF-8') as f:
+        with open(f'../resources/bjSaves//player{chat_id}.txt', 'w', encoding='UTF-8') as f:
             f.write(f"{bet}\n{player_score}\n{itog}")
 
     @staticmethod
     def load_player_data(chat_id):
-        with open(f'bjSaves//player{chat_id}.txt', 'r', encoding='UTF-8') as f:
+        with open(f'../resources/bjSaves//player{chat_id}.txt', 'r', encoding='UTF-8') as f:
             return [line.strip().lower() for line in f]
 
     @staticmethod

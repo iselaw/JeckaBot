@@ -13,6 +13,7 @@ from my_package.Millionaire import Millionaire
 from my_package.mute import *
 from statistic import *
 from my_package.BlackJack import BlackJack
+from my_package.Horoscope import Horoscope
 from my_package.OthersGameMethods import *
 
 # Создаем бота
@@ -222,6 +223,7 @@ def query_handler(call):
     GameQuest.gameQuest_handler(call)
     BlackJack.bj_handler(call)
     Millionaire.millionaire_handler(call)
+    Horoscope.horoscope_handler(call)
     if call.data == "cancel":
         global isAddQuestion
         global isPush
@@ -433,46 +435,11 @@ def query_handler(call):
     elif call.data == "silence":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         muteunmute(call.message)
-    elif call.data == "goroscope":
+    elif call.data == "horoscope":
         bot.delete_message(call.message.chat.id, call.message.message_id)
-        handle_AriesMenu(call.message)
-        updateStatistic(call.message, "goroscope")
-    elif call.data == "aries":
-        bot.delete_message(call.message.chat.id, call.message.message_id)
-        handle_Aries(call.message, "Овен", "aries")
-    elif call.data == "taurus":
-        bot.delete_message(call.message.chat.id, call.message.message_id)
-        handle_Aries(call.message, "Телец", "taurus")
-    elif call.data == "gemini":
-        bot.delete_message(call.message.chat.id, call.message.message_id)
-        handle_Aries(call.message, "Близнецы", "gemini")
-    elif call.data == "cancer":
-        bot.delete_message(call.message.chat.id, call.message.message_id)
-        handle_Aries(call.message, "Рак", "cancer")
-    elif call.data == "leo":
-        bot.delete_message(call.message.chat.id, call.message.message_id)
-        handle_Aries(call.message, "Лев", "leo")
-    elif call.data == "virgo":
-        bot.delete_message(call.message.chat.id, call.message.message_id)
-        handle_Aries(call.message, "Дева", "virgo")
-    elif call.data == "libra":
-        bot.delete_message(call.message.chat.id, call.message.message_id)
-        handle_Aries(call.message, "Весы", "libra")
-    elif call.data == "scorpio":
-        bot.delete_message(call.message.chat.id, call.message.message_id)
-        handle_Aries(call.message, "Скорпион", "scorpio")
-    elif call.data == "sagittarius":
-        bot.delete_message(call.message.chat.id, call.message.message_id)
-        handle_Aries(call.message, "Стрелец", "sagittarius")
-    elif call.data == "capricorn":
-        bot.delete_message(call.message.chat.id, call.message.message_id)
-        handle_Aries(call.message, "Козерог", "capricorn")
-    elif call.data == "aquarius":
-        bot.delete_message(call.message.chat.id, call.message.message_id)
-        handle_Aries(call.message, "Водолей", "aquarius")
-    elif call.data == "pisces":
-        bot.delete_message(call.message.chat.id, call.message.message_id)
-        handle_Aries(call.message, "Рыбы", "pisces")
+        Horoscope.handle_AriesMenu(call.message)
+        updateStatistic(call.message, "horoscope")
+        adminNotification(call.message, "Смотрит гороскоп")
     elif call.data == "para":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         hack(call.message)
@@ -671,7 +638,7 @@ def start(message, res=False):
     UserId = 0
     db = sqlite3.connect('../resources/db/JeckaBot.db')
     cur = db.cursor()
-    pl = open('usersPlayLists/music' + str(message.chat.id) + '.txt', 'a', encoding='UTF-8')
+    pl = open('../resources/usersPlayLists/music' + str(message.chat.id) + '.txt', 'a', encoding='UTF-8')
     si = str(message.from_user.first_name)
     sz = message.chat.id
     for s in cur.execute("SELECT * FROM Users WHERE userId =" + str(message.chat.id)):
@@ -719,17 +686,16 @@ def menu(message, res=False):
         keyboardgame.add(btn3, btn4, btn2, btn5, btn6)
     bot.send_message(message.chat.id, 'Что нужно?', reply_markup=keyboardgame)
 
-
 @bot.message_handler(commands=["приложения", "apps"])
 def botFunny(message, res=False):
     botPanel = types.InlineKeyboardMarkup()
     key_game = types.InlineKeyboardButton(text='Играть', callback_data='game')
     key_music = types.InlineKeyboardButton(text='Музыка', callback_data='music')
     key_weather = types.InlineKeyboardButton(text='Погода', callback_data='weather')
-    key_goroscope = types.InlineKeyboardButton(text='Гороскоп', callback_data='goroscope')
+    key_horoscope = types.InlineKeyboardButton(text='Гороскоп', callback_data='horoscope')
     key_para = types.InlineKeyboardButton(text='Пара дня', callback_data='para')
     botPanel.row(key_game, key_weather)
-    botPanel.row(key_music, key_goroscope)
+    botPanel.row(key_music, key_horoscope)
     botPanel.row(key_para)
     bot.send_message(message.chat.id, 'Чем желаешь заняться?', reply_markup=botPanel)
     adminNotification(message, "Вызвал панель приложений")
@@ -816,39 +782,6 @@ def get_weather(message, open_weather_token):
     except Exception as ex:
         text2 = 'я не знаю такого города'
         return text2
-
-
-# Команда "Гороскоп"
-def handle_Aries(message, sign, engSign):
-    file = urllib2.urlopen(
-        'https://ignio.com/r/export/utf/xml/daily/com.xml')
-    data = file.read()
-    file.close()
-    data = xmltodict.parse(data)
-    Aries = sign + '\n' + data["horo"][engSign]["today"]
-    bot.send_message(message.chat.id, Aries)
-
-
-def handle_AriesMenu(message):
-    keyboard = types.InlineKeyboardMarkup(row_width=2)
-    key_aries = types.InlineKeyboardButton(text='Овен', callback_data='aries')
-    key_taurus = types.InlineKeyboardButton(text='Телец', callback_data='taurus')
-    key_gemini = types.InlineKeyboardButton(text='Близнецы', callback_data='gemini')
-    key_cancer = types.InlineKeyboardButton(text='Рак', callback_data='cancer')
-    key_leo = types.InlineKeyboardButton(text='Лев', callback_data='leo')
-    key_virgo = types.InlineKeyboardButton(text='Дева', callback_data='virgo')
-    key_libra = types.InlineKeyboardButton(text='Весы', callback_data='libra')
-    key_scorpio = types.InlineKeyboardButton(text='Скорпион', callback_data='scorpio')
-    key_sagittarius = types.InlineKeyboardButton(text='Стрелец', callback_data='sagittarius')
-    key_capricorn = types.InlineKeyboardButton(text='Козерог', callback_data='capricorn')
-    key_aquarius = types.InlineKeyboardButton(text='Водолей', callback_data='aquarius')
-    key_pisces = types.InlineKeyboardButton(text='Рыбы', callback_data='pisces')
-    keyboard.row(key_aries, key_taurus, key_gemini, key_cancer)
-    keyboard.row(key_leo, key_virgo, key_libra, key_scorpio)
-    keyboard.row(key_sagittarius, key_capricorn, key_aquarius, key_pisces)
-    bot.send_message(message.chat.id, 'Какой знак интересует?', reply_markup=keyboard)
-    adminNotification(message, "Смотрит гороскоп")
-
 
 # Команда "Пара дня"
 def hack(message):
@@ -945,7 +878,7 @@ def handle_UserId(message):
     UserId = 0
     db = sqlite3.connect('../resources/db/JeckaBot.db')
     cur = db.cursor()
-    pl = open('usersPlayLists/music' + str(message.chat.id) + '.txt', 'a', encoding='UTF-8')
+    pl = open('../resources/usersPlayLists/music' + str(message.chat.id) + '.txt', 'a', encoding='UTF-8')
     si = str(message.from_user.first_name)
     sz = message.chat.id
     for s in cur.execute("SELECT * FROM Users WHERE userId =" + str(message.chat.id)):
