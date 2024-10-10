@@ -240,16 +240,6 @@ def query_handler(call):
         cancelButton(call.message)
     elif call.data == "stat":
         getStatistic(call.message)
-    elif call.data == "rub":
-        keycourse = types.InlineKeyboardMarkup()
-        key_dollar = types.InlineKeyboardButton(text='Доллар', callback_data='dollar')
-        keycourse.add(key_dollar)
-        key_Euro = types.InlineKeyboardButton(text='Евро', callback_data='Euro')
-        keycourse.add(key_Euro)
-        key_Hryvnia = types.InlineKeyboardButton(text='Гривна', callback_data='Hryvnia')
-        keycourse.add(key_Hryvnia)
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text='Какая валюта тебя интересует ?', reply_markup=keycourse)
     elif call.data == "yes":
         global answerString
         global questionNumberToAdd
