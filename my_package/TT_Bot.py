@@ -6,6 +6,7 @@ from my_package.GameQuest import GameQuest
 from my_package.Music import *
 from my_package.Push import *
 from my_package.Millionaire import Millionaire
+from my_package.RockPaperScissors import RockPaperScissors
 from my_package.SlotMachine import SlotMachine
 from my_package.mute import *
 from statistic import *
@@ -222,6 +223,7 @@ def query_handler(call):
     Millionaire.millionaire_handler(call)
     Horoscope.horoscope_handler(call)
     SlotMachine.sm_handler(call)
+    RockPaperScissors.rps_handler(call)
     if call.data == "cancel":
         global isAddQuestion
         global isPush
@@ -257,11 +259,6 @@ def query_handler(call):
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                               text="Введите вопрос и ответ которые хотите добавить в формате: \nВопрос\nОтвет")
         cancelButton(call.message)
-    elif call.data == "GameSSP":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Выбрано: Камень, Ножницы, Бумага\nВаш баланс: " + str(getBalance(call.message)))
-        GameSSP(call.message, "first")
-        updateStatistic(call.message, "GameSSP")
     elif call.data == "StatGame":
         db = sqlite3.connect('../resources/db/JeckaBot.db')
         cur = db.cursor()
@@ -291,63 +288,6 @@ def query_handler(call):
                               text="Самые успешные люди:\n" + staticMessage)
         db.close()
         updateStatistic(call.message, "StatGame")
-    elif call.data == "Scissors":
-        choice = random.choice(['Камень🤜', 'Ножницы✌️', 'Бумага✋'])
-        Scissors = 'Ножницы✌️'
-        if Scissors == choice:
-            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                                  text='Боевая ничья!')
-            itog = "Боевая ничья!"
-        else:
-            if choice == 'Бумага✋':
-                bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                                      text='Поздравляю с победой! У меня была {}.'.format(
-                                          choice))
-                itog = 'Поздравляю с победой! У меня была {}.'.format(choice)
-            else:
-                bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                                      text='Извините, но Вы проиграли 😢. У меня  {}.'.format(
-                                          choice))
-                itog = 'Извините, но Вы проиграли 😢. У меня  {}.'.format(choice)
-        GameSSP(call.message, itog)
-    elif call.data == "Stone":
-        choice = random.choice(['Камень🤜', 'Ножницы✌️', 'Бумага✋'])
-        Stone = 'Камень🤜'
-        if Stone == choice:
-            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                                  text='Боевая ничья!')
-            itog = "Боевая ничья!"
-        else:
-            if choice == 'Ножницы✌️':
-                bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                                      text='Поздравляю с победой! У меня была {}.'.format(choice))
-                itog = 'Поздравляю с победой! У меня была {}.'.format(choice)
-            else:
-                bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                                      text='Извините, но Вы проиграли 😢. У меня  {}.'.format(choice))
-                itog = 'Извините, но Вы проиграли 😢. У меня  {}.'.format(choice)
-        GameSSP(call.message, itog)
-    elif call.data == "Paper":
-        choice = random.choice(['Камень🤜', 'Ножницы✌️', 'Бумага✋'])
-        Paper = 'Бумага✋'
-        if Paper == choice:
-            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                                  text='Боевая ничья!')
-            itog = "Боевая ничья!"
-        else:
-            if choice == 'Камень🤜':
-                bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                                      text='Поздравляю с победой! У меня была {}.'.format(
-                                          choice))
-                itog = 'Поздравляю с победой! У меня была {}.'.format(choice)
-            else:
-                bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                                      text='Извините, но Вы проиграли 😢. У меня  {}.'.format(
-                                          choice))
-                itog = 'Извините, но Вы проиграли 😢. У меня  {}.'.format(choice)
-        GameSSP(call.message, itog)
-    elif call.data == "gameexit":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Приходи еще")
     elif call.data == "krutkonec":
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Приходи еще")
     elif call.data == "audionext":
@@ -490,23 +430,6 @@ def game(message, res=False):
     bot.send_message(message.chat.id, 'Во что сыграем ?\nВаш Баланс: ' + str(getBalance(message)), reply_markup=keygame)
     adminNotification(message, "Пошел играть")
     updateStatistic(message, "game")
-
-
-def GameSSP(message, itog, res=False):
-    keygame1 = types.InlineKeyboardMarkup()
-    key_Stone = types.InlineKeyboardButton(text='Камень🤜', callback_data='Stone')
-    keygame1.add(key_Stone)
-    key_Scissors = types.InlineKeyboardButton(text='Ножницы✌️', callback_data='Scissors')
-    keygame1.add(key_Scissors)
-    key_Paper = types.InlineKeyboardButton(text='Бумага✋', callback_data='Paper')
-    keygame1.add(key_Paper)
-    key_gameexit = types.InlineKeyboardButton(text='В другой раз', callback_data='gameexit')
-    keygame1.add(key_gameexit)
-    if itog == "first":
-        bot.send_message(message.chat.id, "Играем?", reply_markup=keygame1)
-    else:
-        bot.edit_message_text(chat_id=message.chat.id, message_id=message.message_id,
-                              text=itog, reply_markup=keygame1)
 
 
 # Команда «Старт»
