@@ -22,7 +22,7 @@ isAddQuestion = False
 questionString = ""
 answerString = ""
 questionNumberToAdd = 0
-standartPoint = 5000
+standardPoint = 5000
 masVerify = []
 mas = []
 masParaLove = []
@@ -540,9 +540,9 @@ def start(message, res=False):
     for s in cur.execute("SELECT * FROM Users WHERE userId =" + str(message.chat.id)):
         UserId = s[0]
     if (UserId == 0):
-        global standartPoint
+        global standardPoint
         cur.execute("INSERT INTO Users (userId, nickname, balance, active) VALUES (?, ?, ?, ?);",
-                    (sz, f"{si}", standartPoint, 1))
+                    (sz, f"{si}", standardPoint, 1))
         db.commit()
     db.close()
     pl.close()
@@ -582,6 +582,7 @@ def menu(message, res=False):
         keyboardgame.add(btn3, btn4, btn2, btn5, btn6)
     bot.send_message(message.chat.id, 'Что нужно?', reply_markup=keyboardgame)
 
+
 @bot.message_handler(commands=["приложения", "apps"])
 def botFunny(message, res=False):
     botPanel = types.InlineKeyboardMarkup()
@@ -613,6 +614,7 @@ def botSettings(message, res=False):
     botPanel.add(key_silence)
     bot.send_message(message.chat.id, 'Доступные тебе настройки', reply_markup=botPanel)
     adminNotification(message, "Вызвал панель настроек")
+
 
 # Команда "Погода"
 @bot.message_handler(commands=["погода", "weather"])
@@ -670,6 +672,7 @@ def get_weather(message, open_weather_token):
     except Exception as ex:
         text2 = 'я не знаю такого города'
         return text2
+
 
 # Команда "Пара дня"
 def hack(message):
@@ -772,21 +775,12 @@ def handle_UserId(message):
     for s in cur.execute("SELECT * FROM Users WHERE userId =" + str(message.chat.id)):
         UserId = s[0]
     if UserId == 0:
-        global standartPoint
+        global standardPoint
         cur.execute("INSERT INTO Users (userId, nickname, balance, active) VALUES (?, ?, ?, ?);",
-                    (sz, f"{si}", standartPoint, 1))
+                    (sz, f"{si}", standardPoint, 1))
         db.commit()
     db.close()
     pl.close()
-
-
-def handle_Time(message):
-    if fuzz.token_sort_ratio(message.lower().strip(), "сколько времени?") > 70:
-        tz = pytz.timezone('Asia/Krasnoyarsk')
-        nvk_current_datetime = datetime.now(tz).strftime("%y.%m.%d %H:%M:%S")
-        c_date, c_time = nvk_current_datetime.split()
-        Time = f"У тебя че, телефона нет? \nНу на {c_time}"
-        return Time
 
 
 @bot.message_handler(content_types=["text"])
@@ -812,8 +806,7 @@ def handle_text(message):
     db.close()
     handle_UserId(message)
     Brocok = handle_Brocok(message)
-    isStandarnAnswer = True
-    timeAnswer = handle_Time(message.text)
+    isStandardAnswer = True
     db = sqlite3.connect('../resources/db/JeckaBot.db')
     cur = db.cursor()
     for x in cur.execute("SELECT weather FROM Users WHERE userId=" + str(message.chat.id)):
@@ -822,14 +815,14 @@ def handle_text(message):
             textCity(message)
             cur.execute("UPDATE Users SET weather = 0 WHERE userId = " + str(message.chat.id))
             db.commit()
-            isStandarnAnswer = False
+            isStandardAnswer = False
             realAnswer = "*Был дан ответ о погоде*"
     db.close()
     if isAddQuestion:
         if isAdmin:
             if addAdmin == str(message.chat.id):
                 addQuestion(message)
-                isStandarnAnswer = False
+                isStandardAnswer = False
                 isAddQuestion = False
                 addAdmin = "0"
                 realAnswer = "*Был добавлен вопрос*"
@@ -839,13 +832,13 @@ def handle_text(message):
                 push(message.text)
                 pushAdmin = "0"
                 realAnswer = "*Был отправлен пуш*"
-                isStandarnAnswer = False
+                isStandardAnswer = False
                 isPush = False
     if Brocok:
-        isStandarnAnswer = False
+        isStandardAnswer = False
         realAnswer = "*Была подкинута монетка*"
     if 'жека включи ' in message.text.lower():
-        isStandarnAnswer = False
+        isStandardAnswer = False
         maximumSimilarity = 0
         maxMusicName = ''
         varFileId = ''
@@ -867,11 +860,7 @@ def handle_text(message):
             bot.send_audio(chat_id=message.chat.id, audio=varFileId)
             realAnswer = '*была отправлена песня-' + maxMusicName + '*'
     if muteStatus == 0:
-        if timeAnswer is not None:
-            bot.send_message(message.chat.id, timeAnswer)
-            isStandarnAnswer = False
-            realAnswer = timeAnswer
-        if isStandarnAnswer:
+        if isStandardAnswer:
             realAnswer, Similarity = answer(message.text)
             bot.send_message(message.chat.id, realAnswer)
     if not isAdmin:
