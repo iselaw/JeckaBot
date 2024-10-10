@@ -718,14 +718,6 @@ def botSettings(message, res=False):
     bot.send_message(message.chat.id, 'Доступные тебе настройки', reply_markup=botPanel)
     adminNotification(message, "Вызвал панель настроек")
 
-
-@bot.message_handler(commands=["панель", "panel"])
-def botFeature(message, res=False):
-    bot.send_message(message.chat.id, 'Такой команды больше нет. Обнови меню /menu. Панель приложений можно вызвать '
-                                      'командой /apps, панель настроек можно вызвать командой /settings')
-    adminNotification(message, "Попытался вызвать панель командой /панель")
-
-
 # Команда "Погода"
 @bot.message_handler(commands=["погода", "weather"])
 def weather(message, res=False):
