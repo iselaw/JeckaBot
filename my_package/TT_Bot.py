@@ -2,7 +2,6 @@ from pyrogram.errors import FloodWait
 from datetime import datetime
 from requests import get
 from fuzzywuzzy import fuzz
-import pytz
 from my_package.GameQuest import GameQuest
 from my_package.Music import *
 from my_package.Push import *
