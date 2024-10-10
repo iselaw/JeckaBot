@@ -48,7 +48,7 @@ class BlackJack:
         bets = [50, 100, 200]
         for bet in bets:
             keyBJ.add(types.InlineKeyboardButton(text=f'Ставка {bet}', callback_data=f'BlackJack{bet}'))
-        keyBJ.add(types.InlineKeyboardButton(text='Вдругой раз', callback_data='krutkonec'))
+        keyBJ.add(types.InlineKeyboardButton(text='В другой раз', callback_data='krutkonec'))
         bot.edit_message_text(chat_id=message.chat.id, message_id=message.message_id, text=itog, reply_markup=keyBJ)
 
     @staticmethod

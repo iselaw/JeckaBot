@@ -367,7 +367,7 @@ def query_handler(call):
         perc = random.randint(18, 23)
         while perc < 100:
             try:
-                text = "😇 Поиск пары в процесе ..." + str(perc) + "%"
+                text = "😇 Поиск пары в процессе ..." + str(perc) + "%"
                 bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                       text=text)
 
@@ -468,7 +468,7 @@ def audio_record(message):
             isNew = False
             bot.send_message(message.chat.id, Track_performer + " - " + Track_title + " - Такой трек уже есть ")
 
-    if isNew == True:
+    if isNew:
         Track_id = message.audio.file_id
         Track_Unique = message.audio.file_unique_id
         Track_Name = message.audio.file_name
