@@ -10,7 +10,7 @@ class Millionaire:
     @staticmethod
     def getBalance(message):
         balance = 0
-        db = sqlite3.connect('db/JeckaBot.db')
+        db = sqlite3.connect('../resources/db/JeckaBot.db')
         cur = db.cursor()
         for x in cur.execute("SELECT balance FROM Users where userId=" + str(message.chat.id)):
             balance = x[0]
@@ -23,7 +23,7 @@ class Millionaire:
         balance = Millionaire.getBalance(message)
         if balance >= bet:
             balance = balance + point
-            db = sqlite3.connect('db/JeckaBot.db')
+            db = sqlite3.connect('../resources/db/JeckaBot.db')
             cur = db.cursor()
             cur.execute("UPDATE Users SET balance = " + str(balance) + " WHERE userId = " + str(message.chat.id))
             db.commit()
@@ -58,7 +58,7 @@ class Millionaire:
 
     @staticmethod
     def randomQuestion(message, balance, numberQuestion, res=False):
-        db = sqlite3.connect('db/JeckaBot.db')
+        db = sqlite3.connect('../resources/db/JeckaBot.db')
         cur = db.cursor()
         id = 0
         question = ''
@@ -93,7 +93,7 @@ class Millionaire:
         for s in ff:
             milMas.append(s.strip().lower())
         ff.close()
-        db = sqlite3.connect('db/JeckaBot.db')
+        db = sqlite3.connect('../resources/db/JeckaBot.db')
         cur = db.cursor()
         for rand in cur.execute(
                 'SELECT answer FROM Question WHERE id = ' + milMas[1]):
@@ -129,7 +129,7 @@ class Millionaire:
                 Millionaire.startMillionaire(call.message, int(milMas[0]) + 100000, False, call.message.message_id)
             else:
                 balance = Millionaire.getBalance(call.message)
-                db = sqlite3.connect('db/JeckaBot.db')
+                db = sqlite3.connect('../resources/db/JeckaBot.db')
                 cur = db.cursor()
                 cur.execute(
                     "UPDATE Users SET balance = " + str(balance + 500) + " WHERE userId = " + str(call.message.chat.id))

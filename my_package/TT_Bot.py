@@ -1,30 +1,19 @@
-import telebot
-import gspread
-import os
 import time
-from time import sleep
-import random
 from pyrogram.errors import FloodWait
 from datetime import datetime
 from requests import get
-from telebot import types
 from fuzzywuzzy import fuzz
 import pytz
-import requests
-import re
 import xmltodict
 import urllib.request as urllib2
-from telebot.types import InputMediaAudio
-from typing import Any
-from GameQuest import GameQuest
-from Login import *
-from Music import *
-from Push import *
-from Millionaire import Millionaire
-from mute import *
+from my_package.GameQuest import GameQuest
+from my_package.Music import *
+from my_package.Push import *
+from my_package.Millionaire import Millionaire
+from my_package.mute import *
 from statistic import *
-from BlackJack import BlackJack
-from OthersGameMethods import *
+from my_package.BlackJack import BlackJack
+from my_package.OthersGameMethods import *
 
 # Создаем бота
 isPush = False
@@ -40,27 +29,27 @@ mas = []
 masParaLove = []
 masstiker = []
 musicList = []
-db = sqlite3.connect('db/JeckaBot.db')
+db = sqlite3.connect('../resources/db/JeckaBot.db')
 cur = db.cursor()
 for s in cur.execute('SELECT Performer||Title FROM Music where Performer is not null AND Title IS NOT NULL'):
     musicList.append(s[0])
 db.close()
-if os.path.exists('data/boltun.txt'):
-    f = open('data/boltun.txt', 'r', encoding='UTF-8')
+if os.path.exists('../resources/data/boltun.txt'):
+    f = open('../resources/data/boltun.txt', 'r', encoding='UTF-8')
     for x in f:
         if len(x.strip()) > 2:
             mas.append(x.strip().lower())
     lastString = 'u: fUnCr55Iofefsfcccраытысш'
     mas.append(lastString.strip().lower())
     f.close()
-if os.path.exists('data/stiker.txt'):
-    f3 = open('data/stiker.txt', 'r', encoding='UTF-8')
+if os.path.exists('../resources/data/stiker.txt'):
+    f3 = open('../resources/data/stiker.txt', 'r', encoding='UTF-8')
     for x3 in f3:
         if len(x3.strip()) > 2:
             masstiker.append(x3.strip())
     f3.close()
-if os.path.exists('data/masParaLove.txt'):
-    f7 = open('data/masParaLove.txt', 'r', encoding='UTF-8')
+if os.path.exists('../resources/data/masParaLove.txt'):
+    f7 = open('../resources/data/masParaLove.txt', 'r', encoding='UTF-8')
     for x7 in f7:
         masParaLove.append(x7)
     f7.close()
@@ -69,11 +58,11 @@ if os.path.exists('data/masParaLove.txt'):
 def update(questionString, answerString):
     questionString = questionString.lower().strip()
     answerString = answerString.lower().strip()
-    x = open('data//boltun.txt', 'a', encoding='UTF-8')
+    x = open('../resources/data/boltun.txt', 'a', encoding='UTF-8')
     x.write("u: " + questionString + '\n')
     x.write(answerString + '\n')
     x.close()
-    f = open('data/boltun.txt', 'r', encoding='UTF-8')
+    f = open('../resources/data/boltun.txt', 'r', encoding='UTF-8')
     countMas = 0
     valumeMas = len(mas) - 1
     for x in f:
@@ -108,7 +97,7 @@ def addAnswer(text, questionNumber):
                 mas[count] = memoryMas[countMemory]
                 countMemory = countMemory + 1
         count = count + 1
-    x = open('data//boltun.txt', 'w', encoding='UTF-8')
+    x = open('../resources/data/boltun.txt', 'w', encoding='UTF-8')
     count = 0
     for z in mas:
         if count != len(mas) - 1:
@@ -121,7 +110,7 @@ def answer(text):
     text = text.lower().strip()
     try:
         valumeMas = len(mas) - 1
-        if os.path.exists('data/boltun.txt'):
+        if os.path.exists('../resources/data/boltun.txt'):
             maximumSimilarity = 0
             elementNumber = 0
             questionNumber = 0
@@ -154,13 +143,13 @@ def answer(text):
 @bot.message_handler(content_types=["photo"])
 def handle_photo(message):
     muteStatus = 2
-    db = sqlite3.connect('db/JeckaBot.db')
+    db = sqlite3.connect('../resources/db/JeckaBot.db')
     cur = db.cursor()
     for x in cur.execute("SELECT mute FROM Users WHERE userId=" + str(message.chat.id)):
         muteStatus = x[0]
     db.close()
     if muteStatus == 0:
-        photo = open('photos/1.jpg', 'rb')
+        photo = open('../resources/photos/1.jpg', 'rb')
         bot.send_photo(chat_id=message.chat.id, photo=photo,
                        caption='Крутая фотка, а это я в Америке')
     isAdmin = False
@@ -180,7 +169,7 @@ def handle_photo(message):
 @bot.message_handler(content_types=["sticker"])
 def handle_sticker(message):
     muteStatus = 2
-    db = sqlite3.connect('db/JeckaBot.db')
+    db = sqlite3.connect('../resources/db/JeckaBot.db')
     cur = db.cursor()
     for x in cur.execute("SELECT mute FROM Users WHERE userId=" + str(message.chat.id)):
         muteStatus = x[0]
@@ -207,7 +196,7 @@ def handle_sticker(message):
 @bot.message_handler(content_types=['voice'])
 def voice_processing(message):
     muteStatus = 2
-    db = sqlite3.connect('db/JeckaBot.db')
+    db = sqlite3.connect('../resources/db/JeckaBot.db')
     cur = db.cursor()
     for x in cur.execute("SELECT mute FROM Users WHERE userId=" + str(message.chat.id)):
         muteStatus = x[0]
@@ -284,7 +273,7 @@ def query_handler(call):
         GameSSP(call.message, "first")
         updateStatistic(call.message, "GameSSP")
     elif call.data == "StatGame":
-        db = sqlite3.connect('db/JeckaBot.db')
+        db = sqlite3.connect('../resources/db/JeckaBot.db')
         cur = db.cursor()
         static = []
         staticMessage = ""
@@ -520,7 +509,7 @@ def adminNotification(message, text):
 # Добавление Аудио
 @bot.message_handler(content_types=['audio'])
 def audio_record(message):
-    db = sqlite3.connect('db/JeckaBot.db')
+    db = sqlite3.connect('../resources/db/JeckaBot.db')
     cur = db.cursor()
     track = str(message.audio.file_unique_id)
     Track_performer = message.audio.performer
@@ -549,7 +538,7 @@ def audio_record(message):
 # Команда "Игра"
 @bot.message_handler(commands=["game", "игра"])
 def game(message, res=False):
-    db = sqlite3.connect('db/JeckaBot.db')
+    db = sqlite3.connect('../resources/db/JeckaBot.db')
     cur = db.cursor()
     try:
         cur.execute(
@@ -680,7 +669,7 @@ def SlotBet(message, itog, res=False):
 @bot.message_handler(commands=["start", "старт"])
 def start(message, res=False):
     UserId = 0
-    db = sqlite3.connect('db/JeckaBot.db')
+    db = sqlite3.connect('../resources/db/JeckaBot.db')
     cur = db.cursor()
     pl = open('usersPlayLists/music' + str(message.chat.id) + '.txt', 'a', encoding='UTF-8')
     si = str(message.from_user.first_name)
@@ -749,7 +738,7 @@ def botFunny(message, res=False):
 @bot.message_handler(commands=["настройки", "settings"])
 def botSettings(message, res=False):
     muteStatus = 2
-    db = sqlite3.connect('db/JeckaBot.db')
+    db = sqlite3.connect('../resources/db/JeckaBot.db')
     cur = db.cursor()
     for x in cur.execute("SELECT mute FROM Users WHERE userId=" + str(message.chat.id)):
         muteStatus = x[0]
@@ -774,7 +763,7 @@ def botFeature(message, res=False):
 # Команда "Погода"
 @bot.message_handler(commands=["погода", "weather"])
 def weather(message, res=False):
-    db = sqlite3.connect('db/JeckaBot.db')
+    db = sqlite3.connect('../resources/db/JeckaBot.db')
     cur = db.cursor()
     cur.execute("UPDATE Users SET weather = 1 WHERE userId = " + str(message.chat.id))
     db.commit()
@@ -954,7 +943,7 @@ def addQuestion(message):
 def handle_UserId(message):
     # Запись userId
     UserId = 0
-    db = sqlite3.connect('db/JeckaBot.db')
+    db = sqlite3.connect('../resources/db/JeckaBot.db')
     cur = db.cursor()
     pl = open('usersPlayLists/music' + str(message.chat.id) + '.txt', 'a', encoding='UTF-8')
     si = str(message.from_user.first_name)
@@ -995,7 +984,7 @@ def handle_text(message):
         if message.chat.id == x:
             ignoreListParameter = True
     muteStatus = 2
-    db = sqlite3.connect('db/JeckaBot.db')
+    db = sqlite3.connect('../resources/db/JeckaBot.db')
     cur = db.cursor()
     for x in cur.execute("SELECT mute FROM Users WHERE userId=" + str(message.chat.id)):
         muteStatus = x[0]
@@ -1004,7 +993,7 @@ def handle_text(message):
     Brocok = handle_Brocok(message)
     isStandarnAnswer = True
     timeAnswer = handle_Time(message.text)
-    db = sqlite3.connect('db/JeckaBot.db')
+    db = sqlite3.connect('../resources/db/JeckaBot.db')
     cur = db.cursor()
     for x in cur.execute("SELECT weather FROM Users WHERE userId=" + str(message.chat.id)):
         weatherStatus = x[0]
@@ -1049,7 +1038,7 @@ def handle_text(message):
             bot.send_message(message.chat.id, 'Прости, я не смог найти в библиотеке ничего подходящего')
             realAnswer = '*Неудачный поиск музыки*'
         else:
-            db = sqlite3.connect('db/JeckaBot.db')
+            db = sqlite3.connect('../resources/db/JeckaBot.db')
             cur = db.cursor()
             for s in cur.execute("SELECT FileId FROM Music where Performer||Title=" + "'" + maxMusicName + "'"):
                 varFileId = s[0]

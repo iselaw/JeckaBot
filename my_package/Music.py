@@ -14,7 +14,7 @@ def audio_processing(message, isFirstAudio):
     keyboard = types.InlineKeyboardMarkup()
     keyboard.add(key_like)
     keyboard.add(key_nextTrack)
-    db = sqlite3.connect('db/JeckaBot.db')
+    db = sqlite3.connect('../resources/db/JeckaBot.db')
     cur = db.cursor()
     for rand in cur.execute('SELECT * FROM Music WHERE ID IN (SELECT ID FROM Music ORDER BY RANDOM() LIMIT 1)'):
         audioo = rand[5]
@@ -34,7 +34,7 @@ def LikePlayList(message):
     try:
         MessageChatId = str(message.chat.id)
         MessageGroupId = MessageChatId.split('-', 1)[1]
-        db = sqlite3.connect('db/PlayList.db')
+        db = sqlite3.connect('../resources/db/PlayList.db')
         Plist = db.cursor()
         Plist.execute("CREATE TABLE IF NOT EXISTS " + "pList_" + MessageGroupId + """(
                    Id INTEGER NOT NULL UNIQUE,
@@ -70,7 +70,7 @@ def LikePlayList(message):
         db.close()
     except:
         MessageChatId = str(message.chat.id)
-        db = sqlite3.connect('db/PlayList.db')
+        db = sqlite3.connect('../resources/db/PlayList.db')
         Plist = db.cursor()
         Plist.execute("CREATE TABLE IF NOT EXISTS " + "pList_" + MessageChatId + """(
        Id INTEGER NOT NULL UNIQUE,
@@ -110,7 +110,7 @@ def PlayList(message):
     try:
         MessageChatId = str(message.chat.id)
         MessageGroupId = MessageChatId.split('-', 1)[1]
-        db = sqlite3.connect('db/PlayList.db')
+        db = sqlite3.connect('../resources/db/PlayList.db')
         Plist = db.cursor()
         try:
             for s1 in Plist.execute("SELECT FileId FROM " + "pList_" + MessageGroupId):
@@ -121,7 +121,7 @@ def PlayList(message):
                                   text="Ваш плейлист пуст")
         db.close()
     except:
-        db = sqlite3.connect('db/PlayList.db')
+        db = sqlite3.connect('../resources/db/PlayList.db')
         Plist = db.cursor()
         try:
             for s1 in Plist.execute("SELECT FileId FROM " + "pList_" + MessageChatId):

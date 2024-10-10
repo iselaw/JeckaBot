@@ -8,7 +8,7 @@ from Login import *
 
 def getBalance(message):
     balance = 0
-    db = sqlite3.connect('db/JeckaBot.db')
+    db = sqlite3.connect('../resources/db/JeckaBot.db')
     cur = db.cursor()
     for x in cur.execute("SELECT balance FROM Users where userId=" + str(message.chat.id)):
         balance = x[0]
@@ -21,7 +21,7 @@ def updateScore(bet, point, message):
     balance = getBalance(message)
     if balance >= bet:
         balance = balance + point
-        db = sqlite3.connect('db/JeckaBot.db')
+        db = sqlite3.connect('../resources/db/JeckaBot.db')
         cur = db.cursor()
         cur.execute("UPDATE Users SET balance = " + str(balance) + " WHERE userId = " + str(message.chat.id))
         db.commit()
