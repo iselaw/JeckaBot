@@ -1,15 +1,13 @@
-import time
 from pyrogram.errors import FloodWait
 from datetime import datetime
 from requests import get
 from fuzzywuzzy import fuzz
 import pytz
-import xmltodict
-import urllib.request as urllib2
 from my_package.GameQuest import GameQuest
 from my_package.Music import *
 from my_package.Push import *
 from my_package.Millionaire import Millionaire
+from my_package.SlotMachine import SlotMachine
 from my_package.mute import *
 from statistic import *
 from my_package.BlackJack import BlackJack
@@ -224,6 +222,7 @@ def query_handler(call):
     BlackJack.bj_handler(call)
     Millionaire.millionaire_handler(call)
     Horoscope.horoscope_handler(call)
+    SlotMachine.sm_handler(call)
     if call.data == "cancel":
         global isAddQuestion
         global isPush
@@ -350,17 +349,6 @@ def query_handler(call):
         GameSSP(call.message, itog)
     elif call.data == "gameexit":
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Приходи еще")
-    elif call.data == "SlotMachine":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Выбрано: Слот-машина\nВаш баланс: " + str(getBalance(call.message)))
-        SlotBet(call.message, "first")
-        updateStatistic(call.message, "SlotMachine")
-    elif call.data == "SlotBet10":
-        itog = slotMachine(call.message, 10)
-        SlotBet(call.message, itog)
-    elif call.data == "SlotBet50":
-        itog = slotMachine(call.message, 50)
-        SlotBet(call.message, itog)
     elif call.data == "krutkonec":
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Приходи еще")
     elif call.data == "audionext":
@@ -377,7 +365,7 @@ def query_handler(call):
         PlayList(call.message)
     elif call.data == "love":
         perc = random.randint(18, 23)
-        while (perc < 100):
+        while perc < 100:
             try:
                 text = "😇 Поиск пары в процесе ..." + str(perc) + "%"
                 bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
@@ -531,95 +519,13 @@ def GameSSP(message, itog, res=False):
     keygame1.add(key_Scissors)
     key_Paper = types.InlineKeyboardButton(text='Бумага✋', callback_data='Paper')
     keygame1.add(key_Paper)
-    key_gameexit = types.InlineKeyboardButton(text='Вдругой раз', callback_data='gameexit')
+    key_gameexit = types.InlineKeyboardButton(text='В другой раз', callback_data='gameexit')
     keygame1.add(key_gameexit)
     if itog == "first":
         bot.send_message(message.chat.id, "Играем?", reply_markup=keygame1)
     else:
         bot.edit_message_text(chat_id=message.chat.id, message_id=message.message_id,
                               text=itog, reply_markup=keygame1)
-
-
-def slotMachine(message, betValue):
-    bet = betValue
-    slot1 = ""
-    slot2 = ""
-    slot3 = ""
-    point = 0
-    randSlot = random.randint(0, 100)
-    if randSlot <= 20:
-        slot1 = "💰"
-    elif randSlot <= 43:
-        slot1 = "🍌"
-    elif randSlot <= 71:
-        slot1 = "🍋"
-    elif randSlot > 71:
-        slot1 = "🍒"
-    randSlot = random.randint(0, 100)
-    if randSlot <= 20:
-        slot2 = "💰"
-    elif randSlot <= 43:
-        slot2 = "🍌"
-    elif randSlot <= 71:
-        slot2 = "🍋"
-    elif randSlot > 71:
-        slot2 = "🍒"
-    randSlot = random.randint(0, 100)
-    if randSlot <= 20:
-        slot3 = "💰"
-    elif randSlot <= 43:
-        slot3 = "🍌"
-    elif randSlot <= 71:
-        slot3 = "🍋"
-    elif randSlot > 71:
-        slot3 = "🍒"
-    itog = slot1 + slot2 + slot3
-    if slot1 == slot2 == slot3:
-        if slot1 == "💰":
-            point = bet * 100
-        if slot1 == "🍌":
-            point = bet * 10
-        if slot1 == "🍋":
-            point = bet * 5
-        if slot1 == "🍒":
-            point = bet * 3
-        isBankrot, balance = updateScore(bet, point, message)
-        if not isBankrot:
-            itog = "Ты выиграл \n{}".format(itog) + "\n" + "Баланс: " + str(balance) + "(+" + str(
-                point) + ")"
-        else:
-            itog = "bankrot"
-    else:
-        point = bet * (-1)
-        isBankrot, balance = updateScore(bet, point, message)
-        if not isBankrot:
-            itog = "Увы, но ты проиграл \n{}".format(itog) + "\n" + "Баланс: " + str(balance) + "(" + str(
-                point) + ")"
-        else:
-            itog = "bankrot"
-    return itog
-
-
-# Функция "Ставка в слот-машине"
-def SlotBet(message, itog, res=False):
-    keykazino = types.InlineKeyboardMarkup()
-    key_bet10 = types.InlineKeyboardButton(text='Ставка 10', callback_data='SlotBet10')
-    keykazino.add(key_bet10)
-    key_bet50 = types.InlineKeyboardButton(text='Ставка 50', callback_data='SlotBet50')
-    keykazino.add(key_bet50)
-    key_krutexit = types.InlineKeyboardButton(text='Вдругой раз', callback_data='krutkonec')
-    keykazino.add(key_krutexit)
-    if itog == "first":
-        bot.send_message(message.chat.id, 'Сыграем ?', reply_markup=keykazino)
-    elif itog == "bankrot":
-        bot.edit_message_text(chat_id=message.chat.id, message_id=message.message_id,
-                              text="К сожалению, твой баланс не позволяет сделать ставку")
-    else:
-        bot.edit_message_text(chat_id=message.chat.id, message_id=message.message_id,
-                              text=itog)
-        time.sleep(0.5)
-        bot.edit_message_text(chat_id=message.chat.id, message_id=message.message_id,
-                              text=itog, reply_markup=keykazino)
 
 
 # Команда «Старт»
