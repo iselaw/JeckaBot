@@ -19,7 +19,7 @@ class Millionaire:
 
     @staticmethod
     def updateScore(bet, point, message):
-        isBankrot = False
+        isBankrupt = False
         balance = Millionaire.getBalance(message)
         if balance >= bet:
             balance = balance + point
@@ -29,8 +29,8 @@ class Millionaire:
             db.commit()
             db.close()
         else:
-            isBankrot = True
-        return isBankrot, balance
+            isBankrupt = True
+        return isBankrupt, balance
 
     @staticmethod
     def startMillionaire(message, balance, isStarting, messageId, res=False):

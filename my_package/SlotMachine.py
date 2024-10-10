@@ -22,7 +22,7 @@ class SlotMachine:
 
     @staticmethod
     def updateScore(bet, point, message):
-        isBankrot = False
+        isBankrupt = False
         balance = SlotMachine.getBalance(message)
         if balance >= bet:
             balance = balance + point
@@ -32,8 +32,8 @@ class SlotMachine:
             db.commit()
             db.close()
         else:
-            isBankrot = True
-        return isBankrot, balance
+            isBankrupt = True
+        return isBankrupt, balance
 
     @staticmethod
     def slotMachine(message, betValue):
@@ -79,20 +79,20 @@ class SlotMachine:
                 point = bet * 5
             if slot1 == "🍒":
                 point = bet * 3
-            isBankrot, balance = SlotMachine.updateScore(bet, point, message)
-            if not isBankrot:
+            isBankrupt, balance = SlotMachine.updateScore(bet, point, message)
+            if not isBankrupt:
                 itog = "Ты выиграл \n{}".format(itog) + "\n" + "Баланс: " + str(balance) + "(+" + str(
                     point) + ")"
             else:
-                itog = "bankrot"
+                itog = "bankrupt"
         else:
             point = bet * (-1)
-            isBankrot, balance = SlotMachine.updateScore(bet, point, message)
-            if not isBankrot:
+            isBankrupt, balance = SlotMachine.updateScore(bet, point, message)
+            if not isBankrupt:
                 itog = "Увы, но ты проиграл \n{}".format(itog) + "\n" + "Баланс: " + str(balance) + "(" + str(
                     point) + ")"
             else:
-                itog = "bankrot"
+                itog = "bankrupt"
         return itog
 
     @staticmethod
@@ -106,7 +106,7 @@ class SlotMachine:
         keykazino.add(key_krutexit)
         if itog == "first":
             bot.send_message(message.chat.id, 'Сыграем ?', reply_markup=keykazino)
-        elif itog == "bankrot":
+        elif itog == "bankrupt":
             bot.edit_message_text(chat_id=message.chat.id, message_id=message.message_id,
                                   text="К сожалению, твой баланс не позволяет сделать ставку")
         else:

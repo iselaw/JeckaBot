@@ -17,7 +17,7 @@ def getBalance(message):
 
 
 def updateScore(bet, point, message):
-    isBankrot = False
+    isBankrupt = False
     balance = getBalance(message)
     if balance >= bet:
         balance = balance + point
@@ -27,5 +27,5 @@ def updateScore(bet, point, message):
         db.commit()
         db.close()
     else:
-        isBankrot = True
-    return isBankrot, balance
+        isBankrupt = True
+    return isBankrupt, balance
