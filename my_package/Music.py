@@ -167,7 +167,7 @@ class Music:
             maxMusicName = ''
             varFileId = ''
             index = message.text.lower().find("включи ")
-            musicName = (message.text.lower())[index:]
+            musicName = message.text.lower()[index + len("включи "):].strip()
             for q in musicList:
                 degreeOfSimilarity = (fuzz.token_sort_ratio(musicName, q))
                 if degreeOfSimilarity > maximumSimilarity:

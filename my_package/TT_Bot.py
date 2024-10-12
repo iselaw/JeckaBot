@@ -1,23 +1,22 @@
 import os
 
-import requests
-from pyrogram.errors import FloodWait
-from datetime import datetime
 from fuzzywuzzy import fuzz
+from pyrogram.errors import FloodWait
 from requests import get
 
+from my_package.BlackJack import BlackJack
 from my_package.GameQuest import GameQuest
-from my_package.Music import Music
-from my_package.Push import *
+from my_package.Horoscope import Horoscope
 from my_package.Millionaire import Millionaire
+from my_package.Music import Music
+from my_package.OthersGameMethods import *
+from my_package.Push import *
 from my_package.RockPaperScissors import RockPaperScissors
 from my_package.SlotMachine import SlotMachine
 from my_package.Talking import Talking
+from my_package.Weather import Weather
 from my_package.mute import *
 from statistic import *
-from my_package.BlackJack import BlackJack
-from my_package.Horoscope import Horoscope
-from my_package.OthersGameMethods import *
 
 # Создаем бота
 isPush = False
@@ -453,59 +452,8 @@ def botSettings(message, res=False):
 # Команда "Погода"
 @bot.message_handler(commands=["погода", "weather"])
 def weather(message, res=False):
-    db = sqlite3.connect('../resources/db/JeckaBot.db')
-    cur = db.cursor()
-    cur.execute("UPDATE Users SET weather = 1 WHERE userId = " + str(message.chat.id))
-    db.commit()
-    db.close()
-    bot.send_message(chat_id=message.chat.id, text='В Каком городе тебя интересует погода ?')
+    Weather.weather_start(message)
     updateStatistic(message, "weather")
-
-
-def textCity(message):
-    try:
-        bot.send_message(chat_id=message.chat.id, text=get_weather(message.text, open_weather_token))
-    except:
-        bot.send_message(chat_id=message.chat.id,
-                         text="К сожалению, пока не могу подсказать погоду. Что-то поломалось(")
-
-
-def get_weather(message, open_weather_token):
-    code_to_smile = {
-        "Clear": "Ясно \U00002600",
-        "Clouds": "Облачно \U00002601",
-        "Rain": "Дождь \U00002614",
-        "Drizzle": "Дождь \U00002614",
-        "Thunderstorn": "Гроза \U000026A1",
-        "Snow": "Снег \U0001F328",
-        "Mist": "Туман \U0001F32B"
-    }
-    try:
-        City = message
-        r = requests.get(
-            f"https://api.openweathermap.org/data/2.5/weather?q={City}&appid={open_weather_token}&units=metric"
-        )
-        data = r.json()
-
-        cur_city = data["name"]
-        cur_weather = data["main"]["temp"]
-        cur_humidity = data["main"]["humidity"]
-        cur_pressure = data["main"]["pressure"]
-        cur_wind = data["wind"]["speed"]
-        cur_sunrise = datetime.fromtimestamp(data["sys"]["sunrise"])
-        weather_description = data["weather"][0]["main"]
-        if weather_description in code_to_smile:
-            wd = code_to_smile[weather_description]
-        else:
-            wd = "Не пойму что там, посмотри в окно"
-        text = (f"Погода в городе: {cur_city}\nТемпература: {cur_weather}C° {wd}\n"
-                f"Влажность: {cur_humidity}%\nДавление: {cur_pressure} мм.рт.ст\nВетер: {cur_wind}\n"
-                f"Закат Солнца: {cur_sunrise}")
-        return text
-
-    except Exception as ex:
-        text2 = 'я не знаю такого города'
-        return text2
 
 
 # Команда "Пара дня"
@@ -607,31 +555,15 @@ def handle_text(message):
     global isAddQuestion
     global addAdmin
     global pushAdmin
-    ignoreListParameter = False
     isAdmin = False
     for x in admin:
         if message.chat.id == x:
             isAdmin = True
-    for x in ignoreList:
-        if message.chat.id == x:
-            ignoreListParameter = True
     handle_UserId(message)
-    isStandardAnswer = True
-    db = sqlite3.connect('../resources/db/JeckaBot.db')
-    cur = db.cursor()
-    for x in cur.execute("SELECT weather FROM Users WHERE userId=" + str(message.chat.id)):
-        weatherStatus = x[0]
-        if weatherStatus == 1:
-            textCity(message)
-            cur.execute("UPDATE Users SET weather = 0 WHERE userId = " + str(message.chat.id))
-            db.commit()
-            isStandardAnswer = False
-    db.close()
     if isAddQuestion:
         if isAdmin:
             if addAdmin == str(message.chat.id):
                 addQuestion(message)
-                isStandardAnswer = False
                 isAddQuestion = False
                 addAdmin = "0"
     if isPush:
@@ -639,8 +571,10 @@ def handle_text(message):
             if pushAdmin == str(message.chat.id):
                 push(message.text)
                 pushAdmin = "0"
-                isStandardAnswer = False
                 isPush = False
+    isAnswered = Weather.get_weather_text(message)
+    if isAnswered:
+        return
     isAnswered = Music.audio_text_set(message, musicList)
     if isAnswered:
         return

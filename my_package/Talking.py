@@ -41,7 +41,7 @@ class Talking:
                             isQuestion = True
                     answerNumber = random.randint(1, count - 1)
                     answer = mas[questionNumber + answerNumber]
-                    bot.send_message(message.chat.id, 'Не понял, перефразируй')
+                    bot.send_message(message.chat.id, answer)
                 else:
                     bot.send_message(message.chat.id, 'Не понял, перефразируй')
             except:
