@@ -1,10 +1,11 @@
 import os
 
-from google.auth.transport import requests
+import requests
 from pyrogram.errors import FloodWait
 from datetime import datetime
-from requests import get
 from fuzzywuzzy import fuzz
+from requests import get
+
 from my_package.GameQuest import GameQuest
 from my_package.Music import Music
 from my_package.Push import *
