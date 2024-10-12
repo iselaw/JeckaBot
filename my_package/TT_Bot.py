@@ -380,8 +380,7 @@ def start(message, res=False):
     db.close()
     pl.close()
     bot.send_message(message.chat.id,
-                     '{}, привет, меня зовут ЖекаБот. Напиши мне Привет :)\nОбязательно введи /help что бы увидеть '
-                     'что я умею'.format(
+                     '{}, привет, меня зовут Жека Бот.\nОбязательно введи /help'.format(
                          message.from_user.first_name))
 
 
