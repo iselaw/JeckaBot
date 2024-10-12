@@ -1,9 +1,12 @@
+import os
+
+from google.auth.transport import requests
 from pyrogram.errors import FloodWait
 from datetime import datetime
 from requests import get
 from fuzzywuzzy import fuzz
 from my_package.GameQuest import GameQuest
-from my_package.Music import *
+from my_package.Music import Music
 from my_package.Push import *
 from my_package.Millionaire import Millionaire
 from my_package.RockPaperScissors import RockPaperScissors
@@ -192,6 +195,7 @@ def query_handler(call):
     Horoscope.horoscope_handler(call)
     SlotMachine.sm_handler(call)
     RockPaperScissors.rps_handler(call)
+    Music.music_handler(call)
     if call.data == "cancel":
         global isAddQuestion
         global isPush
@@ -258,18 +262,6 @@ def query_handler(call):
         updateStatistic(call.message, "StatGame")
     elif call.data == "krutkonec":
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Приходи еще")
-    elif call.data == "audionext":
-        audio_processing(call.message, False)
-    elif call.data == "musicStart":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="А вот и музыка")
-        audio_processing(call.message, True)
-    elif call.data == "audioLike":
-        bot.answer_callback_query(callback_query_id=call.id, show_alert=False,
-                                  text='Готово')
-        LikePlayList(call.message)
-    elif call.data == "musicList":
-        PlayList(call.message)
     elif call.data == "love":
         perc = random.randint(18, 23)
         while perc < 100:
