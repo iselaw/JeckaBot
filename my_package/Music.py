@@ -182,6 +182,21 @@ class Music:
                     varFileId = s[0]
                 db.close()
                 bot.send_audio(chat_id=message.chat.id, audio=varFileId)
+            return True
+        if 'музыка' in message.text.lower() or 'музон' in message.text.lower():
+            Music.start_music(message)
+            return True
+        return False
+
+    @staticmethod
+    def start_music(message):
+        keymusic = types.InlineKeyboardMarkup()
+        key_musicStart = types.InlineKeyboardButton(text='Включить музыку', callback_data='musicStart')
+        keymusic.add(key_musicStart)
+        key_musicList = types.InlineKeyboardButton(text='Мой плейлист', callback_data='musicList')
+        keymusic.add(key_musicList)
+        bot.send_message(message.chat.id, 'Что хотите послушать ?',
+                         reply_markup=keymusic)
 
     @staticmethod
     def music_handler(call):

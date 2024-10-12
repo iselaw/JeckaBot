@@ -46,3 +46,4 @@ class Talking:
                     bot.send_message(message.chat.id, 'Не понял, перефразируй')
             except:
                 bot.send_message(message.chat.id, 'Не совсем понял вопрос')
+        return

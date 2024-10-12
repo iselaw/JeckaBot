@@ -309,16 +309,9 @@ def query_handler(call):
 # Музыка
 @bot.message_handler(commands=["music", "музыка"])
 def music(message, res=False):
-    keymusic = types.InlineKeyboardMarkup()
-    key_musicStart = types.InlineKeyboardButton(text='Включить музыку', callback_data='musicStart')
-    keymusic.add(key_musicStart)
-    key_musicList = types.InlineKeyboardButton(text='Мой плейлист', callback_data='musicList')
-    keymusic.add(key_musicList)
-    bot.send_message(message.chat.id, 'Что хотите послушать ?',
-                     reply_markup=keymusic)
+    Music.start_music(message)
     adminNotification(message, "Пошел слушать музыку")
     updateStatistic(message, "music")
-
 
 def adminNotification(message, text):
     isAdmin = False
@@ -648,7 +641,9 @@ def handle_text(message):
                 pushAdmin = "0"
                 isStandardAnswer = False
                 isPush = False
-    Music.audio_text_set(message, musicList)
+    isAnswered = Music.audio_text_set(message, musicList)
+    if isAnswered:
+        return
     Talking.answer(message, mas)
 
 # Запускаем бота
