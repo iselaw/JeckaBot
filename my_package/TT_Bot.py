@@ -622,12 +622,6 @@ def handle_text(message):
     for x in ignoreList:
         if message.chat.id == x:
             ignoreListParameter = True
-    muteStatus = 2
-    db = sqlite3.connect('../resources/db/JeckaBot.db')
-    cur = db.cursor()
-    for x in cur.execute("SELECT mute FROM Users WHERE userId=" + str(message.chat.id)):
-        muteStatus = x[0]
-    db.close()
     handle_UserId(message)
     isStandardAnswer = True
     db = sqlite3.connect('../resources/db/JeckaBot.db')
@@ -655,11 +649,7 @@ def handle_text(message):
                 isStandardAnswer = False
                 isPush = False
     Music.audio_text_set(message, musicList)
-    if muteStatus == 0:
-        if isStandardAnswer:
-            realAnswer, Similarity = Talking.answer(message.text, mas)
-            bot.send_message(message.chat.id, realAnswer)
-
+    Talking.answer(message, mas)
 
 # Запускаем бота
 bot.polling(none_stop=True, interval=0)
