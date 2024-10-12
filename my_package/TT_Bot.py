@@ -336,31 +336,7 @@ def adminNotification(message, text):
 # Добавление Аудио
 @bot.message_handler(content_types=['audio'])
 def audio_record(message):
-    db = sqlite3.connect('../resources/db/JeckaBot.db')
-    cur = db.cursor()
-    track = str(message.audio.file_unique_id)
-    Track_performer = message.audio.performer
-    Track_title = message.audio.title
-    isNew = True
-    UniqueId_list = []
-    for UniqueId in cur.execute('SELECT UniqueId FROM Music WHERE UniqueId LIKE ?', ('%' + track + '%',)):
-        UniqueId_list.append(UniqueId[0])
-        UniqueId_list1 = UniqueId_list[0]
-        if str(UniqueId_list1) == str(message.audio.file_unique_id):
-            isNew = False
-            bot.send_message(message.chat.id, Track_performer + " - " + Track_title + " - Такой трек уже есть ")
-
-    if isNew:
-        Track_id = message.audio.file_id
-        Track_Unique = message.audio.file_unique_id
-        Track_Name = message.audio.file_name
-        db.execute("INSERT INTO Music (Name, Performer, Title, UniqueId, FileId) VALUES (?, ?, ?, ?, ?);",
-                   (Track_Name, Track_performer, Track_title, Track_Unique, Track_id))
-        db.commit()
-        bot.send_message(message.chat.id, Track_performer + " - " + Track_title + " - Трек сохранен ")
-        musicList.append(Track_performer + Track_title)
-    db.close()
-
+    Music.audio_record(message, musicList)
 
 # Команда "Игра"
 @bot.message_handler(commands=["game", "игра"])
@@ -634,7 +610,6 @@ def handle_UserId(message):
 
 @bot.message_handler(content_types=["text"])
 def handle_text(message):
-    realAnswer = "*Меня попросили помолчать*"
     global isPush
     global isAddQuestion
     global addAdmin
@@ -664,7 +639,6 @@ def handle_text(message):
             cur.execute("UPDATE Users SET weather = 0 WHERE userId = " + str(message.chat.id))
             db.commit()
             isStandardAnswer = False
-            realAnswer = "*Был дан ответ о погоде*"
     db.close()
     if isAddQuestion:
         if isAdmin:
@@ -673,48 +647,18 @@ def handle_text(message):
                 isStandardAnswer = False
                 isAddQuestion = False
                 addAdmin = "0"
-                realAnswer = "*Был добавлен вопрос*"
     if isPush:
         if isAdmin:
             if pushAdmin == str(message.chat.id):
                 push(message.text)
                 pushAdmin = "0"
-                realAnswer = "*Был отправлен пуш*"
                 isStandardAnswer = False
                 isPush = False
-    if 'жека включи ' in message.text.lower():
-        isStandardAnswer = False
-        maximumSimilarity = 0
-        maxMusicName = ''
-        varFileId = ''
-        musicName = (message.text.lower())[12:]
-        for q in musicList:
-            degreeOfSimilarity = (fuzz.token_sort_ratio(musicName, q))
-            if degreeOfSimilarity > maximumSimilarity:
-                maximumSimilarity = degreeOfSimilarity
-                maxMusicName = q
-        if maximumSimilarity == 0:
-            bot.send_message(message.chat.id, 'Прости, я не смог найти в библиотеке ничего подходящего')
-            realAnswer = '*Неудачный поиск музыки*'
-        else:
-            db = sqlite3.connect('../resources/db/JeckaBot.db')
-            cur = db.cursor()
-            for s in cur.execute("SELECT FileId FROM Music where Performer||Title=" + "'" + maxMusicName + "'"):
-                varFileId = s[0]
-            db.close()
-            bot.send_audio(chat_id=message.chat.id, audio=varFileId)
-            realAnswer = '*была отправлена песня-' + maxMusicName + '*'
+    Music.audio_text_set(message, musicList)
     if muteStatus == 0:
         if isStandardAnswer:
             realAnswer, Similarity = Talking.answer(message.text, mas)
             bot.send_message(message.chat.id, realAnswer)
-    if not isAdmin:
-        if not ignoreListParameter:
-            for x in admin:
-                try:
-                    bot.send_message(x, message.from_user.first_name + "\n" + message.text + "\n" + realAnswer)
-                except:
-                    print('Не удалось отправить сообщение администратору')
 
 
 # Запускаем бота
