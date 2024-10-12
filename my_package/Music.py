@@ -96,8 +96,7 @@ class Music:
                 if str(UniqueId_list1) == str(message.audio.file_unique_id):
                     isNew = False
                     bot.send_message(message.chat.id, Track_performer + " - " + Track_title + " - Такой трек уже есть ")
-
-            if isNew == True:
+            if isNew:
                 Track_id = message.audio.file_id
                 Track_Unique = message.audio.file_unique_id
                 db.execute(
