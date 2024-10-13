@@ -1,12 +1,11 @@
 import os
 
 from fuzzywuzzy import fuzz
-from pyrogram.errors import FloodWait
-from requests import get
 
 from my_package.BlackJack import BlackJack
 from my_package.GameQuest import GameQuest
 from my_package.Horoscope import Horoscope
+from my_package.Love import Love
 from my_package.Millionaire import Millionaire
 from my_package.Music import Music
 from my_package.OthersGameMethods import *
@@ -29,7 +28,7 @@ questionNumberToAdd = 0
 standardPoint = 5000
 masVerify = []
 mas = []
-masParaLove = []
+massive_love = []
 masstiker = []
 musicList = []
 db = sqlite3.connect('../resources/db/JeckaBot.db')
@@ -51,10 +50,10 @@ if os.path.exists('../resources/data/stiker.txt'):
         if len(x3.strip()) > 2:
             masstiker.append(x3.strip())
     f3.close()
-if os.path.exists('../resources/data/masParaLove.txt'):
-    f7 = open('../resources/data/masParaLove.txt', 'r', encoding='UTF-8')
+if os.path.exists('../resources/data/massive_love.txt'):
+    f7 = open('../resources/data/massive_love.txt', 'r', encoding='UTF-8')
     for x7 in f7:
-        masParaLove.append(x7)
+        massive_love.append(x7)
     f7.close()
 
 
@@ -196,6 +195,7 @@ def query_handler(call):
     SlotMachine.sm_handler(call)
     RockPaperScissors.rps_handler(call)
     Music.music_handler(call)
+    Love.love_handler(call, massive_love)
     if call.data == "cancel":
         global isAddQuestion
         global isPush
@@ -260,26 +260,6 @@ def query_handler(call):
                               text="Самые успешные люди:\n" + staticMessage)
         db.close()
         updateStatistic(call.message, "StatGame")
-    elif call.data == "love":
-        perc = random.randint(18, 23)
-        while perc < 100:
-            try:
-                text = "😇 Поиск пары в процессе ..." + str(perc) + "%"
-                bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                                      text=text)
-
-                perc += random.randint(14, 27)
-                sleep(0.3)
-
-            except FloodWait as e:
-                sleep(e.x)
-
-        lenghtMasPara = len(masParaLove)
-        urlNumber = random.randint(0, lenghtMasPara - 1)
-        url = masParaLove[urlNumber]
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Твоя Любовь найдена  ❤ ")
-        bot.send_photo(chat_id=call.message.chat.id, photo=get(url).content)
     elif call.data == "game":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         game(call.message)
@@ -297,10 +277,6 @@ def query_handler(call):
         Horoscope.handle_AriesMenu(call.message)
         updateStatistic(call.message, "horoscope")
         adminNotification(call.message, "Смотрит гороскоп")
-    elif call.data == "para":
-        bot.delete_message(call.message.chat.id, call.message.message_id)
-        hack(call.message)
-        updateStatistic(call.message, "para")
 
 
 # Музыка
@@ -309,6 +285,7 @@ def music(message, res=False):
     Music.start_music(message)
     adminNotification(message, "Пошел слушать музыку")
     updateStatistic(message, "music")
+
 
 def adminNotification(message, text):
     isAdmin = False
@@ -327,6 +304,7 @@ def adminNotification(message, text):
 @bot.message_handler(content_types=['audio'])
 def audio_record(message):
     Music.audio_record(message, musicList)
+
 
 # Команда "Игра"
 @bot.message_handler(commands=["game", "игра"])
@@ -420,7 +398,7 @@ def botFunny(message, res=False):
     key_music = types.InlineKeyboardButton(text='Музыка', callback_data='music')
     key_weather = types.InlineKeyboardButton(text='Погода', callback_data='weather')
     key_horoscope = types.InlineKeyboardButton(text='Гороскоп', callback_data='horoscope')
-    key_para = types.InlineKeyboardButton(text='Пара дня', callback_data='para')
+    key_para = types.InlineKeyboardButton(text='Поиск любви', callback_data='love_search')
     botPanel.row(key_game, key_weather)
     botPanel.row(key_music, key_horoscope)
     botPanel.row(key_para)
@@ -451,15 +429,6 @@ def botSettings(message, res=False):
 def weather(message, res=False):
     Weather.weather_start(message)
     updateStatistic(message, "weather")
-
-
-# Команда "Пара дня"
-def hack(message):
-    keylove = types.InlineKeyboardMarkup()
-    key_love = types.InlineKeyboardButton(text='Поиск пары дня', callback_data='love')
-    keylove.add(key_love)
-    bot.send_message(message.chat.id, 'Ну что найдем для тебя пару дня ?', reply_markup=keylove)
-    adminNotification(message, "Смотрит пару дня")
 
 
 # Команда "Админ"
@@ -569,6 +538,9 @@ def handle_text(message):
                 push(message.text)
                 pushAdmin = "0"
                 isPush = False
+    isAnswered = Love.love_text_set(message, massive_love)
+    if isAnswered:
+        return
     isAnswered = Weather.get_weather_text(message)
     if isAnswered:
         return
@@ -576,6 +548,7 @@ def handle_text(message):
     if isAnswered:
         return
     Talking.answer(message, mas)
+
 
 # Запускаем бота
 bot.polling(none_stop=True, interval=0)
