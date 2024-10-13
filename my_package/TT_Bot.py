@@ -386,16 +386,11 @@ def startadm(message: types.Message):
     for x in admin:
         if message.chat.id == x:
             isAdmin = True
-    if isAdmin == True:
-        bot.send_message(message.chat.id, ' {}, вы авторизованы! \n\n'.format(message.from_user.first_name),
+    if isAdmin:
+        bot.send_message(message.chat.id, '{}, вы авторизованы! \n\n'.format(message.from_user.first_name),
                          reply_markup=keyadmin)
     else:
-        bot.send_message(message.chat.id, ' {}, у Вас нет прав администратора'.format(message.from_user.first_name))
-        for x in admin:
-            try:
-                bot.send_message(x, message.from_user.first_name + " - Попытался вызвать панель админа")
-            except:
-                print('Не удалось отправить сообщение администратору')
+        bot.send_message(message.chat.id, '{}, у Вас нет прав администратора'.format(message.from_user.first_name))
 
 
 def cancelButton(message):

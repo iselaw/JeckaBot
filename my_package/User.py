@@ -1,8 +1,5 @@
-import random
-from time import sleep
 import sqlite3
-from pyrogram.errors import FloodWait
-from requests import get
+
 from telebot import types
 
 from Login import bot
@@ -20,21 +17,6 @@ class User:
             balance = x[0]
         db.close()
         return balance
-
-    @staticmethod
-    def updateScore(bet, point, message):
-        isBankrupt = False
-        balance = User.getBalance(message)
-        if balance >= bet:
-            balance = balance + point
-            db = sqlite3.connect('../resources/db/JeckaBot.db')
-            cur = db.cursor()
-            cur.execute("UPDATE Users SET balance = " + str(balance) + " WHERE userId = " + str(message.chat.id))
-            db.commit()
-            db.close()
-        else:
-            isBankrupt = True
-        return isBankrupt, balance
 
     @staticmethod
     def game_menu(message):
