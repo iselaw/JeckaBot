@@ -48,7 +48,7 @@ class BlackJack:
         bets = [50, 100, 200]
         for bet in bets:
             keyBJ.add(types.InlineKeyboardButton(text=f'Ставка {bet}', callback_data=f'BlackJack{bet}'))
-        keyBJ.add(types.InlineKeyboardButton(text='В другой раз', callback_data='krutkonec'))
+        keyBJ.add(types.InlineKeyboardButton(text='В другой раз', callback_data='bj_exit'))
         bot.edit_message_text(chat_id=message.chat.id, message_id=message.message_id, text=itog, reply_markup=keyBJ)
 
     @staticmethod
@@ -163,3 +163,5 @@ class BlackJack:
         elif call.data == "BlackJack":
             BlackJack.BJBet(call.message, "Выбрано: Блекджек\nВаш баланс: " + str(BlackJack.getBalanceBJ(call.message)))
             updateStatistic(call.message, "BlackJack")
+        elif call.data == "bj_exit":
+            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Приходи еще")

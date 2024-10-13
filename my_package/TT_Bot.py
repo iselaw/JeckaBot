@@ -260,8 +260,6 @@ def query_handler(call):
                               text="Самые успешные люди:\n" + staticMessage)
         db.close()
         updateStatistic(call.message, "StatGame")
-    elif call.data == "krutkonec":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Приходи еще")
     elif call.data == "love":
         perc = random.randint(18, 23)
         while perc < 100:

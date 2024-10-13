@@ -97,15 +97,15 @@ class SlotMachine:
 
     @staticmethod
     def SlotBet(message, itog, res=False):
-        keykazino = types.InlineKeyboardMarkup()
+        key_casino = types.InlineKeyboardMarkup()
         key_bet10 = types.InlineKeyboardButton(text='Ставка 10', callback_data='SlotBet10')
-        keykazino.add(key_bet10)
+        key_casino.add(key_bet10)
         key_bet50 = types.InlineKeyboardButton(text='Ставка 50', callback_data='SlotBet50')
-        keykazino.add(key_bet50)
-        key_krutexit = types.InlineKeyboardButton(text='В другой раз', callback_data='krutkonec')
-        keykazino.add(key_krutexit)
+        key_casino.add(key_bet50)
+        key_slot_exit = types.InlineKeyboardButton(text='В другой раз', callback_data='slot_exit')
+        key_casino.add(key_slot_exit)
         if itog == "first":
-            bot.send_message(message.chat.id, 'Сыграем ?', reply_markup=keykazino)
+            bot.send_message(message.chat.id, 'Сыграем ?', reply_markup=key_casino)
         elif itog == "bankrupt":
             bot.edit_message_text(chat_id=message.chat.id, message_id=message.message_id,
                                   text="К сожалению, твой баланс не позволяет сделать ставку")
@@ -114,7 +114,7 @@ class SlotMachine:
                                   text=itog)
             sleep(0.5)
             bot.edit_message_text(chat_id=message.chat.id, message_id=message.message_id,
-                                  text=itog, reply_markup=keykazino)
+                                  text=itog, reply_markup=key_casino)
 
     @staticmethod
     def sm_handler(call):
@@ -129,3 +129,5 @@ class SlotMachine:
         elif call.data == "SlotBet50":
             itog = SlotMachine.slotMachine(call.message, 50)
             SlotMachine.SlotBet(call.message, itog)
+        elif call.data == "slot_exit":
+            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Приходи еще")
