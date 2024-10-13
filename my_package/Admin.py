@@ -2,6 +2,8 @@ import sqlite3
 from telebot import types
 from Login import bot, admin
 
+isPush = False
+push_admin = ""
 
 class Admin:
 
@@ -120,7 +122,8 @@ class Admin:
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                   text="Операция отменена")
         elif call.data == "push":
-            pushAdmin = str(call.message.chat.id)
+            global push_admin
+            push_admin = str(call.message.chat.id)
             isPush = True
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                   text="Введите текст который хотите отправить")

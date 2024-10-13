@@ -18,8 +18,6 @@ from my_package.Talking import Talking
 from my_package.User import User
 from my_package.Weather import Weather
 
-isPush = False
-pushAdmin = ""
 standard_point = 5000
 mas = []
 massive_love = []
@@ -262,19 +260,17 @@ def un_mute(message):
 @bot.message_handler(content_types=["text"])
 def handle_text(message):
     global standard_point
-    global isPush
-    global pushAdmin
     User.insert_user_id(message, standard_point)
-    isAdmin = False
-    for x in admin:
-        if message.chat.id == x:
-            isAdmin = True
-    if isPush:
-        if isAdmin:
-            if pushAdmin == str(message.chat.id):
-                Admin.push(message.text)
-                pushAdmin = "0"
-                isPush = False
+    # isAdmin = False
+    # for x in admin:
+    #     if message.chat.id == x:
+    #         isAdmin = True
+    # if isPush:
+    #     if isAdmin:
+    #         if push_admin == str(message.chat.id):
+    #             Admin.push(message.text)
+    #             push_admin = "0"
+    #             isPush = False
     isAnswered = Love.love_text_set(message)
     if isAnswered:
         return
