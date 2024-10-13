@@ -1,7 +1,6 @@
 import os
 from random import random
 
-from fuzzywuzzy import fuzz
 from telebot import types
 
 from my_package.BlackJack import BlackJack
