@@ -17,15 +17,9 @@ from my_package.User import User
 from my_package.Weather import Weather
 from statistic import *
 
-# Создаем бота
 isPush = False
 pushAdmin = ""
-addAdmin = ""
-questionString = ""
-answerString = ""
-questionNumberToAdd = 0
 standard_point = 5000
-masVerify = []
 mas = []
 massive_love = []
 masstiker = []
@@ -54,6 +48,7 @@ if os.path.exists('../resources/data/massive_love.txt'):
     for x7 in f7:
         massive_love.append(x7)
     f7.close()
+
 
 # Отправка фото на фото
 @bot.message_handler(content_types=["photo"])
@@ -301,17 +296,18 @@ def mute(message):
 def un_mute(message):
     User.un_mute(message)
 
+
 def cancelButton(message):
     keyCancel = types.InlineKeyboardMarkup()  # наша клавиатура
     key_cancel = types.InlineKeyboardButton(text='Отменить операцию', callback_data='cancel')  # кнопка «Да»
     keyCancel.add(key_cancel)  # добавляем кнопку в клавиатуру
     bot.send_message(message.chat.id, "Нажмите, если хотите отменить операцию", reply_markup=keyCancel)
 
+
 @bot.message_handler(content_types=["text"])
 def handle_text(message):
     global standard_point
     global isPush
-    global addAdmin
     global pushAdmin
     User.insert_user_id(message, standard_point)
     isAdmin = False
