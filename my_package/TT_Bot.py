@@ -1,4 +1,5 @@
 import os
+import sqlite3
 from random import random
 
 from telebot import types
@@ -7,10 +8,10 @@ from my_package.Admin import Admin
 from my_package.BlackJack import BlackJack
 from my_package.GameQuest import GameQuest
 from my_package.Horoscope import Horoscope
+from my_package.Login import admin, bot
 from my_package.Love import Love
 from my_package.Millionaire import Millionaire
 from my_package.Music import Music
-from my_package.Push import *
 from my_package.RockPaperScissors import RockPaperScissors
 from my_package.SlotMachine import SlotMachine
 from my_package.Talking import Talking
@@ -139,29 +140,21 @@ def query_handler(call):
     Music.music_handler(call)
     Love.love_handler(call, massive_love)
     User.user_handler(call)
-    if call.data == "cancel":
-        global isPush
-        isPush = False
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Операция отменена")
-    elif call.data == "spam":
-        global pushAdmin
-        pushAdmin = str(call.message.chat.id)
-        isPush = True
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Введите текст который хотите отправить")
-        cancelButton(call.message)
-    elif call.data == "stat":
-        Admin.getStatistic(call.message)
-    elif call.data == "game":
+    Admin.admin_handler(call)
+    if call.data == "game":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         game(call.message)
+        Admin.adminNotification(call.message, "Пошел играть")
+        Admin.updateStatistic(call.message, "game")
     elif call.data == "music":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         music(call.message)
+        Admin.adminNotification(call.message, "Пошел слушать музыку")
+        Admin.updateStatistic(call.message, "music")
     elif call.data == "weather":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         weather(call.message)
+        Admin.updateStatistic(call.message, "weather")
     elif call.data == "horoscope":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         Horoscope.handle_AriesMenu(call.message)
@@ -173,8 +166,6 @@ def query_handler(call):
 @bot.message_handler(commands=["music", "музыка"])
 def music(message):
     Music.start_music(message)
-    Admin.adminNotification(message, "Пошел слушать музыку")
-    Admin.updateStatistic(message, "music")
 
 
 # Добавление Аудио
@@ -187,8 +178,6 @@ def audio_record(message):
 @bot.message_handler(commands=["game", "игра"])
 def game(message):
     User.game_menu(message)
-    Admin.adminNotification(message, "Пошел играть")
-    Admin.updateStatistic(message, "game")
 
 
 # Команда «Старт»
@@ -247,12 +236,11 @@ def settings_menu(message):
 @bot.message_handler(commands=["погода", "weather"])
 def weather(message):
     Weather.weather_start(message)
-    Admin.updateStatistic(message, "weather")
 
 
 # Команда "Админ"
 @bot.message_handler(commands=['admin'])
-def startadm(message: types.Message):
+def admin_panel(message: types.Message):
     keyadmin = types.InlineKeyboardMarkup()
     key_stat = types.InlineKeyboardButton(text='Статистика Бота', callback_data='stat')
     keyadmin.add(key_stat)
@@ -269,7 +257,7 @@ def startadm(message: types.Message):
         bot.send_message(message.chat.id, '{}, у Вас нет прав администратора'.format(message.from_user.first_name))
 
 
-@bot.message_handler(commands=["молчанка"])
+@bot.message_handler(commands=["mute"])
 def mute_tumbler(message):
     User.mute_tumbler(message)
 
@@ -282,13 +270,6 @@ def mute(message):
 @bot.message_handler(commands=["on"])
 def un_mute(message):
     User.un_mute(message)
-
-
-def cancelButton(message):
-    keyCancel = types.InlineKeyboardMarkup()  # наша клавиатура
-    key_cancel = types.InlineKeyboardButton(text='Отменить операцию', callback_data='cancel')  # кнопка «Да»
-    keyCancel.add(key_cancel)  # добавляем кнопку в клавиатуру
-    bot.send_message(message.chat.id, "Нажмите, если хотите отменить операцию", reply_markup=keyCancel)
 
 
 @bot.message_handler(content_types=["text"])
@@ -304,7 +285,7 @@ def handle_text(message):
     if isPush:
         if isAdmin:
             if pushAdmin == str(message.chat.id):
-                push(message.text)
+                Admin.push(message.text)
                 pushAdmin = "0"
                 isPush = False
     isAnswered = Love.love_text_set(message)
