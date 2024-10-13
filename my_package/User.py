@@ -19,6 +19,22 @@ class User:
         return balance
 
     @staticmethod
+    def settings_menu(message):
+        muteStatus = 2
+        db = sqlite3.connect('../resources/db/JeckaBot.db')
+        cur = db.cursor()
+        for x in cur.execute("SELECT mute FROM Users WHERE userId=" + str(message.chat.id)):
+            muteStatus = x[0]
+        db.close()
+        settings_menu = types.InlineKeyboardMarkup()
+        if muteStatus == 0:
+            key_silence = types.InlineKeyboardButton(text='Установить мут', callback_data='silence')
+        else:
+            key_silence = types.InlineKeyboardButton(text='Снять мут', callback_data='silence')
+        settings_menu.add(key_silence)
+        bot.send_message(message.chat.id, 'Доступные тебе настройки', reply_markup=settings_menu)
+
+    @staticmethod
     def game_menu(message):
         keygame = types.InlineKeyboardMarkup()
         key_Game0 = types.InlineKeyboardButton(text='Кто хочет стать миллионером?', callback_data='millionaire')
@@ -86,7 +102,41 @@ class User:
         db.close()
 
     @staticmethod
+    def mute_tumbler(message):
+        muteStatus = 3
+        db = sqlite3.connect('../resources/db/JeckaBot.db')
+        cur = db.cursor()
+        for x in cur.execute("SELECT mute FROM Users WHERE userId=" + str(message.chat.id)):
+            muteStatus = x[0]
+        db.close()
+        if muteStatus == 0:
+            User.mute(message)
+        else:
+            User.un_mute(message)
+
+    @staticmethod
+    def mute(message):
+        db = sqlite3.connect('../resources/db/JeckaBot.db')
+        cur = db.cursor()
+        cur.execute("UPDATE Users SET mute = 1 WHERE userId = " + str(message.chat.id))
+        db.commit()
+        db.close()
+        bot.send_message(message.chat.id, 'Хорошо, помолчим. Если захочешь поболтать, введи /on')
+
+    @staticmethod
+    def un_mute(message):
+        db = sqlite3.connect('../resources/db/JeckaBot.db')
+        cur = db.cursor()
+        cur.execute("UPDATE Users SET mute = 0 WHERE userId = " + str(message.chat.id))
+        db.commit()
+        db.close()
+        bot.send_message(message.chat.id, 'Привет, мы снова можем поболтать')
+
+    @staticmethod
     def user_handler(call):
         if call.data == "StatGame":
             User.get_statistic(call)
             updateStatistic(call.message, "StatGame")
+        elif call.data == "silence":
+            bot.delete_message(call.message.chat.id, call.message.message_id)
+            User.mute_tumbler(call.message)

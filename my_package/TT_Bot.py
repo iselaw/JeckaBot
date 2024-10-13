@@ -1,6 +1,8 @@
 import os
+from random import random
 
 from fuzzywuzzy import fuzz
+from telebot import types
 
 from my_package.BlackJack import BlackJack
 from my_package.GameQuest import GameQuest
@@ -8,14 +10,12 @@ from my_package.Horoscope import Horoscope
 from my_package.Love import Love
 from my_package.Millionaire import Millionaire
 from my_package.Music import Music
-from my_package.OthersGameMethods import *
 from my_package.Push import *
 from my_package.RockPaperScissors import RockPaperScissors
 from my_package.SlotMachine import SlotMachine
 from my_package.Talking import Talking
 from my_package.User import User
 from my_package.Weather import Weather
-from my_package.mute import *
 from statistic import *
 
 # Создаем бота
@@ -242,9 +242,6 @@ def query_handler(call):
     elif call.data == "weather":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         weather(call.message)
-    elif call.data == "silence":
-        bot.delete_message(call.message.chat.id, call.message.message_id)
-        muteunmute(call.message)
     elif call.data == "horoscope":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         Horoscope.handle_AriesMenu(call.message)
@@ -348,22 +345,9 @@ def apps_menu(message):
 
 
 @bot.message_handler(commands=["настройки", "settings"])
-def botSettings(message):
-    muteStatus = 2
-    db = sqlite3.connect('../resources/db/JeckaBot.db')
-    cur = db.cursor()
-    for x in cur.execute("SELECT mute FROM Users WHERE userId=" + str(message.chat.id)):
-        muteStatus = x[0]
-    db.close()
-    apps_menu = types.InlineKeyboardMarkup()
-    if muteStatus == 0:
-        key_silence = types.InlineKeyboardButton(text='Установить мут', callback_data='silence')
-    else:
-        key_silence = types.InlineKeyboardButton(text='Снять мут', callback_data='silence')
-    apps_menu.add(key_silence)
-    bot.send_message(message.chat.id, 'Доступные тебе настройки', reply_markup=apps_menu)
+def settings_menu(message):
+    User.settings_menu(message)
     adminNotification(message, "Вызвал панель настроек")
-
 
 # Команда "Погода"
 @bot.message_handler(commands=["погода", "weather"])
@@ -392,6 +376,18 @@ def startadm(message: types.Message):
     else:
         bot.send_message(message.chat.id, '{}, у Вас нет прав администратора'.format(message.from_user.first_name))
 
+@bot.message_handler(commands=["молчанка"])
+def mute_tumbler(message):
+    User.mute_tumbler(message)
+    
+@bot.message_handler(commands=["off"])
+def mute(message):
+    User.mute(message)
+
+
+@bot.message_handler(commands=["on"])
+def un_mute(message):
+    User.un_mute(message)
 
 def cancelButton(message):
     keyCancel = types.InlineKeyboardMarkup()  # наша клавиатура
