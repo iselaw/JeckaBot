@@ -43,7 +43,7 @@ class BlackJack:
             return [line.strip().lower() for line in f]
 
     @staticmethod
-    def BJBet(message, itog, res=False):
+    def BJBet(message, itog):
         keyBJ = types.InlineKeyboardMarkup()
         bets = [50, 100, 200]
         for bet in bets:
@@ -52,7 +52,7 @@ class BlackJack:
         bot.edit_message_text(chat_id=message.chat.id, message_id=message.message_id, text=itog, reply_markup=keyBJ)
 
     @staticmethod
-    def BJGetCard(message, sum, itog, res=False):
+    def BJGetCard(message, sum, itog):
         keyBJGetCard = types.InlineKeyboardMarkup()
         keyBJGetCard.add(types.InlineKeyboardButton(text='Еще карту', callback_data='BlackJackGetCardYes'))
         keyBJGetCard.add(types.InlineKeyboardButton(text='Хватит', callback_data='BlackJackGetCardNo'))

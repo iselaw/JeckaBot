@@ -96,7 +96,7 @@ class SlotMachine:
         return itog
 
     @staticmethod
-    def SlotBet(message, itog, res=False):
+    def SlotBet(message, itog):
         key_casino = types.InlineKeyboardMarkup()
         key_bet10 = types.InlineKeyboardButton(text='Ставка 10', callback_data='SlotBet10')
         key_casino.add(key_bet10)

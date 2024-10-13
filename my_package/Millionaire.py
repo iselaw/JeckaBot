@@ -33,7 +33,7 @@ class Millionaire:
         return isBankrupt, balance
 
     @staticmethod
-    def startMillionaire(message, balance, isStarting, messageId, res=False):
+    def startMillionaire(message, balance, isStarting, messageId):
         if isStarting:
             x = open('millionaire//player' + str(message.chat.id) + '.txt', 'w', encoding='UTF-8')
             x.write("0" + '\n' + "0" + '\n' + "1")
@@ -57,7 +57,7 @@ class Millionaire:
                                   text=Question, reply_markup=keyboard)
 
     @staticmethod
-    def randomQuestion(message, balance, numberQuestion, res=False):
+    def randomQuestion(message, balance, numberQuestion):
         db = sqlite3.connect('../resources/db/JeckaBot.db')
         cur = db.cursor()
         id = 0
@@ -73,7 +73,7 @@ class Millionaire:
         return question
 
     @staticmethod
-    def winMillionaire(message, res=False):
+    def winMillionaire(message):
         isWin = False
         milMas = []
         ff = open('millionaire//player' + str(message.chat.id) + '.txt', 'r', encoding='UTF-8')
@@ -85,7 +85,7 @@ class Millionaire:
         return isWin
 
     @staticmethod
-    def checkAnswer(message, code, res=False):
+    def checkAnswer(message, code):
         milMas = []
         answer = 0
         isTrueAnswer = False
@@ -104,7 +104,7 @@ class Millionaire:
         return isTrueAnswer
 
     @staticmethod
-    def resultMillionaire(call, isTrueAnswer, res=False):
+    def resultMillionaire(call, isTrueAnswer):
         if not isTrueAnswer:
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                   text="Неправильный ответ :(")
@@ -149,7 +149,7 @@ class Millionaire:
                 Millionaire.millionaireStart(call.message)
 
     @staticmethod
-    def millionaireStart(message, res=False):
+    def millionaireStart(message):
         keygame = types.InlineKeyboardMarkup()
         key_startgame = types.InlineKeyboardButton(text='Начать игру', callback_data='startMillionaire')
         keygame.add(key_startgame)

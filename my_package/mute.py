@@ -5,7 +5,7 @@ from Login import *
 
 
 @bot.message_handler(commands=["off"])
-def mute(message, res=False):
+def mute(message):
     db = sqlite3.connect('../resources/db/JeckaBot.db')
     cur = db.cursor()
     cur.execute("UPDATE Users SET mute = 1 WHERE userId = " + str(message.chat.id))
@@ -25,7 +25,7 @@ def mute(message, res=False):
 
 
 @bot.message_handler(commands=["on"])
-def unmute(message, res=False):
+def unmute(message):
     db = sqlite3.connect('../resources/db/JeckaBot.db')
     cur = db.cursor()
     cur.execute("UPDATE Users SET mute = 0 WHERE userId = " + str(message.chat.id))
@@ -45,7 +45,7 @@ def unmute(message, res=False):
 
 
 @bot.message_handler(commands=["молчанка"])
-def muteunmute(message, res=False):
+def muteunmute(message):
     muteStatus = 3
     db = sqlite3.connect('../resources/db/JeckaBot.db')
     cur = db.cursor()

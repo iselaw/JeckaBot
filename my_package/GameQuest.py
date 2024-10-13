@@ -5,7 +5,7 @@ from statistic import updateStatistic
 class GameQuest:
 
     @staticmethod
-    def GameQuestStart(message, res=False):
+    def GameQuestStart(message):
         keygameQuest = types.InlineKeyboardMarkup()
         key_startQuest = types.InlineKeyboardButton(text='Да', callback_data='startQuest')
         keygameQuest.add(key_startQuest)
@@ -15,7 +15,7 @@ class GameQuest:
                          reply_markup=keygameQuest)
 
     @staticmethod
-    def Questt(message, res=False):
+    def Questt(message):
         photo1 = open('../resources/GameQuest/putnic.jpg', 'rb')
         keygameQuest1 = types.InlineKeyboardMarkup()
         key_askTraveler = types.InlineKeyboardButton(text='Спросить что случилось', callback_data='askTraveler')
@@ -26,7 +26,7 @@ class GameQuest:
                        reply_markup=keygameQuest1)
 
     @staticmethod
-    def Quest2(message, isFirst, res=False):
+    def Quest2(message, isFirst):
         keygameQuest2 = types.InlineKeyboardMarkup()
         key_blacksmith = types.InlineKeyboardButton(text='Пойти до Кузнеца', callback_data='blacksmith')
         keygameQuest2.add(key_blacksmith)
@@ -55,7 +55,7 @@ class GameQuest:
                            reply_markup=keygameQuest2)
 
     @staticmethod
-    def QuestBlacksith1(message, text, res=False):
+    def QuestBlacksith1(message, text):
         photo2 = open('../resources/GameQuest/kuznec.jpg', 'rb')
         keygameQuest3 = types.InlineKeyboardMarkup()
         key_CastleBlacksith = types.InlineKeyboardButton(text='Расскажи про заброшенный замок',
@@ -70,7 +70,7 @@ class GameQuest:
         bot.send_photo(chat_id=message.chat.id, photo=photo2, caption=text, reply_markup=keygameQuest3)
 
     @staticmethod
-    def QuestCastle1(message, res=False):
+    def QuestCastle1(message):
         photo4 = open('../resources/GameQuest/замокбездоспехов.jpg', 'rb')
         keygameQuest4 = types.InlineKeyboardMarkup()
         key_CastleOver = types.InlineKeyboardButton(text='Пойти к заброшенному замку', callback_data='CastleOver')
@@ -85,7 +85,7 @@ class GameQuest:
                        reply_markup=keygameQuest4)
 
     @staticmethod
-    def BlacksithPurchase(message, brokenTools, res=False):
+    def BlacksithPurchase(message, brokenTools):
         photo7 = open('../resources/GameQuest/kuznec.jpg', 'rb')
         keygameQuest5 = types.InlineKeyboardMarkup()
         key_PriceArmor = types.InlineKeyboardButton(text='Купить доспехи ', callback_data='PriceArmor')
@@ -99,7 +99,7 @@ class GameQuest:
                        reply_markup=keygameQuest5)
 
     @staticmethod
-    def ResourceExtraction(message, res=False):
+    def ResourceExtraction(message):
         photo7 = open('../resources/GameQuest/kuznec.jpg', 'rb')
         keygameQuest6 = types.InlineKeyboardMarkup()
         key_TreeMining = types.InlineKeyboardButton(text='Отправиться добывать дерево', callback_data='TreeMining')
@@ -114,7 +114,7 @@ class GameQuest:
                        reply_markup=keygameQuest6)
 
     @staticmethod
-    def TreeMining(message, res=False):
+    def TreeMining(message):
         photo6 = open('../resources/GameQuest/лес.jpg', 'rb')
         keygameQuest7 = types.InlineKeyboardMarkup()
         key_TreeMiningON = types.InlineKeyboardButton(text='Высокое и тонкое', callback_data='TreeMiningON')
@@ -127,7 +127,7 @@ class GameQuest:
                        reply_markup=keygameQuest7)
 
     @staticmethod
-    def MetalMining(message, res=False):
+    def MetalMining(message):
         photo7 = open('../resources/GameQuest/shahta.jpg', 'rb')
         keygameQuest8 = types.InlineKeyboardMarkup()
         key_TreeMiningExit = types.InlineKeyboardButton(text='Из Первой жилы', callback_data='MetalMiningExit')
@@ -141,7 +141,7 @@ class GameQuest:
                        reply_markup=keygameQuest8)
 
     @staticmethod
-    def Outlaw(message, res=False):
+    def Outlaw(message):
         photo7 = open('../resources/GameQuest/kuznec.jpg', 'rb')
         keygameQuest9 = types.InlineKeyboardMarkup()
         key_OutlawYes = types.InlineKeyboardButton(text='Пойти к Бандитам', callback_data='OutlawYes')
@@ -156,7 +156,7 @@ class GameQuest:
                        reply_markup=keygameQuest9)
 
     @staticmethod
-    def BanditBattle(message, res=False):
+    def BanditBattle(message):
         photo8 = open('../resources/GameQuest/bandit.jpg', 'rb')
         keygameQuest10 = types.InlineKeyboardMarkup()
         key_BanditDogovor = types.InlineKeyboardButton(text='Попробовать договориться с Бандитом',
@@ -170,7 +170,7 @@ class GameQuest:
                        reply_markup=keygameQuest10)
 
     @staticmethod
-    def BanditDogovor(message, res=False):
+    def BanditDogovor(message):
         photo8 = open('../resources/GameQuest/bandit.jpg', 'rb')
         keygameQuest11 = types.InlineKeyboardMarkup()
         key_DieBandit = types.InlineKeyboardButton(text='Отдать все золото и вернуться к Кузнецу',
@@ -183,7 +183,7 @@ class GameQuest:
                        reply_markup=keygameQuest11)
 
     @staticmethod
-    def BanditBattleExit(message, res=False):
+    def BanditBattleExit(message):
         photo8 = open('../resources/GameQuest/bandit.jpg', 'rb')
         keygameQuest12 = types.InlineKeyboardMarkup()
         key_BlowHead = types.InlineKeyboardButton(text='Ударить мечом по голове', callback_data='BlowHead')
@@ -194,7 +194,7 @@ class GameQuest:
                        caption="Главарь Бандитов достал меч\nВыберите куда ударить бандита", reply_markup=keygameQuest12)
 
     @staticmethod
-    def ReceivingMoney(message, res=False):
+    def ReceivingMoney(message):
         photo11 = open('../resources/GameQuest/мертвбандит.jpg', 'rb')
         keygameQuest13 = types.InlineKeyboardMarkup()
         key_ReceivingMoney = types.InlineKeyboardButton(text='Отправиться к мэру города за наградой',
@@ -206,7 +206,7 @@ class GameQuest:
                        reply_markup=keygameQuest13)
 
     @staticmethod
-    def BlacksmithArmorPayment(message, res=False):
+    def BlacksmithArmorPayment(message):
         photo12 = open('../resources/GameQuest/nagrada.jpg', 'rb')
         keygameQuest14 = types.InlineKeyboardMarkup()
         key_BlacksmithArmorPayment = types.InlineKeyboardButton(text='Отправиться к Кузнецу за доспехами',
@@ -219,7 +219,7 @@ class GameQuest:
                        reply_markup=keygameQuest14)
 
     @staticmethod
-    def Castle(message, res=False):
+    def Castle(message):
         photo13 = open('../resources/GameQuest/Куз2нец.jpg', 'rb')
         keygameQuest15 = types.InlineKeyboardMarkup()
         key_CastleArmor = types.InlineKeyboardButton(text='Отправиться к Жуткому заброшенному замку',
@@ -231,7 +231,7 @@ class GameQuest:
                        reply_markup=keygameQuest15)
 
     @staticmethod
-    def MistakeBroken(message, res=False):
+    def MistakeBroken(message):
         photo15 = open('../resources/GameQuest/brokenкирка.jpg', 'rb')
         keygameQuest16 = types.InlineKeyboardMarkup()
         key_MistakeBroken = types.InlineKeyboardButton(text='Вернуться к кузнецу', callback_data='MistakeBroken')
@@ -241,7 +241,7 @@ class GameQuest:
                        reply_markup=keygameQuest16)
 
     @staticmethod
-    def GotIt(message, res=False):
+    def GotIt(message):
         photo18 = open('../resources/GameQuest/цфвфц.jpg', 'rb')
         keygameQuest17 = types.InlineKeyboardMarkup()
         key_GotIt = types.InlineKeyboardButton(text='Пойти к кузнецу за доспехами', callback_data='GotIt')
@@ -251,7 +251,7 @@ class GameQuest:
                        reply_markup=keygameQuest17)
 
     @staticmethod
-    def СhoosePath(message, res=False):
+    def СhoosePath(message):
         photo14 = open('../resources/GameQuest/pal.jpg', 'rb')
         keygameQuest18 = types.InlineKeyboardMarkup()
         key_СhoosePathCastle = types.InlineKeyboardButton(text='Заброшенный замок', callback_data='СhoosePathCastle')
@@ -266,7 +266,7 @@ class GameQuest:
                        reply_markup=keygameQuest18)
 
     @staticmethod
-    def DragonDialogue(message, res=False):
+    def DragonDialogue(message):
         photo19 = open('../resources/GameQuest/драконзолото.jpg', 'rb')
         keygameQuest19 = types.InlineKeyboardMarkup()
         key_DragonDialogue = types.InlineKeyboardButton(text='Подойти к дракону ', callback_data='DragonDialogue')
@@ -278,7 +278,7 @@ class GameQuest:
                        reply_markup=keygameQuest19)
 
     @staticmethod
-    def DragonExit(message, res=False):
+    def DragonExit(message):
         photo19 = open('../resources/GameQuest/драконзолото.jpg', 'rb')
         keygameQuest20 = types.InlineKeyboardMarkup()
         key_DragonExitGold = types.InlineKeyboardButton(text='Хочу Разбогатеть', callback_data='DragonExitGold')
@@ -293,7 +293,7 @@ class GameQuest:
                        reply_markup=keygameQuest20)
 
     @staticmethod
-    def SkeletonsOfbBry(message, res=False):
+    def SkeletonsOfbBry(message):
         photo23 = open('../resources/GameQuest/скелетыжека.jpg', 'rb')
         keygameQuest21 = types.InlineKeyboardMarkup()
         key_SkeletonsOfbBry = types.InlineKeyboardButton(text='Атаковать скелетов', callback_data='SkeletonsOfbBry')
@@ -304,7 +304,7 @@ class GameQuest:
                        reply_markup=keygameQuest21)
 
     @staticmethod
-    def Ingot(message, res=False):
+    def Ingot(message):
         photo24 = open('../resources/GameQuest/winskelet.jpg', 'rb')
         keygameQuest22 = types.InlineKeyboardMarkup()
         key_IngotYes = types.InlineKeyboardButton(text='Подобрать свиток', callback_data='IngotYes')
@@ -314,7 +314,7 @@ class GameQuest:
                        reply_markup=keygameQuest22)
 
     @staticmethod
-    def Demon(message, res=False):
+    def Demon(message):
         photo24 = open('../resources/GameQuest/svitok.jpg', 'rb')
         keygameQuest23 = types.InlineKeyboardMarkup()
         key_Demon = types.InlineKeyboardButton(text='Подойти к демону', callback_data='Demon')
@@ -325,7 +325,7 @@ class GameQuest:
                        reply_markup=keygameQuest23)
 
     @staticmethod
-    def Demon2(message, res=False):
+    def Demon2(message):
         photo25 = open('../resources/GameQuest/vulgrim.jpg', 'rb')
         keygameQuest24 = types.InlineKeyboardMarkup()
         key_Demon2 = types.InlineKeyboardButton(text='Выслушать демона', callback_data='Demon2')
@@ -337,7 +337,7 @@ class GameQuest:
                        reply_markup=keygameQuest24)
 
     @staticmethod
-    def Demon3(message, res=False):
+    def Demon3(message):
         photo26 = open('../resources/GameQuest/amulet.jpg', 'rb')
         keygameQuest25 = types.InlineKeyboardMarkup()
         key_DemonAmuletYes = types.InlineKeyboardButton(text='Принять Амулет', callback_data='DemonAmuletYes')
@@ -351,7 +351,7 @@ class GameQuest:
                        reply_markup=keygameQuest25)
 
     @staticmethod
-    def Boss1(message, res=False):
+    def Boss1(message):
         photo27 = open('../resources/GameQuest/image15.jpg', 'rb')
         keygameQuest26 = types.InlineKeyboardMarkup()
         key_BossAmuletYes = types.InlineKeyboardButton(text='Использовать Амулет для Атаки', callback_data='BossAmuletYes')
@@ -366,7 +366,7 @@ class GameQuest:
                        reply_markup=keygameQuest26)
 
     @staticmethod
-    def Demon4(message, res=False):
+    def Demon4(message):
         photo29 = open('../resources/GameQuest/killsasha.jpg', 'rb')
         keygameQuest27 = types.InlineKeyboardMarkup()
         key_Demon4 = types.InlineKeyboardButton(text='Пойти дальше', callback_data='Demon4')
@@ -379,7 +379,7 @@ class GameQuest:
                        reply_markup=keygameQuest27)
 
     @staticmethod
-    def Demon5(message, res=False):
+    def Demon5(message):
         photo32 = open('../resources/GameQuest/hearth.jpg', 'rb')
         keygameQuest28 = types.InlineKeyboardMarkup()
         key_DemonHeartYes = types.InlineKeyboardButton(text='Отдать сердце', callback_data='DemonHeartYes')
@@ -393,7 +393,7 @@ class GameQuest:
                        reply_markup=keygameQuest28)
 
     @staticmethod
-    def MainBoss(message, res=False):
+    def MainBoss(message):
         photo33 = open('../resources/GameQuest/listat.jpg', 'rb')
         keygameQuest29 = types.InlineKeyboardMarkup()
         key_MainBossNo = types.InlineKeyboardButton(text='Атаковать без усилений', callback_data='MainBossNo')
@@ -409,7 +409,7 @@ class GameQuest:
                        reply_markup=keygameQuest29)
 
     @staticmethod
-    def VinBoss(message, res=False):
+    def VinBoss(message):
         photo35 = open('../resources/GameQuest/ЖекаВин.jpg', 'rb')
         keygameQuest30 = types.InlineKeyboardMarkup()
         key_VinBoss = types.InlineKeyboardButton(text='Освободить девушку и забрать золото', callback_data='VinBoss')
@@ -420,7 +420,7 @@ class GameQuest:
                        reply_markup=keygameQuest30)
 
     @staticmethod
-    def SashaelKill(message, res=False):
+    def SashaelKill(message):
         photo31 = open('../resources/GameQuest/killsasha.jpg', 'rb')
         keygameQuest31 = types.InlineKeyboardMarkup()
         key_SashaelKill = types.InlineKeyboardButton(text='Пойти дальше', callback_data='SashaelKill')
@@ -433,7 +433,7 @@ class GameQuest:
                        reply_markup=keygameQuest31)
 
     @staticmethod
-    def SashaelKill2(message, res=False):
+    def SashaelKill2(message):
         photo38 = open('../resources/GameQuest/demonBlade.jpg', 'rb')
         keygameQuest32 = types.InlineKeyboardMarkup()
         key_SashaelKillYes = types.InlineKeyboardButton(text='Отдать сердце', callback_data='SashaelKillYes')
@@ -449,7 +449,7 @@ class GameQuest:
                        reply_markup=keygameQuest32)
 
     @staticmethod
-    def MainBoss2(message, res=False):
+    def MainBoss2(message):
         photo34 = open('../resources/GameQuest/listat.jpg', 'rb')
         keygameQuest33 = types.InlineKeyboardMarkup()
         key_Died = types.InlineKeyboardButton(text='Атаковать без усилений', callback_data='Died')
@@ -468,7 +468,7 @@ class GameQuest:
                        reply_markup=keygameQuest33)
 
     @staticmethod
-    def VinBoss2(message, res=False):
+    def VinBoss2(message):
         photo42 = open('../resources/GameQuest/ЖекаВин.jpg', 'rb')
         keygameQuest34 = types.InlineKeyboardMarkup()
         key_VinBoss2 = types.InlineKeyboardButton(text='Освободить девушку и забрать золото', callback_data='VinBoss2')
@@ -479,7 +479,7 @@ class GameQuest:
                        reply_markup=keygameQuest34)
 
     @staticmethod
-    def TenYears(message, res=False):
+    def TenYears(message):
         photo43 = open('../resources/GameQuest/finalgood.jpg', 'rb')
         keygameQuest35 = types.InlineKeyboardMarkup()
         key_TenYears = types.InlineKeyboardButton(text='Спустя 10 лет', callback_data='TenYears')
@@ -490,7 +490,7 @@ class GameQuest:
                        reply_markup=keygameQuest35)
 
     @staticmethod
-    def JekaDemon(message, res=False):
+    def JekaDemon(message):
         photo45 = open('../resources/GameQuest/gekaDemon.jpg', 'rb')
         keygameQuest36 = types.InlineKeyboardMarkup()
         key_JekaDemon = types.InlineKeyboardButton(text='Наброситься на врага', callback_data='JekaDemon')
@@ -502,7 +502,7 @@ class GameQuest:
                        reply_markup=keygameQuest36)
 
     @staticmethod
-    def JekaDemon2(message, res=False):
+    def JekaDemon2(message):
         photo46 = open('../resources/GameQuest/gekaDemonBoi.jpg', 'rb')
         keygameQuest37 = types.InlineKeyboardMarkup()
         key_JekaDemon2 = types.InlineKeyboardButton(text='Продолжить', callback_data='JekaDemon2')
@@ -517,7 +517,7 @@ class GameQuest:
                        reply_markup=keygameQuest37)
 
     @staticmethod
-    def MainBoss3(message, res=False):
+    def MainBoss3(message):
         photo40 = open('../resources/GameQuest/listat.jpg', 'rb')
         keygameQuest38 = types.InlineKeyboardMarkup()
         key_Died2 = types.InlineKeyboardButton(text='Атаковать без усилений', callback_data='Died2')
@@ -535,7 +535,7 @@ class GameQuest:
                        reply_markup=keygameQuest38)
 
     @staticmethod
-    def TakeSword(message, res=False):
+    def TakeSword(message):
         keygameQuest39 = types.InlineKeyboardMarkup()
         key_TakeSword = types.InlineKeyboardButton(text='Взять Меч', callback_data='TakeSword')
         keygameQuest39.add(key_TakeSword)
@@ -544,7 +544,7 @@ class GameQuest:
                          reply_markup=keygameQuest39)
 
     @staticmethod
-    def MainBoss4(message, res=False):
+    def MainBoss4(message):
         photo39 = open('../resources/GameQuest/listatwad.jpg', 'rb')
         keygameQuest40 = types.InlineKeyboardMarkup()
         key_SwordAttack = types.InlineKeyboardButton(text='Атаковать клинком Бездны', callback_data='SwordAttack')
@@ -558,7 +558,7 @@ class GameQuest:
                        reply_markup=keygameQuest40)
 
     @staticmethod
-    def Boss2(message, res=False):
+    def Boss2(message):
         photo28 = open('../resources/GameQuest/image15.jpg', 'rb')
         keygameQuest41 = types.InlineKeyboardMarkup()
         key_BossAmuletNo2 = types.InlineKeyboardButton(text='Атаковать без усилений', callback_data='BossAmuletNo2')

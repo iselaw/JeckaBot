@@ -31,7 +31,7 @@ class RockPaperScissors:
         return balance
 
     @staticmethod
-    def GameSSP(message, itog, res=False):
+    def GameSSP(message, itog):
         keygame1 = types.InlineKeyboardMarkup()
         key_Stone = types.InlineKeyboardButton(text='Камень🤜', callback_data='Stone')
         keygame1.add(key_Stone)

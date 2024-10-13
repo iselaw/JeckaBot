@@ -13,6 +13,7 @@ from my_package.Push import *
 from my_package.RockPaperScissors import RockPaperScissors
 from my_package.SlotMachine import SlotMachine
 from my_package.Talking import Talking
+from my_package.User import User
 from my_package.Weather import Weather
 from my_package.mute import *
 from statistic import *
@@ -196,6 +197,7 @@ def query_handler(call):
     RockPaperScissors.rps_handler(call)
     Music.music_handler(call)
     Love.love_handler(call, massive_love)
+    User.user_handler(call)
     if call.data == "cancel":
         global isAddQuestion
         global isPush
@@ -231,35 +233,6 @@ def query_handler(call):
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                               text="Введите вопрос и ответ которые хотите добавить в формате: \nВопрос\nОтвет")
         cancelButton(call.message)
-    elif call.data == "StatGame":
-        db = sqlite3.connect('../resources/db/JeckaBot.db')
-        cur = db.cursor()
-        static = []
-        staticMessage = ""
-        for x in cur.execute(
-                "Select count(*) from users where balance>5000 and active=1"):
-            amount = x[0]
-        if amount >= 10:
-            for x in cur.execute(
-                    "Select nickname, balance from users where balance>5000 and active=1 ORDER BY balance DESC Limit 10"):
-                static.append(x[0])
-                static.append(x[1])
-        else:
-            for x in cur.execute(
-                    "Select nickname, balance from users where balance>5000 ORDER BY balance DESC Limit 10"):
-                static.append(x[0])
-                static.append(x[1])
-        count = 0
-        while count < 20:
-            if count % 2 == 0:
-                staticMessage = staticMessage + str((count + 1) // 2 + 1) + ". " + str(static[count])
-            else:
-                staticMessage = staticMessage + ": " + str(static[count]) + '\n'
-            count = count + 1
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Самые успешные люди:\n" + staticMessage)
-        db.close()
-        updateStatistic(call.message, "StatGame")
     elif call.data == "game":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         game(call.message)
@@ -281,7 +254,7 @@ def query_handler(call):
 
 # Музыка
 @bot.message_handler(commands=["music", "музыка"])
-def music(message, res=False):
+def music(message):
     Music.start_music(message)
     adminNotification(message, "Пошел слушать музыку")
     updateStatistic(message, "music")
@@ -308,38 +281,15 @@ def audio_record(message):
 
 # Команда "Игра"
 @bot.message_handler(commands=["game", "игра"])
-def game(message, res=False):
-    db = sqlite3.connect('../resources/db/JeckaBot.db')
-    cur = db.cursor()
-    try:
-        cur.execute(
-            "UPDATE Users SET (nickname) = '" + str(message.chat.first_name) + "'" + " WHERE userId = " + str(
-                message.chat.id))
-        db.commit()
-    except:
-        print("error update nickname")
-    db.close()
-    keygame = types.InlineKeyboardMarkup()
-    key_Game0 = types.InlineKeyboardButton(text='Кто хочет стать миллионером?', callback_data='millionaire')
-    keygame.add(key_Game0)
-    key_Game1 = types.InlineKeyboardButton(text='Камень,Ножницы,Бумага', callback_data='GameSSP')
-    keygame.add(key_Game1)
-    key_Game2 = types.InlineKeyboardButton(text='Слот-машина', callback_data='SlotMachine')
-    keygame.add(key_Game2)
-    key_Game3 = types.InlineKeyboardButton(text='Блекджек', callback_data='BlackJack')
-    keygame.add(key_Game3)
-    key_Quest = types.InlineKeyboardButton(text='Путешествие Жеки', callback_data='Quest')
-    keygame.add(key_Quest)
-    key_StatGame = types.InlineKeyboardButton(text='Статистика', callback_data='StatGame')
-    keygame.add(key_StatGame)
-    bot.send_message(message.chat.id, 'Во что сыграем ?\nВаш Баланс: ' + str(getBalance(message)), reply_markup=keygame)
+def game(message):
+    User.game_menu(message)
     adminNotification(message, "Пошел играть")
     updateStatistic(message, "game")
 
 
 # Команда «Старт»
 @bot.message_handler(commands=["start", "старт"])
-def start(message, res=False):
+def start(message):
     UserId = 0
     db = sqlite3.connect('../resources/db/JeckaBot.db')
     cur = db.cursor()
@@ -356,13 +306,13 @@ def start(message, res=False):
     db.close()
     pl.close()
     bot.send_message(message.chat.id,
-                     '{}, привет, меня зовут Жека Бот.\nОбязательно введи /help'.format(
+                     'Привет, {},меня зовут Жека бот.\nОбязательно введи /help'.format(
                          message.from_user.first_name))
 
 
 # Команда "ХЕЛП"
 @bot.message_handler(commands=["help"])
-def help(message, res=False):
+def help(message):
     bot.send_message(message.chat.id,
                      'Привет, вот что я умею' + '\n❕ Список Команд ❕\n/menu - Вызвать меню\n/apps - вызвать '
                                                 'панель приложений\n/settings - вызвать панель настроек\n/off - '
@@ -373,7 +323,7 @@ def help(message, res=False):
 
 # Команда "Бот меню"
 @bot.message_handler(commands=["menu"])
-def menu(message, res=False):
+def menu(message):
     keyboardgame = types.ReplyKeyboardMarkup(resize_keyboard=True)
     btn3 = types.KeyboardButton('/музыка')
     btn4 = types.KeyboardButton('/игра')
@@ -392,41 +342,32 @@ def menu(message, res=False):
 
 
 @bot.message_handler(commands=["приложения", "apps"])
-def botFunny(message, res=False):
-    botPanel = types.InlineKeyboardMarkup()
-    key_game = types.InlineKeyboardButton(text='Играть', callback_data='game')
-    key_music = types.InlineKeyboardButton(text='Музыка', callback_data='music')
-    key_weather = types.InlineKeyboardButton(text='Погода', callback_data='weather')
-    key_horoscope = types.InlineKeyboardButton(text='Гороскоп', callback_data='horoscope')
-    key_para = types.InlineKeyboardButton(text='Поиск любви', callback_data='love_search')
-    botPanel.row(key_game, key_weather)
-    botPanel.row(key_music, key_horoscope)
-    botPanel.row(key_para)
-    bot.send_message(message.chat.id, 'Чем желаешь заняться?', reply_markup=botPanel)
+def apps_menu(message):
+    User.apps_menu(message)
     adminNotification(message, "Вызвал панель приложений")
 
 
 @bot.message_handler(commands=["настройки", "settings"])
-def botSettings(message, res=False):
+def botSettings(message):
     muteStatus = 2
     db = sqlite3.connect('../resources/db/JeckaBot.db')
     cur = db.cursor()
     for x in cur.execute("SELECT mute FROM Users WHERE userId=" + str(message.chat.id)):
         muteStatus = x[0]
     db.close()
-    botPanel = types.InlineKeyboardMarkup()
+    apps_menu = types.InlineKeyboardMarkup()
     if muteStatus == 0:
         key_silence = types.InlineKeyboardButton(text='Установить мут', callback_data='silence')
     else:
         key_silence = types.InlineKeyboardButton(text='Снять мут', callback_data='silence')
-    botPanel.add(key_silence)
-    bot.send_message(message.chat.id, 'Доступные тебе настройки', reply_markup=botPanel)
+    apps_menu.add(key_silence)
+    bot.send_message(message.chat.id, 'Доступные тебе настройки', reply_markup=apps_menu)
     adminNotification(message, "Вызвал панель настроек")
 
 
 # Команда "Погода"
 @bot.message_handler(commands=["погода", "weather"])
-def weather(message, res=False):
+def weather(message):
     Weather.weather_start(message)
     updateStatistic(message, "weather")
 
