@@ -50,6 +50,6 @@ class Love:
         if call.data == "love_search":
             bot.delete_message(call.message.chat.id, call.message.message_id)
             Love.search_love(call.message)
-            Admin.updateStatistic(call.message, "para")
+            Admin.update_statistic(call.message, "para")
         elif call.data == "love_search_start":
             Love.love_search_start(call.message, massive_love)

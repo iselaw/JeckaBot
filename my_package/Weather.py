@@ -9,15 +9,15 @@ from Login import *
 class Weather:
 
     @staticmethod
-    def textCity(message, cityName):
+    def text_city(message, city_name):
         try:
-            bot.send_message(chat_id=message.chat.id, text=Weather.get_weather(cityName, open_weather_token))
+            bot.send_message(chat_id=message.chat.id, text=Weather.get_weather(city_name, open_weather_token))
         except:
             bot.send_message(chat_id=message.chat.id,
                              text="К сожалению, пока не могу подсказать погоду. Что-то поломалось(")
 
     @staticmethod
-    def get_weather(cityName, open_weather_token):
+    def get_weather(city_name, open_weather_token):
         code_to_smile = {
             "Clear": "Ясно \U00002600",
             "Clouds": "Облачно \U00002601",
@@ -28,7 +28,7 @@ class Weather:
             "Mist": "Туман \U0001F32B"
         }
         try:
-            City = cityName
+            City = city_name
             r = requests.get(
                 f"https://api.openweathermap.org/data/2.5/weather?q={City}&appid={open_weather_token}&units=metric"
             )
@@ -51,7 +51,7 @@ class Weather:
             return text
 
         except Exception as ex:
-            text2 = 'Я не знаю такого города: ' + cityName
+            text2 = 'Я не знаю такого города: ' + city_name
             return text2
 
     @staticmethod
@@ -70,15 +70,15 @@ class Weather:
         for x in cur.execute("SELECT weather FROM Users WHERE userId=" + str(message.chat.id)):
             weatherStatus = x[0]
             if weatherStatus == 1:
-                Weather.textCity(message, message.text)
+                Weather.text_city(message, message.text)
                 cur.execute("UPDATE Users SET weather = 0 WHERE userId = " + str(message.chat.id))
                 db.commit()
                 return True
         db.close()
         if 'погода ' in message.text.lower():
             index = message.text.lower().find("погода ")
-            cityName = message.text.lower()[index + len("включи "):].strip()
-            Weather.textCity(message, cityName)
+            city_name = message.text.lower()[index + len("включи "):].strip()
+            Weather.text_city(message, city_name)
             return True
         if 'погода' in message.text.lower():
             Weather.weather_start(message)

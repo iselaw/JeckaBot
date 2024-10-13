@@ -10,7 +10,7 @@ from my_package.Admin import Admin
 class RockPaperScissors:
 
     @staticmethod
-    def getBalance(message):
+    def get_balance(message):
         balance = 0
         db = sqlite3.connect('../resources/db/JeckaBot.db')
         cur = db.cursor()
@@ -20,8 +20,8 @@ class RockPaperScissors:
         return balance
 
     @staticmethod
-    def updateScore(point, message):
-        balance = RockPaperScissors.getBalance(message)
+    def update_score(point, message):
+        balance = RockPaperScissors.get_balance(message)
         balance = balance + point
         db = sqlite3.connect('../resources/db/JeckaBot.db')
         cur = db.cursor()
@@ -31,7 +31,7 @@ class RockPaperScissors:
         return balance
 
     @staticmethod
-    def GameSSP(message, itog):
+    def game_rps(message, result):
         keygame1 = types.InlineKeyboardMarkup()
         key_Stone = types.InlineKeyboardButton(text='Камень🤜', callback_data='Stone')
         keygame1.add(key_Stone)
@@ -41,11 +41,11 @@ class RockPaperScissors:
         keygame1.add(key_Paper)
         key_gameexit = types.InlineKeyboardButton(text='В другой раз', callback_data='gameexit')
         keygame1.add(key_gameexit)
-        if itog == "first":
+        if result == "first":
             bot.send_message(message.chat.id, "Играем?", reply_markup=keygame1)
         else:
             bot.edit_message_text(chat_id=message.chat.id, message_id=message.message_id,
-                                  text=itog, reply_markup=keygame1)
+                                  text=result, reply_markup=keygame1)
 
     @staticmethod
     def rps_handler(call):
@@ -55,69 +55,69 @@ class RockPaperScissors:
             if Scissors == choice:
                 bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                       text='Боевая ничья!')
-                itog = "Боевая ничья!"
+                result = "Боевая ничья!"
             else:
                 if choice == 'Бумага✋':
-                    balance = RockPaperScissors.updateScore(20, call.message)
+                    balance = RockPaperScissors.update_score(20, call.message)
                     bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                           text='Поздравляю с победой! У меня была {}.'.format(
                                               choice) + '\nВаш баланс: ' + str(
                                               balance) + '(+20)')
-                    itog = 'Поздравляю с победой! У меня была {}.'.format(choice) + '\nВаш баланс: ' + str(
+                    result = 'Поздравляю с победой! У меня была {}.'.format(choice) + '\nВаш баланс: ' + str(
                         balance) + '(+20)'
                 else:
                     bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                           text='Извините, но Вы проиграли 😢. У меня  {}.'.format(
                                               choice))
-                    itog = 'Извините, но Вы проиграли 😢. У меня  {}.'.format(choice)
-            RockPaperScissors.GameSSP(call.message, itog)
+                    result = 'Извините, но Вы проиграли 😢. У меня  {}.'.format(choice)
+            RockPaperScissors.game_rps(call.message, result)
         elif call.data == "Stone":
             choice = random.choice(['Камень🤜', 'Ножницы✌️', 'Бумага✋'])
             Stone = 'Камень🤜'
             if Stone == choice:
                 bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                       text='Боевая ничья!')
-                itog = "Боевая ничья!"
+                result = "Боевая ничья!"
             else:
                 if choice == 'Ножницы✌️':
-                    balance = RockPaperScissors.updateScore(20, call.message)
+                    balance = RockPaperScissors.update_score(20, call.message)
                     bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                           text='Поздравляю с победой! У меня была {}.'.format(
                                               choice) + '\nВаш баланс: ' + str(
                                               balance) + '(+20)' + '\nВаш баланс: ' + balance + '(+20)')
-                    itog = 'Поздравляю с победой! У меня была {}.'.format(choice) + '\nВаш баланс: ' + str(
+                    result = 'Поздравляю с победой! У меня была {}.'.format(choice) + '\nВаш баланс: ' + str(
                         balance) + '(+20)'
                 else:
                     bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                           text='Извините, но Вы проиграли 😢. У меня  {}.'.format(choice))
-                    itog = 'Извините, но Вы проиграли 😢. У меня  {}.'.format(choice)
-            RockPaperScissors.GameSSP(call.message, itog)
+                    result = 'Извините, но Вы проиграли 😢. У меня  {}.'.format(choice)
+            RockPaperScissors.game_rps(call.message, result)
         elif call.data == "Paper":
             choice = random.choice(['Камень🤜', 'Ножницы✌️', 'Бумага✋'])
             Paper = 'Бумага✋'
             if Paper == choice:
                 bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                       text='Боевая ничья!')
-                itog = "Боевая ничья!"
+                result = "Боевая ничья!"
             else:
                 if choice == 'Камень🤜':
-                    balance = RockPaperScissors.updateScore(20, call.message)
+                    balance = RockPaperScissors.update_score(20, call.message)
                     bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                           text='Поздравляю с победой! У меня была {}.'.format(
                                               choice) + '\nВаш баланс: ' + str(balance) + '(+20)')
-                    itog = 'Поздравляю с победой! У меня была {}.'.format(choice) + '\nВаш баланс: ' + str(
+                    result = 'Поздравляю с победой! У меня была {}.'.format(choice) + '\nВаш баланс: ' + str(
                         balance) + '(+20)'
                 else:
                     bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                           text='Извините, но Вы проиграли 😢. У меня  {}.'.format(
                                               choice))
-                    itog = 'Извините, но Вы проиграли 😢. У меня  {}.'.format(choice)
-            RockPaperScissors.GameSSP(call.message, itog)
+                    result = 'Извините, но Вы проиграли 😢. У меня  {}.'.format(choice)
+            RockPaperScissors.game_rps(call.message, result)
         elif call.data == "gameexit":
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Приходи еще")
-        elif call.data == "GameSSP":
+        elif call.data == "game_rps":
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                   text="Выбрано: Камень, Ножницы, Бумага\nВаш баланс: " + str(
-                                      RockPaperScissors.getBalance(call.message)))
-            RockPaperScissors.GameSSP(call.message, "first")
-            Admin.updateStatistic(call.message, "GameSSP")
+                                      RockPaperScissors.get_balance(call.message)))
+            RockPaperScissors.game_rps(call.message, "first")
+            Admin.update_statistic(call.message, "game_rps")

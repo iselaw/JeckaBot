@@ -10,7 +10,7 @@ from Login import *
 class Music:
 
     @staticmethod
-    def audio_processing(message, isFirstAudio):
+    def audio_processing(message, is_first_audio):
         key_like = types.InlineKeyboardButton(text='❤', callback_data='audioLike')
         key_nextTrack = types.InlineKeyboardButton(text='>>>', callback_data='audionext')
         keyboard = types.InlineKeyboardMarkup()
@@ -20,19 +20,19 @@ class Music:
         cur = db.cursor()
         for rand in cur.execute('SELECT * FROM Music WHERE ID IN (SELECT ID FROM Music ORDER BY RANDOM() LIMIT 1)'):
             audioo = rand[5]
-            Music.nextAudio(message, audioo, keyboard, isFirstAudio)
+            Music.next_audio(message, audioo, keyboard, is_first_audio)
         db.close()
 
     @staticmethod
-    def nextAudio(message, audioo, keyboard, isFirstAudio):
-        if not isFirstAudio:
+    def next_audio(message, audioo, keyboard, is_first_audio):
+        if not is_first_audio:
             bot.edit_message_media(chat_id=message.chat.id, message_id=message.message_id, media=InputMediaAudio(audioo),
                                    reply_markup=keyboard)
-        if isFirstAudio:
+        if is_first_audio:
             bot.send_audio(chat_id=message.chat.id, audio=audioo, reply_markup=keyboard)
 
     @staticmethod
-    def LikePlayList(message):
+    def like_play_list(message):
         try:
             MessageChatId = str(message.chat.id)
             MessageGroupId = MessageChatId.split('-', 1)[1]
@@ -209,6 +209,6 @@ class Music:
         elif call.data == "audioLike":
             bot.answer_callback_query(callback_query_id=call.id, show_alert=False,
                                       text='Готово')
-            Music.LikePlayList(call.message)
+            Music.like_play_list(call.message)
         elif call.data == "musicList":
             Music.PlayList(call.message)

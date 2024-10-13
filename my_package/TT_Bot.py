@@ -144,22 +144,22 @@ def query_handler(call):
     if call.data == "game":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         game(call.message)
-        Admin.adminNotification(call.message, "Пошел играть")
-        Admin.updateStatistic(call.message, "game")
+        Admin.admin_notification(call.message, "Пошел играть")
+        Admin.update_statistic(call.message, "game")
     elif call.data == "music":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         music(call.message)
-        Admin.adminNotification(call.message, "Пошел слушать музыку")
-        Admin.updateStatistic(call.message, "music")
+        Admin.admin_notification(call.message, "Пошел слушать музыку")
+        Admin.update_statistic(call.message, "music")
     elif call.data == "weather":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         weather(call.message)
-        Admin.updateStatistic(call.message, "weather")
+        Admin.update_statistic(call.message, "weather")
     elif call.data == "horoscope":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         Horoscope.handle_AriesMenu(call.message)
-        Admin.updateStatistic(call.message, "horoscope")
-        Admin.adminNotification(call.message, "Смотрит гороскоп")
+        Admin.update_statistic(call.message, "horoscope")
+        Admin.admin_notification(call.message, "Смотрит гороскоп")
 
 
 # Музыка
@@ -223,13 +223,13 @@ def menu(message):
 @bot.message_handler(commands=["приложения", "apps"])
 def apps_menu(message):
     User.apps_menu(message)
-    Admin.adminNotification(message, "Вызвал панель приложений")
+    Admin.admin_notification(message, "Вызвал панель приложений")
 
 
 @bot.message_handler(commands=["настройки", "settings"])
 def settings_menu(message):
     User.settings_menu(message)
-    Admin.adminNotification(message, "Вызвал панель настроек")
+    Admin.admin_notification(message, "Вызвал панель настроек")
 
 
 # Команда "Погода"
@@ -240,21 +240,8 @@ def weather(message):
 
 # Команда "Админ"
 @bot.message_handler(commands=['admin'])
-def admin_panel(message: types.Message):
-    keyadmin = types.InlineKeyboardMarkup()
-    key_stat = types.InlineKeyboardButton(text='Статистика Бота', callback_data='stat')
-    keyadmin.add(key_stat)
-    key_spam = types.InlineKeyboardButton(text='Отправить Сообщение Всем ', callback_data='spam')
-    keyadmin.add(key_spam)
-    isAdmin = False
-    for x in admin:
-        if message.chat.id == x:
-            isAdmin = True
-    if isAdmin:
-        bot.send_message(message.chat.id, '{}, вы авторизованы! \n\n'.format(message.from_user.first_name),
-                         reply_markup=keyadmin)
-    else:
-        bot.send_message(message.chat.id, '{}, у Вас нет прав администратора'.format(message.from_user.first_name))
+def admin_panel(message):
+    Admin.admin_panel(message)
 
 
 @bot.message_handler(commands=["mute"])

@@ -6,7 +6,7 @@ from Login import bot, admin
 class Admin:
 
     @staticmethod
-    def adminNotification(message, text):
+    def admin_notification(message, text):
         isAdmin = False
         for x in admin:
             if message.chat.id == x:
@@ -19,7 +19,7 @@ class Admin:
                     bot.send_message(x, message.chat.title + " - " + text)
 
     @staticmethod
-    def updateStatistic(message, button):
+    def update_statistic(message, button):
         isAdmin = False
         for x in admin:
             if message.chat.id == x:
@@ -33,7 +33,7 @@ class Admin:
             db.close()
 
     @staticmethod
-    def getStatistic(message):
+    def get_statistic(message):
         bot.edit_message_text(chat_id=message.chat.id, message_id=message.message_id,
                               text="Загрузка...")
         number_of_elements = 0
@@ -60,7 +60,7 @@ class Admin:
         bot.edit_message_text(chat_id=message.chat.id, message_id=message.message_id,
                               text=statistic)
 
-    def cancelButton(message):
+    def cancel_button(message):
         keyCancel = types.InlineKeyboardMarkup()  # наша клавиатура
         key_cancel = types.InlineKeyboardButton(text='Отменить операцию', callback_data='cancel')  # кнопка «Да»
         keyCancel.add(key_cancel)  # добавляем кнопку в клавиатуру
@@ -101,18 +101,29 @@ class Admin:
             count = count + 1
 
     @staticmethod
+    def admin_panel(message):
+        keyboard = types.InlineKeyboardMarkup()
+        key_stat = types.InlineKeyboardButton(text='Статистика Бота', callback_data='stat')
+        keyboard.add(key_stat)
+        key_push = types.InlineKeyboardButton(text='Отправить Сообщение Всем ', callback_data='push')
+        keyboard.add(key_push)
+        for x in admin:
+            if message.chat.id == x:
+                bot.send_message(message.chat.id, '{}, вы авторизованы! \n\n'.format(message.from_user.first_name),
+                                 reply_markup=keyboard)
+
+    @staticmethod
     def admin_handler(call):
         if call.data == "cancel":
             global isPush
             isPush = False
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                   text="Операция отменена")
-        elif call.data == "spam":
-            global pushAdmin
+        elif call.data == "push":
             pushAdmin = str(call.message.chat.id)
             isPush = True
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                   text="Введите текст который хотите отправить")
-            Admin.cancelButton(call.message)
+            Admin.cancel_button(call.message)
         elif call.data == "stat":
-            Admin.getStatistic(call.message)
+            Admin.get_statistic(call.message)

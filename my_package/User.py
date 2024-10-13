@@ -9,7 +9,7 @@ from my_package.Admin import Admin
 class User:
 
     @staticmethod
-    def getBalance(message):
+    def get_balance(message):
         balance = 0
         db = sqlite3.connect('../resources/db/JeckaBot.db')
         cur = db.cursor()
@@ -39,7 +39,7 @@ class User:
         keygame = types.InlineKeyboardMarkup()
         key_Game0 = types.InlineKeyboardButton(text='Кто хочет стать миллионером?', callback_data='millionaire')
         keygame.add(key_Game0)
-        key_Game1 = types.InlineKeyboardButton(text='Камень,Ножницы,Бумага', callback_data='GameSSP')
+        key_Game1 = types.InlineKeyboardButton(text='Камень,Ножницы,Бумага', callback_data='game_rps')
         keygame.add(key_Game1)
         key_Game2 = types.InlineKeyboardButton(text='Слот-машина', callback_data='SlotMachine')
         keygame.add(key_Game2)
@@ -49,7 +49,7 @@ class User:
         keygame.add(key_Quest)
         key_StatGame = types.InlineKeyboardButton(text='Статистика', callback_data='StatGame')
         keygame.add(key_StatGame)
-        bot.send_message(message.chat.id, 'Во что сыграем?\nВаш Баланс: ' + str(User.getBalance(message)),
+        bot.send_message(message.chat.id, 'Во что сыграем?\nВаш Баланс: ' + str(User.get_balance(message)),
                          reply_markup=keygame)
 
     @staticmethod
@@ -151,7 +151,7 @@ class User:
     def user_handler(call):
         if call.data == "StatGame":
             User.get_statistic(call)
-            Admin.updateStatistic(call.message, "StatGame")
+            Admin.update_statistic(call.message, "StatGame")
         elif call.data == "silence":
             bot.delete_message(call.message.chat.id, call.message.message_id)
             User.mute_tumbler(call.message)
