@@ -22,7 +22,6 @@ from statistic import *
 isPush = False
 pushAdmin = ""
 addAdmin = ""
-isAddQuestion = False
 questionString = ""
 answerString = ""
 questionNumberToAdd = 0
@@ -56,58 +55,6 @@ if os.path.exists('../resources/data/massive_love.txt'):
     for x7 in f7:
         massive_love.append(x7)
     f7.close()
-
-
-def update(questionString, answerString):
-    questionString = questionString.lower().strip()
-    answerString = answerString.lower().strip()
-    x = open('../resources/data/boltun.txt', 'a', encoding='UTF-8')
-    x.write("u: " + questionString + '\n')
-    x.write(answerString + '\n')
-    x.close()
-    f = open('../resources/data/boltun.txt', 'r', encoding='UTF-8')
-    countMas = 0
-    valumeMas = len(mas) - 1
-    for x in f:
-        if countMas <= valumeMas:
-            mas[countMas] = x
-            countMas = countMas + 1
-        else:
-            mas.append(x.strip().lower())
-    lastString = 'u: fUnCr55Iofefsfcccраытысш'
-    mas.append(lastString.strip().lower())
-    f.close()
-
-
-def addAnswer(text, questionNumber):
-    text = text.lower().strip()
-    valumeMas = len(mas)
-    memoryMas = []
-    countMemory = 0
-    count = questionNumber + 1
-    while count != valumeMas - 1:
-        memoryMas.append(mas[count].strip().lower())
-        count = count + 1
-    count = questionNumber + 1
-    while count < valumeMas + 1:
-        if count == valumeMas:
-            lastString = 'u: fUnCr55Iofefsfcccраытысш'
-            mas.append(lastString.strip().lower())
-        if count == questionNumber + 1:
-            mas[count] = text
-        if count < valumeMas:
-            if count > questionNumber + 1:
-                mas[count] = memoryMas[countMemory]
-                countMemory = countMemory + 1
-        count = count + 1
-    x = open('../resources/data/boltun.txt', 'w', encoding='UTF-8')
-    count = 0
-    for z in mas:
-        if count != len(mas) - 1:
-            x.write(z.strip() + '\n')
-        count = count + 1
-    x.close()
-
 
 # Отправка фото на фото
 @bot.message_handler(content_types=["photo"])
@@ -199,9 +146,7 @@ def query_handler(call):
     Love.love_handler(call, massive_love)
     User.user_handler(call)
     if call.data == "cancel":
-        global isAddQuestion
         global isPush
-        isAddQuestion = False
         isPush = False
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                               text="Операция отменена")
@@ -214,25 +159,6 @@ def query_handler(call):
         cancelButton(call.message)
     elif call.data == "stat":
         getStatistic(call.message)
-    elif call.data == "yes":
-        global answerString
-        global questionNumberToAdd
-        global questionString
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Добавил")
-        update(questionString, answerString)
-    elif call.data == "no":
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Ну ок")
-        addAnswer(answerString, questionNumberToAdd)
-    elif call.data == "addQuestion":
-        global addAdmin
-        addAdmin = str(call.message.chat.id)
-        keyotmena = types.InlineKeyboardMarkup()
-        key_otmena = types.InlineKeyboardButton(text='отмена', callback_data='otmena');
-        keyotmena.add(key_otmena)
-        isAddQuestion = True
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                              text="Введите вопрос и ответ которые хотите добавить в формате: \nВопрос\nОтвет")
-        cancelButton(call.message)
     elif call.data == "game":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         game(call.message)
@@ -384,44 +310,10 @@ def cancelButton(message):
     keyCancel.add(key_cancel)  # добавляем кнопку в клавиатуру
     bot.send_message(message.chat.id, "Нажмите, если хотите отменить операцию", reply_markup=keyCancel)
 
-
-# Команда добавления
-def addQuestion(message):
-    degreeOfSimilarity = 0
-    maximumSimilarity = 0
-    elementNumber = 0
-    global questionNumberToAdd
-    questionNumberToAdd = 0
-    index = message.text.find("\n")
-    global questionString
-    global answerString
-    questionString = message.text[:index]
-    answerString = message.text[index + 1:]
-    for q in mas:
-        if 'u: ' in q:
-            degreeOfSimilarity = (fuzz.token_sort_ratio(q.replace('u: ', ''), questionString))
-            if degreeOfSimilarity > maximumSimilarity:
-                maximumSimilarity = degreeOfSimilarity
-                questionNumberToAdd = elementNumber
-        elementNumber = elementNumber + 1
-    if maximumSimilarity > 70:
-        questionOfSimilary = "В базе есть похожий вопрос:\n" + mas[questionNumberToAdd].replace('u: ',
-                                                                                                '') + "\n" + "ты уверен, что хочешь добавить новый? "
-        keyboard = types.InlineKeyboardMarkup()  # наша клавиатура
-        key_yes = types.InlineKeyboardButton(text='Добавить', callback_data='yes')  # кнопка «Да»
-        keyboard.add(key_yes)  # добавляем кнопку в клавиатуру
-        key_no = types.InlineKeyboardButton(text='Добавить ответ к существующему', callback_data='no')
-        keyboard.add(key_no)
-        bot.send_message(message.chat.id, questionOfSimilary, reply_markup=keyboard)
-    else:
-        update(questionString, answerString)
-
-
 @bot.message_handler(content_types=["text"])
 def handle_text(message):
     global standard_point
     global isPush
-    global isAddQuestion
     global addAdmin
     global pushAdmin
     User.insert_user_id(message, standard_point)
@@ -429,12 +321,6 @@ def handle_text(message):
     for x in admin:
         if message.chat.id == x:
             isAdmin = True
-    if isAddQuestion:
-        if isAdmin:
-            if addAdmin == str(message.chat.id):
-                addQuestion(message)
-                isAddQuestion = False
-                addAdmin = "0"
     if isPush:
         if isAdmin:
             if pushAdmin == str(message.chat.id):
