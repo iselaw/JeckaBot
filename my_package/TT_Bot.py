@@ -26,7 +26,7 @@ isAddQuestion = False
 questionString = ""
 answerString = ""
 questionNumberToAdd = 0
-standardPoint = 5000
+standard_point = 5000
 masVerify = []
 mas = []
 massive_love = []
@@ -287,21 +287,7 @@ def game(message):
 # Команда «Старт»
 @bot.message_handler(commands=["start", "старт"])
 def start(message):
-    UserId = 0
-    db = sqlite3.connect('../resources/db/JeckaBot.db')
-    cur = db.cursor()
-    pl = open('../resources/usersPlayLists/music' + str(message.chat.id) + '.txt', 'a', encoding='UTF-8')
-    si = str(message.from_user.first_name)
-    sz = message.chat.id
-    for s in cur.execute("SELECT * FROM Users WHERE userId =" + str(message.chat.id)):
-        UserId = s[0]
-    if UserId == 0:
-        global standardPoint
-        cur.execute("INSERT INTO Users (userId, nickname, balance, active) VALUES (?, ?, ?, ?);",
-                    (sz, f"{si}", standardPoint, 1))
-        db.commit()
-    db.close()
-    pl.close()
+    User.insert_user_id(message, standard_point)
     bot.send_message(message.chat.id,
                      'Привет, {},меня зовут Жека бот.\nОбязательно введи /help'.format(
                          message.from_user.first_name))
@@ -349,6 +335,7 @@ def settings_menu(message):
     User.settings_menu(message)
     adminNotification(message, "Вызвал панель настроек")
 
+
 # Команда "Погода"
 @bot.message_handler(commands=["погода", "weather"])
 def weather(message):
@@ -376,10 +363,12 @@ def startadm(message: types.Message):
     else:
         bot.send_message(message.chat.id, '{}, у Вас нет прав администратора'.format(message.from_user.first_name))
 
+
 @bot.message_handler(commands=["молчанка"])
 def mute_tumbler(message):
     User.mute_tumbler(message)
-    
+
+
 @bot.message_handler(commands=["off"])
 def mute(message):
     User.mute(message)
@@ -428,36 +417,18 @@ def addQuestion(message):
         update(questionString, answerString)
 
 
-def handle_UserId(message):
-    # Запись userId
-    UserId = 0
-    db = sqlite3.connect('../resources/db/JeckaBot.db')
-    cur = db.cursor()
-    pl = open('../resources/usersPlayLists/music' + str(message.chat.id) + '.txt', 'a', encoding='UTF-8')
-    si = str(message.from_user.first_name)
-    sz = message.chat.id
-    for s in cur.execute("SELECT * FROM Users WHERE userId =" + str(message.chat.id)):
-        UserId = s[0]
-    if UserId == 0:
-        global standardPoint
-        cur.execute("INSERT INTO Users (userId, nickname, balance, active) VALUES (?, ?, ?, ?);",
-                    (sz, f"{si}", standardPoint, 1))
-        db.commit()
-    db.close()
-    pl.close()
-
-
 @bot.message_handler(content_types=["text"])
 def handle_text(message):
+    global standard_point
     global isPush
     global isAddQuestion
     global addAdmin
     global pushAdmin
+    User.insert_user_id(message, standard_point)
     isAdmin = False
     for x in admin:
         if message.chat.id == x:
             isAdmin = True
-    handle_UserId(message)
     if isAddQuestion:
         if isAdmin:
             if addAdmin == str(message.chat.id):

@@ -133,6 +133,21 @@ class User:
         bot.send_message(message.chat.id, 'Привет, мы снова можем поболтать')
 
     @staticmethod
+    def insert_user_id(message, standard_point):
+        UserId = 0
+        db = sqlite3.connect('../resources/db/JeckaBot.db')
+        cur = db.cursor()
+        si = str(message.from_user.first_name)
+        sz = message.chat.id
+        for s in cur.execute("SELECT * FROM Users WHERE userId =" + str(sz)):
+            UserId = s[0]
+        if UserId == 0:
+            cur.execute("INSERT INTO Users (userId, nickname, balance, active) VALUES (?, ?, ?, ?);",
+                        (sz, f"{si}", standard_point, 1))
+            db.commit()
+        db.close()
+
+    @staticmethod
     def user_handler(call):
         if call.data == "StatGame":
             User.get_statistic(call)
