@@ -276,8 +276,6 @@ def startadm(message: types.Message):
     keyadmin.add(key_stat)
     key_spam = types.InlineKeyboardButton(text='Отправить Сообщение Всем ', callback_data='spam')
     keyadmin.add(key_spam)
-    key_addQuestion = types.InlineKeyboardButton(text='Добавить вопрос ', callback_data='addQuestion')
-    keyadmin.add(key_addQuestion)
     isAdmin = False
     for x in admin:
         if message.chat.id == x:
