@@ -4,7 +4,7 @@ import sqlite3
 from telebot import types
 
 from Login import bot
-from statistic import updateStatistic
+from my_package.Admin import Admin
 
 
 class RockPaperScissors:
@@ -120,4 +120,4 @@ class RockPaperScissors:
                                   text="Выбрано: Камень, Ножницы, Бумага\nВаш баланс: " + str(
                                       RockPaperScissors.getBalance(call.message)))
             RockPaperScissors.GameSSP(call.message, "first")
-            updateStatistic(call.message, "GameSSP")
+            Admin.updateStatistic(call.message, "GameSSP")

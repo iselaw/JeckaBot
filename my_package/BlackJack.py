@@ -3,7 +3,8 @@ import random
 from time import sleep
 from telebot import types
 from Login import bot
-from statistic import updateStatistic
+from my_package.Admin import Admin
+
 
 class BlackJack:
 
@@ -162,6 +163,6 @@ class BlackJack:
             BlackJack.BlackJackFirst(call.message, 200)
         elif call.data == "BlackJack":
             BlackJack.BJBet(call.message, "Выбрано: Блекджек\nВаш баланс: " + str(BlackJack.getBalanceBJ(call.message)))
-            updateStatistic(call.message, "BlackJack")
+            Admin.updateStatistic(call.message, "BlackJack")
         elif call.data == "bj_exit":
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Приходи еще")

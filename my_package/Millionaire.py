@@ -3,7 +3,8 @@ from time import sleep
 
 from telebot import types
 from Login import *
-from statistic import updateStatistic
+from my_package.Admin import Admin
+
 
 class Millionaire:
 
@@ -160,7 +161,7 @@ class Millionaire:
         if call.data == "millionaire":
             bot.delete_message(call.message.chat.id, call.message.message_id)
             Millionaire.millionaireStart(call.message)
-            updateStatistic(call.message, "millionaire")
+            Admin.updateStatistic(call.message, "millionaire")
         elif call.data == "startMillionaire":
             bot.delete_message(call.message.chat.id, call.message.message_id)
             Millionaire.startMillionaire(call.message, 0, True, 0)

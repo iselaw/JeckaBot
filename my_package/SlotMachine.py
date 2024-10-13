@@ -5,7 +5,7 @@ from time import sleep
 from telebot import types
 
 from Login import bot
-from statistic import updateStatistic
+from my_package.Admin import Admin
 
 
 class SlotMachine:
@@ -122,7 +122,7 @@ class SlotMachine:
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                   text="Выбрано: Слот-машина\nВаш баланс: " + str(SlotMachine.getBalance(call.message)))
             SlotMachine.SlotBet(call.message, "first")
-            updateStatistic(call.message, "SlotMachine")
+            Admin.updateStatistic(call.message, "SlotMachine")
         elif call.data == "SlotBet10":
             itog = SlotMachine.slotMachine(call.message, 10)
             SlotMachine.SlotBet(call.message, itog)

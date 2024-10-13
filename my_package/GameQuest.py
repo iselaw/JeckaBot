@@ -1,6 +1,7 @@
 from telebot import types
 from Login import *
-from statistic import updateStatistic
+from my_package.Admin import Admin
+
 
 class GameQuest:
 
@@ -576,7 +577,7 @@ class GameQuest:
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                   text="Поиграем?")
             GameQuest.GameQuestStart(call.message)
-            updateStatistic(call.message, "Quest")
+            Admin.updateStatistic(call.message, "Quest")
         elif call.data == "startQuest":
             bot.delete_message(call.message.chat.id, call.message.message_id)
             GameQuest.Questt(call.message)

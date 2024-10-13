@@ -3,7 +3,7 @@ import sqlite3
 from telebot import types
 
 from Login import bot
-from statistic import updateStatistic
+from my_package.Admin import Admin
 
 
 class User:
@@ -151,7 +151,7 @@ class User:
     def user_handler(call):
         if call.data == "StatGame":
             User.get_statistic(call)
-            updateStatistic(call.message, "StatGame")
+            Admin.updateStatistic(call.message, "StatGame")
         elif call.data == "silence":
             bot.delete_message(call.message.chat.id, call.message.message_id)
             User.mute_tumbler(call.message)

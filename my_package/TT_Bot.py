@@ -3,6 +3,7 @@ from random import random
 
 from telebot import types
 
+from my_package.Admin import Admin
 from my_package.BlackJack import BlackJack
 from my_package.GameQuest import GameQuest
 from my_package.Horoscope import Horoscope
@@ -15,7 +16,6 @@ from my_package.SlotMachine import SlotMachine
 from my_package.Talking import Talking
 from my_package.User import User
 from my_package.Weather import Weather
-from statistic import *
 
 isPush = False
 pushAdmin = ""
@@ -152,7 +152,7 @@ def query_handler(call):
                               text="Введите текст который хотите отправить")
         cancelButton(call.message)
     elif call.data == "stat":
-        getStatistic(call.message)
+        Admin.getStatistic(call.message)
     elif call.data == "game":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         game(call.message)
@@ -165,29 +165,16 @@ def query_handler(call):
     elif call.data == "horoscope":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         Horoscope.handle_AriesMenu(call.message)
-        updateStatistic(call.message, "horoscope")
-        adminNotification(call.message, "Смотрит гороскоп")
+        Admin.updateStatistic(call.message, "horoscope")
+        Admin.adminNotification(call.message, "Смотрит гороскоп")
 
 
 # Музыка
 @bot.message_handler(commands=["music", "музыка"])
 def music(message):
     Music.start_music(message)
-    adminNotification(message, "Пошел слушать музыку")
-    updateStatistic(message, "music")
-
-
-def adminNotification(message, text):
-    isAdmin = False
-    for x in admin:
-        if message.chat.id == x:
-            isAdmin = True
-    if not isAdmin:
-        for x in admin:
-            try:
-                bot.send_message(x, message.chat.first_name + " - " + text)
-            except:
-                bot.send_message(x, message.chat.title + " - " + text)
+    Admin.adminNotification(message, "Пошел слушать музыку")
+    Admin.updateStatistic(message, "music")
 
 
 # Добавление Аудио
@@ -200,8 +187,8 @@ def audio_record(message):
 @bot.message_handler(commands=["game", "игра"])
 def game(message):
     User.game_menu(message)
-    adminNotification(message, "Пошел играть")
-    updateStatistic(message, "game")
+    Admin.adminNotification(message, "Пошел играть")
+    Admin.updateStatistic(message, "game")
 
 
 # Команда «Старт»
@@ -247,20 +234,20 @@ def menu(message):
 @bot.message_handler(commands=["приложения", "apps"])
 def apps_menu(message):
     User.apps_menu(message)
-    adminNotification(message, "Вызвал панель приложений")
+    Admin.adminNotification(message, "Вызвал панель приложений")
 
 
 @bot.message_handler(commands=["настройки", "settings"])
 def settings_menu(message):
     User.settings_menu(message)
-    adminNotification(message, "Вызвал панель настроек")
+    Admin.adminNotification(message, "Вызвал панель настроек")
 
 
 # Команда "Погода"
 @bot.message_handler(commands=["погода", "weather"])
 def weather(message):
     Weather.weather_start(message)
-    updateStatistic(message, "weather")
+    Admin.updateStatistic(message, "weather")
 
 
 # Команда "Админ"
