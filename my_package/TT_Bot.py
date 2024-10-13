@@ -538,7 +538,7 @@ def handle_text(message):
                 push(message.text)
                 pushAdmin = "0"
                 isPush = False
-    isAnswered = Love.love_text_set(message, massive_love)
+    isAnswered = Love.love_text_set(message)
     if isAnswered:
         return
     isAnswered = Weather.get_weather_text(message)

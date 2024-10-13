@@ -39,9 +39,9 @@ class Love:
         bot.send_photo(chat_id=message.chat.id, photo=get(url).content)
 
     @staticmethod
-    def love_text_set(message, massive_love):
+    def love_text_set(message):
         if 'любовь' in message.text.lower():
-            Love.love_search_start(message, massive_love)
+            Love.search_love(message)
             return True
         return False
 
