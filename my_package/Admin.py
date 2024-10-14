@@ -9,10 +9,7 @@ class Admin:
 
     @staticmethod
     def admin_notification(message, text):
-        isAdmin = False
-        for x in admin:
-            if message.chat.id == x:
-                isAdmin = True
+        isAdmin = message.chat.id in admin
         if not isAdmin:
             for x in admin:
                 try:
@@ -22,10 +19,7 @@ class Admin:
 
     @staticmethod
     def update_statistic(message, button):
-        isAdmin = False
-        for x in admin:
-            if message.chat.id == x:
-                isAdmin = True
+        isAdmin = message.chat.id in admin
         if not isAdmin:
             db = sqlite3.connect('../resources/db/JeckaBot.db')
             cur = db.cursor()
