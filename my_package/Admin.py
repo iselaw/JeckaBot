@@ -115,6 +115,18 @@ class Admin:
                                  reply_markup=keyboard)
 
     @staticmethod
+    def check_push(message):
+        global isPush
+        global push_admin
+        isAdmin = message.chat.id in admin
+        if isAdmin and isPush and push_admin == str(message.chat.id):
+            Admin.push(message.text)
+            push_admin = "0"
+            isPush = False
+            return True
+        return False
+
+    @staticmethod
     def admin_handler(call):
         if call.data == "cancel":
             global isPush

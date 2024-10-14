@@ -261,16 +261,9 @@ def un_mute(message):
 def handle_text(message):
     global standard_point
     User.insert_user_id(message, standard_point)
-    # isAdmin = False
-    # for x in admin:
-    #     if message.chat.id == x:
-    #         isAdmin = True
-    # if isPush:
-    #     if isAdmin:
-    #         if push_admin == str(message.chat.id):
-    #             Admin.push(message.text)
-    #             push_admin = "0"
-    #             isPush = False
+    isAnswered = Admin.check_push(message)
+    if isAnswered:
+        return
     isAnswered = Love.love_text_set(message)
     if isAnswered:
         return
