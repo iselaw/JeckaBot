@@ -62,10 +62,7 @@ def handle_photo(message):
         photo = open('../resources/photos/1.jpg', 'rb')
         bot.send_photo(chat_id=message.chat.id, photo=photo,
                        caption='Крутая фотка, а это я в Америке')
-    isAdmin = False
-    for x in admin:
-        if message.chat.id == x:
-            isAdmin = True
+    isAdmin = message.chat.id in admin
     if not isAdmin:
         for x in admin:
             try:
@@ -89,10 +86,7 @@ def handle_sticker(message):
         stiker = random.randint(0, lenghtMasStiker - 1)
         stikerr = masstiker[stiker]
         bot.send_sticker(message.chat.id, stikerr)
-    isAdmin = False
-    for x in admin:
-        if message.chat.id == x:
-            isAdmin = True
+    isAdmin = message.chat.id in admin
     if not isAdmin:
         for x in admin:
             try:
@@ -114,10 +108,7 @@ def voice_processing(message):
     if muteStatus == 0:
         bot.send_message(message.chat.id,
                          "Прости, я пока не могу слушать, напиши текстом")
-    isAdmin = False
-    for x in admin:
-        if message.chat.id == x:
-            isAdmin = True
+    isAdmin = message.chat.id in admin
     if not isAdmin:
         for x in admin:
             try:
@@ -207,10 +198,7 @@ def menu(message):
     btn2 = types.KeyboardButton('/настройки')
     btn5 = types.KeyboardButton('/приложения')
     btn6 = types.KeyboardButton('/admin')
-    isAdmin = False
-    for x in admin:
-        if message.chat.id == x:
-            isAdmin = True
+    isAdmin = message.chat.id in admin
     if not isAdmin:
         keyboardgame.add(btn3, btn4, btn2, btn5)
     else:
