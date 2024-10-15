@@ -164,5 +164,6 @@ class BlackJack:
         elif call.data == "BlackJack":
             BlackJack.bj_bet(call.message, "Выбрано: Блекджек\nВаш баланс: " + str(BlackJack.get_balance_bj(call.message)))
             Admin.update_statistic(call.message, "BlackJack")
+            Admin.admin_notification(call.message, "Пошел играть в Блекджек")
         elif call.data == "bj_exit":
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Приходи еще")

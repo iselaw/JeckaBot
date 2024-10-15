@@ -3,6 +3,8 @@ from telebot import types
 from Login import bot
 import urllib.request as urllib2
 
+from my_package.Admin import Admin
+
 
 class Horoscope:
 
@@ -25,6 +27,8 @@ class Horoscope:
         keyboard.row(key_leo, key_virgo, key_libra, key_scorpio)
         keyboard.row(key_sagittarius, key_capricorn, key_aquarius, key_pisces)
         bot.send_message(message.chat.id, 'Какой знак интересует?', reply_markup=keyboard)
+        Admin.update_statistic(message, "horoscope")
+        Admin.admin_notification(message, "Смотрит гороскоп")
 
     @staticmethod
     def handle_Aries(message, sign, engSign):

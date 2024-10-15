@@ -33,6 +33,7 @@ class User:
             key_silence = types.InlineKeyboardButton(text='Снять мут', callback_data='silence')
         settings_menu.add(key_silence)
         bot.send_message(message.chat.id, 'Доступные тебе настройки', reply_markup=settings_menu)
+        Admin.admin_notification(message, "Вызвал панель настроек")
 
     @staticmethod
     def game_menu(message):
@@ -51,6 +52,8 @@ class User:
         keygame.add(key_StatGame)
         bot.send_message(message.chat.id, 'Во что сыграем?\nВаш Баланс: ' + str(User.get_balance(message)),
                          reply_markup=keygame)
+        Admin.admin_notification(message, "Пошел играть")
+        Admin.update_statistic(message, "game")
 
     @staticmethod
     def apps_menu(message):
@@ -64,6 +67,7 @@ class User:
         apps_menu.row(key_music, key_horoscope)
         apps_menu.row(key_para)
         bot.send_message(message.chat.id, 'Чем желаешь заняться?', reply_markup=apps_menu)
+        Admin.admin_notification(message, "Вызвал панель приложений")
 
     def get_statistic(call):
         db = sqlite3.connect('../resources/db/JeckaBot.db')
@@ -122,6 +126,7 @@ class User:
         db.commit()
         db.close()
         bot.send_message(message.chat.id, 'Хорошо, помолчим. Если захочешь поболтать, введи /on')
+        Admin.admin_notification(message, "Замутил бота")
 
     @staticmethod
     def un_mute(message):
@@ -131,6 +136,7 @@ class User:
         db.commit()
         db.close()
         bot.send_message(message.chat.id, 'Привет, мы снова можем поболтать')
+        Admin.admin_notification(message, "Размутил бота")
 
     @staticmethod
     def insert_user_id(message, standard_point):

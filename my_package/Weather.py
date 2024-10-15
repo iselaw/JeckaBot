@@ -4,6 +4,7 @@ from datetime import datetime
 import requests
 
 from Login import *
+from my_package.Admin import Admin
 
 
 class Weather:
@@ -62,6 +63,8 @@ class Weather:
         db.commit()
         db.close()
         bot.send_message(chat_id=message.chat.id, text='В Каком городе тебя интересует погода ?')
+        Admin.admin_notification(message, "Пошел смотреть погоду")
+        Admin.update_statistic(message, "weather")
 
     @staticmethod
     def get_weather_text(message):

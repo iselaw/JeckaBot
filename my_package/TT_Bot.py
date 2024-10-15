@@ -133,22 +133,15 @@ def query_handler(call):
     if call.data == "game":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         game(call.message)
-        Admin.admin_notification(call.message, "Пошел играть")
-        Admin.update_statistic(call.message, "game")
     elif call.data == "music":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         music(call.message)
-        Admin.admin_notification(call.message, "Пошел слушать музыку")
-        Admin.update_statistic(call.message, "music")
     elif call.data == "weather":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         weather(call.message)
-        Admin.update_statistic(call.message, "weather")
     elif call.data == "horoscope":
         bot.delete_message(call.message.chat.id, call.message.message_id)
         Horoscope.handle_AriesMenu(call.message)
-        Admin.update_statistic(call.message, "horoscope")
-        Admin.admin_notification(call.message, "Смотрит гороскоп")
 
 
 # Музыка
@@ -209,13 +202,11 @@ def menu(message):
 @bot.message_handler(commands=["приложения", "apps"])
 def apps_menu(message):
     User.apps_menu(message)
-    Admin.admin_notification(message, "Вызвал панель приложений")
 
 
 @bot.message_handler(commands=["настройки", "settings"])
 def settings_menu(message):
     User.settings_menu(message)
-    Admin.admin_notification(message, "Вызвал панель настроек")
 
 
 # Команда "Погода"

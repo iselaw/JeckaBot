@@ -5,6 +5,7 @@ from telebot import types
 from telebot.types import InputMediaAudio
 
 from Login import *
+from my_package.Admin import Admin
 
 
 class Music:
@@ -197,6 +198,8 @@ class Music:
         keymusic.add(key_musicList)
         bot.send_message(message.chat.id, 'Что хотите послушать ?',
                          reply_markup=keymusic)
+        Admin.admin_notification(message, "Пошел слушать музыку")
+        Admin.update_statistic(message, "music")
 
     @staticmethod
     def music_handler(call):
