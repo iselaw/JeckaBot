@@ -162,7 +162,7 @@ class BlackJack:
                                   text="Ставка 200\nВаш баланс: " + str(int(BlackJack.get_balance_bj(call.message)) - 200))
             BlackJack.black_jack_first(call.message, 200)
         elif call.data == "BlackJack":
-            BlackJack.bj_bet(call.message, "Выбрано: Блекджек\nВаш баланс: " + str(BlackJack.get_balance_bj(call.message)))
+            BlackJack.bj_bet(call.message, "Выбрано: Блэкджек\nВаш баланс: " + str(BlackJack.get_balance_bj(call.message)))
             Admin.update_statistic(call.message, "BlackJack")
         elif call.data == "bj_exit":
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Приходи еще")

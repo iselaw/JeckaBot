@@ -41,7 +41,7 @@ class User:
         key_Game0 = types.InlineKeyboardButton(text='Викторина', callback_data='millionaire')
         key_Game1 = types.InlineKeyboardButton(text='Цу-е-фа', callback_data='game_rps')
         key_Game2 = types.InlineKeyboardButton(text='Слот-машина', callback_data='SlotMachine')
-        key_Game3 = types.InlineKeyboardButton(text='Блекджек', callback_data='BlackJack')
+        key_Game3 = types.InlineKeyboardButton(text='Блэкджек', callback_data='BlackJack')
         key_Quest = types.InlineKeyboardButton(text='Квест Жеки', callback_data='Quest')
         key_StatGame = types.InlineKeyboardButton(text='Статистика', callback_data='StatGame')
         keygame.row(key_Game0, key_Game1)

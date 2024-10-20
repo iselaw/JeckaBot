@@ -117,7 +117,7 @@ class RockPaperScissors:
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Приходи еще")
         elif call.data == "game_rps":
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                                  text="Выбрано: Камень, Ножницы, Бумага\nВаш баланс: " + str(
+                                  text="Выбрано: Викторина\nВаш баланс: " + str(
                                       RockPaperScissors.get_balance(call.message)))
             RockPaperScissors.game_rps(call.message, "first")
             Admin.update_statistic(call.message, "game_rps")
