@@ -80,7 +80,7 @@ class Weather:
         db.close()
         if 'погода ' in message.text.lower():
             index = message.text.lower().find("погода ")
-            city_name = message.text.lower()[index + len("включи "):].strip()
+            city_name = message.text.lower()[index + len("погода "):].strip()
             Weather.text_city(message, city_name)
             return True
         if 'погода' in message.text.lower():
