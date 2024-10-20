@@ -36,11 +36,11 @@ class Millionaire:
     @staticmethod
     def start_millionaire(message, balance, is_starting, message_id):
         if is_starting:
-            x = open('millionaire//player' + str(message.chat.id) + '.txt', 'w', encoding='UTF-8')
+            x = open('../resources/millionaire//player' + str(message.chat.id) + '.txt', 'w', encoding='UTF-8')
             x.write("0" + '\n' + "0" + '\n' + "1")
             x.close()
         milMas = []
-        ff = open('millionaire//player' + str(message.chat.id) + '.txt', 'r', encoding='UTF-8')
+        ff = open('../resources/millionaire//player' + str(message.chat.id) + '.txt', 'r', encoding='UTF-8')
         for s in ff:
             milMas.append(s.strip().lower())
         ff.close()
@@ -68,7 +68,7 @@ class Millionaire:
             id = rand[0]
             question = rand[1]
         db.close()
-        x = open('millionaire//player' + str(message.chat.id) + '.txt', 'w', encoding='UTF-8')
+        x = open('../resources/millionaire//player' + str(message.chat.id) + '.txt', 'w', encoding='UTF-8')
         x.write(str(balance) + '\n' + str(id) + '\n' + str(number_question))
         x.close()
         return question
@@ -77,7 +77,7 @@ class Millionaire:
     def win_millionaire(message):
         isWin = False
         milMas = []
-        ff = open('millionaire//player' + str(message.chat.id) + '.txt', 'r', encoding='UTF-8')
+        ff = open('../resources/millionaire//player' + str(message.chat.id) + '.txt', 'r', encoding='UTF-8')
         for s in ff:
             milMas.append(s.strip().lower())
         ff.close()
@@ -90,7 +90,7 @@ class Millionaire:
         milMas = []
         answer = 0
         is_true_answer = False
-        ff = open('millionaire//player' + str(message.chat.id) + '.txt', 'r', encoding='UTF-8')
+        ff = open('../resources/millionaire//player' + str(message.chat.id) + '.txt', 'r', encoding='UTF-8')
         for s in ff:
             milMas.append(s.strip().lower())
         ff.close()
@@ -116,11 +116,11 @@ class Millionaire:
             isWin = Millionaire.win_millionaire(call.message)
             if not isWin:
                 milMas = []
-                ff = open('millionaire//player' + str(call.message.chat.id) + '.txt', 'r', encoding='UTF-8')
+                ff = open('../resources/millionaire//player' + str(call.message.chat.id) + '.txt', 'r', encoding='UTF-8')
                 for s in ff:
                     milMas.append(s.strip().lower())
                 ff.close()
-                x = open('millionaire//player' + str(call.message.chat.id) + '.txt', 'w', encoding='UTF-8')
+                x = open('../resources/millionaire//player' + str(call.message.chat.id) + '.txt', 'w', encoding='UTF-8')
                 x.write(str(int(milMas[0]) + 100000) + '\n' + milMas[1] + '\n' + str(int(milMas[2]) + 1))
                 x.close()
                 bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
@@ -142,7 +142,7 @@ class Millionaire:
                 bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                                       text="Поздравляю! Вы ответили правильно на все 10 вопросов." + '\n' + "В качестве приза Вы получаете 500 очков на баланс" + '\n' + "Баланс: " + str(
                                           balance + 500) + " (+500)")
-                x = open('millionaire//player' + str(call.message.chat.id) + '.txt', 'w', encoding='UTF-8')
+                x = open('../resources/millionaire//player' + str(call.message.chat.id) + '.txt', 'w', encoding='UTF-8')
                 x.write("0" + '\n' + "0" + '\n' + "1")
                 x.close()
                 sleep(4)
