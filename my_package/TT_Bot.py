@@ -67,7 +67,7 @@ def handle_photo(message):
         for x in admin:
             try:
                 bot.send_message(x, message.from_user.first_name + " - Отправил картинку в чат")
-                bot.send_photo(x, message.photo[len(message.photo) - 1].file_id)
+                # bot.send_photo(x, message.photo[len(message.photo) - 1].file_id)
             except:
                 print('Не удалось отправить сообщение администратору')
 
@@ -91,7 +91,7 @@ def handle_sticker(message):
         for x in admin:
             try:
                 bot.send_message(x, message.from_user.first_name + " - Отправил стикер в чат")
-                bot.send_sticker(x, message.sticker.file_id)
+                # bot.send_sticker(x, message.sticker.file_id)
             except:
                 print('Не удалось отправить сообщение администратору')
 
