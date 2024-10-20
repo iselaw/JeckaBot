@@ -59,7 +59,7 @@ def handle_photo(message):
         muteStatus = x[0]
     db.close()
     if muteStatus == 0:
-        photo = open('../resources/photos/1.jpg', 'rb')
+        photo = open('../resources/photos/usa.jpg', 'rb')
         bot.send_photo(chat_id=message.chat.id, photo=photo,
                        caption='Крутая фотка, а это я в Америке')
     isAdmin = message.chat.id in admin
