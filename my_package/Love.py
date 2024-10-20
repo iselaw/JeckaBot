@@ -31,8 +31,8 @@ class Love:
             except FloodWait as e:
                 sleep(e.x)
 
-        lenghtMasPara = len(massive_love)
-        urlNumber = random.randint(0, lenghtMasPara - 1)
+        lengthMasPara = len(massive_love)
+        urlNumber = random.randint(0, lengthMasPara - 1)
         url = massive_love[urlNumber]
         bot.edit_message_text(chat_id=message.chat.id, message_id=message.message_id,
                               text="Твоя Любовь найдена  ❤ ")

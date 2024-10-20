@@ -1,6 +1,6 @@
 import os
 import sqlite3
-from random import random
+import random
 
 from telebot import types
 
@@ -21,7 +21,7 @@ from my_package.Weather import Weather
 standard_point = 5000
 mas = []
 massive_love = []
-masstiker = []
+massive_sticker = []
 musicList = []
 db = sqlite3.connect('../resources/db/JeckaBot.db')
 cur = db.cursor()
@@ -36,11 +36,11 @@ if os.path.exists('../resources/data/boltun.txt'):
     lastString = 'u: fUnCr55Iofefsfcccраытысш'
     mas.append(lastString.strip().lower())
     f.close()
-if os.path.exists('../resources/data/stiker.txt'):
-    f3 = open('../resources/data/stiker.txt', 'r', encoding='UTF-8')
+if os.path.exists('../resources/data/sticker.txt'):
+    f3 = open('../resources/data/sticker.txt', 'r', encoding='UTF-8')
     for x3 in f3:
         if len(x3.strip()) > 2:
-            masstiker.append(x3.strip())
+            massive_sticker.append(x3.strip())
     f3.close()
 if os.path.exists('../resources/data/massive_love.txt'):
     f7 = open('../resources/data/massive_love.txt', 'r', encoding='UTF-8')
@@ -82,10 +82,10 @@ def handle_sticker(message):
         muteStatus = x[0]
     db.close()
     if muteStatus == 0:
-        lenghtMasStiker = len(masstiker)
-        stiker = random.randint(0, lenghtMasStiker - 1)
-        stikerr = masstiker[stiker]
-        bot.send_sticker(message.chat.id, stikerr)
+        length_massive_sticker = len(massive_sticker)
+        n_sticker = random.randint(0, length_massive_sticker - 1)
+        sticker = massive_sticker[n_sticker]
+        bot.send_sticker(message.chat.id, sticker)
     isAdmin = message.chat.id in admin
     if not isAdmin:
         for x in admin:
