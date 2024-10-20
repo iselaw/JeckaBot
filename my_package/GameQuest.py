@@ -8,11 +8,11 @@ class GameQuest:
     @staticmethod
     def GameQuestStart(message):
         keygameQuest = types.InlineKeyboardMarkup()
-        key_startQuest = types.InlineKeyboardButton(text='Да', callback_data='startQuest')
+        key_startQuest = types.InlineKeyboardButton(text='Начать игру', callback_data='startQuest')
         keygameQuest.add(key_startQuest)
-        key_exitQuest = types.InlineKeyboardButton(text='Нет', callback_data='exitQuest')
+        key_exitQuest = types.InlineKeyboardButton(text='Выход', callback_data='exitQuest')
         keygameQuest.add(key_exitQuest)
-        bot.send_message(message.chat.id, 'Привет, хочешь сыграть в игру про путешествия Жеки по волшебному миру?',
+        bot.send_message(message.chat.id, '⚔️Квест Жеки⚔️',
                          reply_markup=keygameQuest)
 
     @staticmethod
