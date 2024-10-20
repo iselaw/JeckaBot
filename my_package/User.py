@@ -67,7 +67,6 @@ class User:
         apps_menu.row(key_music, key_horoscope)
         apps_menu.row(key_para)
         bot.send_message(message.chat.id, 'Чем желаешь заняться?', reply_markup=apps_menu)
-        Admin.admin_notification(message, "Вызвал панель приложений")
 
     def get_statistic(call):
         db = sqlite3.connect('../resources/db/JeckaBot.db')

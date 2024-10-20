@@ -1,7 +1,7 @@
 import os
 import random
 import sqlite3
-from Login import bot
+from Login import bot, admin
 from fuzzywuzzy import fuzz
 
 
@@ -18,7 +18,7 @@ class Talking:
         if muteStatus == 0:
             text = message.text.lower().strip()
             try:
-                valumeMas = len(mas) - 1
+                volumeMas = len(mas) - 1
                 if os.path.exists('../resources/data/boltun.txt'):
                     maximumSimilarity = 0
                     elementNumber = 0
@@ -29,7 +29,7 @@ class Talking:
                             degreeOfSimilarity = (fuzz.token_sort_ratio(q.replace('u: ', ''), text))
                             if degreeOfSimilarity > maximumSimilarity:
                                 maximumSimilarity = degreeOfSimilarity
-                                if elementNumber != valumeMas:
+                                if elementNumber != volumeMas:
                                     questionNumber = elementNumber
                         elementNumber = elementNumber + 1
                     isQuestion = False
@@ -42,6 +42,13 @@ class Talking:
                     answerNumber = random.randint(1, count - 1)
                     answer = mas[questionNumber + answerNumber]
                     bot.send_message(message.chat.id, answer)
+                    isAdmin = message.chat.id in admin
+                    if not isAdmin:
+                        for x in admin:
+                            try:
+                                bot.send_message(x, message.chat.first_name + "\n" + text + "\n" +answer)
+                            except:
+                                bot.send_message(x, message.chat.title + "\n" + text + "\n" +answer)
                 else:
                     bot.send_message(message.chat.id, 'Не понял, перефразируй')
             except:
